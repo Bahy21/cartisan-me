@@ -1,0 +1,162 @@
+{
+  "project_info": {
+    "project_number": "847331421929",
+    "project_id": "cartisan-production",
+    "storage_bucket": "cartisan-production.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847331421929:android:5a5be400aaa0ae8f360a78",
+        "android_client_info": {
+          "package_name": "com.cartisan.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "847331421929-tfmeinjtc443407f6ntsdaltk3b0hc3d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRVUbs_7il6dkyWaBPiS3EIuqM-KMZQis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "847331421929-tfmeinjtc443407f6ntsdaltk3b0hc3d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "847331421929-9ngu9fvd1haek0qmkna59ptqql439fu5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.cartisan.exchange"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847331421929:android:c419466af1a4f9ce360a78",
+        "android_client_info": {
+          "package_name": "com.cartisan.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "847331421929-tfmeinjtc443407f6ntsdaltk3b0hc3d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRVUbs_7il6dkyWaBPiS3EIuqM-KMZQis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "847331421929-tfmeinjtc443407f6ntsdaltk3b0hc3d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "847331421929-9ngu9fvd1haek0qmkna59ptqql439fu5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.cartisan.exchange"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847331421929:android:26d8df970e7fdc39360a78",
+        "android_client_info": {
+          "package_name": "com.cartisan.app.cartisan_getx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "847331421929-9nu12sih4atfdvu6g5v5u3n3nm6e2ts4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cartisan.app.cartisan_getx",
+            "certificate_hash": "1f910715e0e43a1cb2dfa9f48152b16ca399b84f"
+          }
+        },
+        {
+          "client_id": "847331421929-tfmeinjtc443407f6ntsdaltk3b0hc3d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRVUbs_7il6dkyWaBPiS3EIuqM-KMZQis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "847331421929-tfmeinjtc443407f6ntsdaltk3b0hc3d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "847331421929-9ngu9fvd1haek0qmkna59ptqql439fu5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.cartisan.exchange"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847331421929:android:a90d15bbdec2230a360a78",
+        "android_client_info": {
+          "package_name": "com.silist.buddiesgram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "847331421929-tfmeinjtc443407f6ntsdaltk3b0hc3d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRVUbs_7il6dkyWaBPiS3EIuqM-KMZQis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "847331421929-tfmeinjtc443407f6ntsdaltk3b0hc3d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "847331421929-9ngu9fvd1haek0qmkna59ptqql439fu5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.cartisan.exchange"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -24,6 +24,7 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   fluttertoast: ^8.2.1
   progress_dialog_null_safe: ^1.0.7
+  firebase_core: ^2.9.0
   
 
 dev_dependencies: 
