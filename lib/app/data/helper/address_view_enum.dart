@@ -1,0 +1,1 @@
+enum AddressViewEnum { address, changeAddress }
