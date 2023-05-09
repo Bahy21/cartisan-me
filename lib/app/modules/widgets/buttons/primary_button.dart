@@ -36,11 +36,11 @@ class _PrimaryButtonState extends State<PrimaryButton>
     super.initState();
   }
 
-  void _tapDown(TapDownDetails details) {
+  void _tapDown(TapDownDetails _) {
     _controller.forward();
   }
 
-  void _tapUp(TapUpDetails details) {
+  void _tapUp(TapUpDetails _) {
     _controller.reverse();
   }
 

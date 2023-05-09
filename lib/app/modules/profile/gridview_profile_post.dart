@@ -1,3 +1,4 @@
+import 'package:cartisan/app/models/delivery_options.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/search/components/explore_card.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ class GridViewProfilePost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      itemCount: explore.length,
+      itemCount: 5, // TODO: ADD ACTUAL explore.length,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
@@ -24,10 +25,10 @@ class GridViewProfilePost extends StatelessWidget {
           child: SlideAnimation(
             verticalOffset: 50.0,
             child: FadeInAnimation(
-              child: ExploreCard(
-                onTap: () {},
-                post: explore[index],
-              ),
+              // child: ExploreCard(
+              //   onTap: () {},
+              //   post: ),
+              child: Placeholder(),
             ),
           ),
         );

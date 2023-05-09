@@ -1,3 +1,4 @@
+import 'package:cartisan/app/controllers/auth_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/auth/components/cartisan_logo.dart';
 import 'package:cartisan/app/modules/auth/components/custom_login_field.dart';
@@ -25,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailFocus = FocusNode();
   final TextEditingController _passwordController = TextEditingController();
   final _passwordFocus = FocusNode();
-
+  final ac = Get.find<AuthController>();
   @override
   void dispose() {
     _emailFocus.dispose();

@@ -25,6 +25,13 @@ dependencies:
   fluttertoast: ^8.2.1
   progress_dialog_null_safe: ^1.0.7
   firebase_core: ^2.9.0
+  firebase_auth:
+  cloud_firestore:
+  firebase_messaging:
+  firebase_storage:
+  cloud_functions:
+  dio: ^5.1.2
+  awesome_notifications:
   
 
 dev_dependencies: 

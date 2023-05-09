@@ -25,7 +25,7 @@ class SearchView extends StatelessWidget {
           SizedBox(height: 26.h),
           StaggeredGridView.countBuilder(
             crossAxisCount: 3,
-            itemCount: explore.length,
+            itemCount: 0,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
@@ -36,11 +36,12 @@ class SearchView extends StatelessWidget {
                   verticalOffset: 50.0,
                   child: FadeInAnimation(
                     child: Hero(
-                      tag: 'explore_card_${explore[index].id}',
-                      child: ExploreCard(
-                        onTap: () {},
-                        post: explore[index],
-                      ),
+                      tag: 'explore_card_1',
+                      // child: ExploreCard(
+                      //   onTap: () {},
+                      //   post: explore[index],
+                      // ),
+                      child: Placeholder(),
                     ),
                   ),
                 ),

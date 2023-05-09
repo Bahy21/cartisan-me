@@ -1,3 +1,4 @@
+import 'package:cartisan/app/controllers/auth_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/auth/components/cartisan_logo.dart';
 import 'package:cartisan/app/modules/auth/components/custom_login_field.dart';
@@ -16,6 +17,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final ac = Get.find<AuthController>();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final _nameFocus = FocusNode();
@@ -127,8 +130,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     } else if (value.length <= 8) {
                       return TranslationsService
                           .sigInPageTranslation.validPassword;
-                    } else if (_passwordController !=
-                        _confirmPasswordController) {
+                    } else if (_passwordController.text !=
+                        _confirmPasswordController.text) {
                       return TranslationsService
                           .sigUpPageTranslation.passwordNotMatch;
                     }
@@ -155,7 +158,18 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(height: 32.h),
                 PrimaryButton(
                   onTap: () {
-                    if (_formKey.currentState!.validate()) {}
+                    if (_formKey.currentState!.validate()) {
+                      ac.signUp(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        name: _nameController.text,
+                        isSeller: false,
+                        taxPercentage: 0,
+                        city: 'Miami',
+                        country: 'USA',
+                        state: 'LA',
+                      );
+                    }
                   },
                   text: TranslationsService.sigInPageTranslation.signUp,
                   width: 211.w,

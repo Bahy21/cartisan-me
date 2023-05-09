@@ -18,7 +18,7 @@ class ExploreCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(post.imageUrl),
+            image: AssetImage(post.images.first),
             fit: BoxFit.cover,
           ),
         ),

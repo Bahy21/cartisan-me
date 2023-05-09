@@ -10,14 +10,15 @@ class ListViewProfilePost extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: posts.length,
+      itemCount: 5, // TODO: ADD ACTUAL LENGTH
       separatorBuilder: (context, index) => SizedBox(height: 10.h),
       padding: EdgeInsets.symmetric(horizontal: 18.w),
       itemBuilder: (context, index) {
-        return PostCard(
-          post: posts[index],
-          index: index,
-        );
+        // return PostCard(
+        //   post: posts[index],
+        //   index: index,
+        // );
+        return Placeholder();
       },
     );
   }
