@@ -1,10 +1,8 @@
-import { firestore } from "firebase-admin";
 import { DeliveryOptions, } from "./enums";
 
 export class PostModel {
     postId:string;
     ownerId:string;
-    likes:Map<any,any>;
     username:string;
     description:string;
     productName:string;
@@ -12,8 +10,6 @@ export class PostModel {
     variants:string[];
     price: number;
     location:string;
-    url:string[];
-    reviewedBy:Map<any,any>;
     rating:number;
     images:string[];
     reviewCount: number;
@@ -23,13 +19,11 @@ export class PostModel {
     quantity:number;
     isProductInStock:boolean;
     archived: boolean;
-    postReference: firestore.DocumentReference;
     sellCount: number;
-    comments: Map<any,any>;
     commentCount: number;
     timestamp: number;
     constructor(
-      {postId,ownerId,username,description,productName,brand,variants,price,location,url,rating,reviewCount,likesCount ,images,selectedVariant,
+      {postId,ownerId,username,description,productName,brand,variants,price,location,rating,reviewCount,likesCount ,images,selectedVariant,
       deliveryOptions,quantity,isProductInStock,archived,sellCount, commentCount, timestamp}:
       {postId: string,
       ownerId:string,
@@ -40,7 +34,6 @@ export class PostModel {
       variants:string[],
       price: number,
       location:string,
-      url:string[],
       rating:number,
       images:string[],
       likesCount: number,
@@ -64,7 +57,6 @@ export class PostModel {
       this.variants = variants;
       this.price = price;
       this.location = location;
-      this.url = url;
       this.rating = rating;
       this.images = images;
       this.selectedVariant= selectedVariant;
@@ -92,7 +84,6 @@ export class PostModel {
         variants: this.variants,
         price: this.price,
         location: this.location,
-        url: this.url,
         rating: this.rating,
         images: this.images,
         selectedVariant: this.selectedVariant,
@@ -119,7 +110,6 @@ export class PostModel {
         "price": this.price,
         "description": this.description,
         "location": this.location,
-        "url": this.url,
         "archived": this.archived,
         "sellCount": this.sellCount,
         "timestamp": this.timestamp,

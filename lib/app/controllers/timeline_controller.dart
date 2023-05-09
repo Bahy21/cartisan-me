@@ -15,7 +15,7 @@ class TimelineController extends GetxController {
 
   Future<bool> fetchPosts() async {
     try {
-      final apiCall = '$apiRoot/v1/api/timeline/fetchPosts/${ac.user!.uid}';
+      final apiCall = '$apiRoot/api/timeline/fetchPosts/${ac.user!.uid}';
       final result = await dio.get<Map>(apiCall);
       if (result.statusCode != 200) {
         throw Exception('Error fetching posts');

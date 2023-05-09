@@ -119,23 +119,20 @@ class _LoginPageState extends State<LoginPage> {
                   text: TranslationsService.sigInPageTranslation.signIn,
                   width: 211.w,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      TranslationsService.sigInPageTranslation.noAccount,
-                      style: AppTypography.kLight14
-                          .copyWith(color: AppColors.kPrimary),
-                    ),
-                    CustomTextButton(
-                      onPressed: () {
-                        Get.to<Widget>(
-                          () => const SignUpPage(),
-                        );
-                      },
-                      text: TranslationsService.sigInPageTranslation.signUp,
-                    ),
-                  ],
+                SizedBox(
+                  height: 20,
+                ),
+                InkWell(
+                  onTap: () {
+                    Get.to<Widget>(
+                      () => const SignUpPage(),
+                    );
+                  },
+                  child: Text(
+                    '${TranslationsService.sigInPageTranslation.noAccount} ${TranslationsService.sigInPageTranslation.signUp}',
+                    style: AppTypography.kLight14
+                        .copyWith(color: AppColors.kPrimary),
+                  ),
                 ),
               ],
             ),

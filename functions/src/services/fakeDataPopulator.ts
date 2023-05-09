@@ -57,7 +57,6 @@ export class FakeDataPopulator {
           variants: options,
           price: parseInt(faker.commerce.price()),
           location: faker.address.streetAddress(),
-          url: [faker.image.imageUrl(null, null, null, true)],
           rating: faker.datatype.number({ max: 5, min: 1 }),
           reviewCount: 0,
           likesCount: 0,
@@ -73,12 +72,9 @@ export class FakeDataPopulator {
           
         }
       );
-      newPost.likes = await this.generateLikes(newPost.postId);
-      newPost.likesCount = Object.keys(newPost.likes).length;
-      newPost.comments = await this.generateComments(newPost.postId);
-      newPost.commentCount = Object.keys(newPost.comments).length;
-      newPost.reviewedBy = await this.generateReviewers(newPost.postId);
-      newPost.reviewCount = Object.keys(newPost.reviewedBy).length;
+      newPost.likesCount = await this.generateLikes(newPost.postId);
+      newPost.commentCount = await this.generateComments(newPost.postId);
+      newPost.reviewCount =  await this.generateReviewers(newPost.postId);
       await this.createUserPost(newPost.ownerId, newPost.postId, newPost);
     }
   }
@@ -102,11 +98,11 @@ export class FakeDataPopulator {
       for (const [key, _] of likes.entries()) {
         await db.likesCollection(postId).doc(key).set({ "timestamp": Date.now() });
       }
-      return likes;
+      return likes.size;
     } catch (error) {
       console.log("error generating likes");
       console.log(error);
-      return new Map();
+      return 0;
     }
   }
 
@@ -130,17 +126,17 @@ export class FakeDataPopulator {
       for (const [key, value] of comments.entries())  {
         await db.commentsCollection(postId).doc(key).set(value.toMap());
       }
-      return comments;
+      return comments.size;
     } catch (error) {
       log("error generating comments");
       log(error);
-      return new Map();
+      return 0;
     }
   }
   private getImages(count: number): string[] {
     let images = <string[]>[]
     for (let i = 0; i < count; i++) {
-      images.push(faker.image.imageUrl(null, null, null, true))
+      images.push(`https://placekitten.com/${faker.datatype.number({min: 200, max:1000})}/${faker.datatype.number({min: 200, max:1000})}`)
     }
     return images;
   }
@@ -162,11 +158,11 @@ export class FakeDataPopulator {
           await db.reviewCollection(postId).doc(key).set(value.toMap());
         }
       }
-      return reviews;
+      return reviews.size;
     } catch (error) {
       log("error in generateReviewers");
       log(error);
-      return new Map();
+      return 0;
     }
   }
 

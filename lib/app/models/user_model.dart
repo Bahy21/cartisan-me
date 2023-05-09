@@ -190,17 +190,27 @@ class UserModel {
       unreadMessageCount: map['unreadMessageCount'] as int? ?? 0,
       id: map['id'] as String? ?? '',
       profileName: map['profileName'] as String? ?? '',
-      taxPercentage: map['taxPercentage'] as double? ?? 0.0,
+      taxPercentage: map['taxPercentage'] != null
+          ? (map['taxPercentage'] as num).toDouble()
+          : 0.0,
       username: map['username'] as String? ?? '',
       url: map['url'] as String? ?? '',
       email: map['email'] as String? ?? '',
       bio: map['bio'] as String? ?? '',
       customerId:
           map['customer_id'] as String? ?? map['buyerID'] as String? ?? '',
-      shippingCost: map['shippingCost'] as double? ?? 0.0,
-      deliveryCost: map['deliveryCost'] as double? ?? 0.0,
-      freeShipping: map['freeShipping'] as double? ?? 0.0,
-      freeDelivery: map['freeDelivery'] as double? ?? 0.0,
+      shippingCost: map['shippingCost'] != null
+          ? (map['shippingCost'] as num).toDouble()
+          : 0.0,
+      deliveryCost: map['deliveryCost'] != null
+          ? (map['deliveryCost'] as num).toDouble()
+          : 0.0,
+      freeShipping: map['freeShipping'] != null
+          ? (map['freeShipping'] as num).toDouble()
+          : 0.0,
+      freeDelivery: map['freeDelivery'] != null
+          ? (map['freeDelivery'] as num).toDouble()
+          : 0.0,
       activeShipping: map['activeShipping'] as bool? ?? false,
       pickup: map['pickup'] as bool? ?? true,
       isDeliveryAvailable: map['isDeliveryAvailable'] as bool? ?? false,

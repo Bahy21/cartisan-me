@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,24 +43,42 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDvYPPjf56vOOfrOS_1HNZL0RVGXvGerS4',
+    appId: '1:75477652308:web:ac30492603dda63489aec1',
+    messagingSenderId: '75477652308',
+    projectId: 'cloud-function-practice-f911f',
+    authDomain: 'cloud-function-practice-f911f.firebaseapp.com',
+    storageBucket: 'cloud-function-practice-f911f.appspot.com',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDRVUbs_7il6dkyWaBPiS3EIuqM-KMZQis',
-    appId: '1:847331421929:android:c419466af1a4f9ce360a78',
-    messagingSenderId: '847331421929',
-    projectId: 'cartisan-production',
-    storageBucket: 'cartisan-production.appspot.com',
+    apiKey: 'AIzaSyDoSzpuz-VzFNCbvwiw5RB09tYV-AjaNLo',
+    appId: '1:75477652308:android:26bb96586a8d9a5a89aec1',
+    messagingSenderId: '75477652308',
+    projectId: 'cloud-function-practice-f911f',
+    storageBucket: 'cloud-function-practice-f911f.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAhT6CBs5LSi0mMW3K1_4QphL9YYwwhjgw',
-    appId: '1:847331421929:ios:2984005b88f71f2f360a78',
-    messagingSenderId: '847331421929',
-    projectId: 'cartisan-production',
-    storageBucket: 'cartisan-production.appspot.com',
-    androidClientId:
-        '847331421929-9nu12sih4atfdvu6g5v5u3n3nm6e2ts4.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCvmjgB8B527AhrnY7nlZNmQ0nPi5-hy7I',
+    appId: '1:75477652308:ios:e1891fd0753550bc89aec1',
+    messagingSenderId: '75477652308',
+    projectId: 'cloud-function-practice-f911f',
+    storageBucket: 'cloud-function-practice-f911f.appspot.com',
     iosClientId:
-        '847331421929-u53tk5kkbm7bv99qjteff5qdqqghgqkm.apps.googleusercontent.com',
+        '75477652308-1oauugaeoebdhkp41qs1kbeer2gb69f5.apps.googleusercontent.com',
+    iosBundleId: 'com.cartisan.app',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCvmjgB8B527AhrnY7nlZNmQ0nPi5-hy7I',
+    appId: '1:75477652308:ios:e1891fd0753550bc89aec1',
+    messagingSenderId: '75477652308',
+    projectId: 'cloud-function-practice-f911f',
+    storageBucket: 'cloud-function-practice-f911f.appspot.com',
+    iosClientId:
+        '75477652308-1oauugaeoebdhkp41qs1kbeer2gb69f5.apps.googleusercontent.com',
     iosBundleId: 'com.cartisan.app',
   );
 }

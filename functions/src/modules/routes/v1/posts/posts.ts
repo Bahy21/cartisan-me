@@ -45,7 +45,6 @@ router.post("/api/newPost/:userId", async (req, res) => {
       variants: req.body.variants as string[] ?? <string[]>[],
       price: req.body.price as number ?? 0,
       location: req.body.location as string ?? "",
-      url: req.body.url as string[] ?? <string[]>[],
       rating: req.body.rating as number ?? 0,
       reviewCount: req.body.reviewCount as number ?? 0,
       images: req.body.images as string[] ?? <string[]>[],

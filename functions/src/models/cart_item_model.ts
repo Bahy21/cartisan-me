@@ -15,14 +15,13 @@ export class CartItemModel {
   /// pirce in Cents
   priceInCents: number;
   discountInCents: number;
-  url: string[];
   images: string[];
   variants: string[];
   selectedVariant: string;
   quantity: number;
   constructor({cartItemId: itemId, postId, sellerId: ownerId, username, description, 
     productname, brand, deliveryOptions, price, discount, 
-    priceInCents, discountInCents, url, images, variants, 
+    priceInCents, discountInCents, images, variants, 
     selectedVariant, quantity}:{
       cartItemId:string,
       postId:string,
@@ -36,7 +35,6 @@ export class CartItemModel {
       discount:number,
       priceInCents:number,
       discountInCents:number,
-      url:string[],
       images:string[],
       variants:string[],
       selectedVariant:string,
@@ -53,7 +51,6 @@ export class CartItemModel {
       this.discount = discount;
       this.priceInCents = priceInCents;
       this.discountInCents = discountInCents;
-      this.url = url;
       this.images = images;
       this.variants = variants;
       this.selectedVariant = selectedVariant;
@@ -73,7 +70,6 @@ export class CartItemModel {
       discount: this.discount,
       priceInCents: this.priceInCents,
       discountInCents: this.discountInCents,
-      url: this.url,
       images: this.images,
       selectedVariant: this.selectedVariant,
       quantity: this.quantity,
@@ -97,7 +93,6 @@ export class CartItemModel {
       || this.discount == null
       || this.priceInCents == null
       || this.discountInCents == null
-      || this.url == null
       || this.images == null
       || this.selectedVariant == null
       || this.quantity == null

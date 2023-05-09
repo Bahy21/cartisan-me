@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:cartisan/api_root.dart';
 import 'package:cartisan/app/controllers/auth_controller.dart';
 import 'package:cartisan/app/models/user_model.dart';
@@ -16,11 +17,14 @@ class UserController extends GetxController {
   Future<UserModel?> fetchUser(String userId) async {
     try {
       final apiCall = '$apiRoot/api/user/getUser/$userId';
+      log(apiCall);
       final result = await dio.get<Map>(apiCall);
+      log(result.toString());
       if (result.statusCode != 200) {
         throw Exception('Error fetching posts');
       }
       final userMap = result.data!['data'] as Map<String, dynamic>;
+      log(userMap.toString());
       return UserModel.fromMap(userMap);
     } on Exception catch (e) {
       Get.snackbar(

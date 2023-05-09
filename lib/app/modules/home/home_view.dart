@@ -67,7 +67,7 @@ class _HomeViewState extends State<HomeView> {
         future: tc.fetchPosts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingDialog();
+            return const SizedBox(height: 200, child: LoadingDialog());
           }
           if (!snapshot.hasData || snapshot.data == false) {
             return const Center(
