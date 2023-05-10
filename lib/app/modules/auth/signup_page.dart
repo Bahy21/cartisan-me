@@ -1,10 +1,10 @@
-import 'package:cartisan/app/controllers/auth_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/auth/components/cartisan_logo.dart';
 import 'package:cartisan/app/modules/auth/components/custom_login_field.dart';
 import 'package:cartisan/app/modules/widgets/buttons/custom_text_button.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:cartisan/app/services/translation_service.dart';
+import 'package:cartisan/app/services/user_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,8 +17,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final ac = Get.find<AuthController>();
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final _nameFocus = FocusNode();
@@ -31,6 +29,20 @@ class _SignUpPageState extends State<SignUpPage> {
   final _confirmPasswordFocus = FocusNode();
   final TextEditingController _sellerController = TextEditingController();
   final _sellerFocus = FocusNode();
+
+  Future<void> _handleRegistration() async {
+    await UserAuthService().signUpWithEmailAndPassword(
+      email: _emailController.text,
+      password: _passwordController.text,
+      name: _nameController.text,
+      isSeller: false,
+      taxPercentage: 0,
+      city: 'Miami',
+      country: 'America',
+      state: 'LA',
+    );
+    Get.back<void>();
+  }
 
   @override
   void dispose() {
@@ -159,16 +171,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 PrimaryButton(
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
-                      ac.signUp(
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                        name: _nameController.text,
-                        isSeller: false,
-                        taxPercentage: 0,
-                        city: 'Miami',
-                        country: 'USA',
-                        state: 'LA',
-                      );
+                      _handleRegistration();
                     }
                   },
                   text: TranslationsService.sigInPageTranslation.signUp,

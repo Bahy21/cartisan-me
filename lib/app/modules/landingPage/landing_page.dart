@@ -29,7 +29,7 @@ class _LandingPageState extends State<LandingPage> {
       SearchView(),
       const CameraView(),
       const NotificationPageView(),
-      const StoreView(
+      StoreView(
         isProfileOwner: true,
       ),
     ];

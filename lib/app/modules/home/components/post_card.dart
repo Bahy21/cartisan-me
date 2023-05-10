@@ -39,9 +39,7 @@ class PostCard extends StatelessWidget {
         snapshot,
       ) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const SizedBox.shrink();
         }
         if (snapshot.data == null) {
           return const Center(

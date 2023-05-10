@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cartisan/app/bindings/initial_bindings.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/data/global_functions/global_functions.dart';
 import 'package:cartisan/app/modules/auth/auth_wrapper.dart';
 import 'package:cartisan/app/services/translation_service.dart';
 import 'package:cartisan/default_firebase_options.dart';
@@ -38,7 +39,7 @@ void main() async {
       log(e.toString());
     }
   }
-
+  await GlobalFunctions.initServicesAndControllers();
   FlutterNativeSplash.remove();
   runApp(const Main());
 }
@@ -61,7 +62,7 @@ class Main extends StatelessWidget {
           themeMode: ThemeMode.dark,
           locale: const Locale('en_US'),
           translations: TranslationService(),
-          home: const AuthWrapper(),
+          home: AuthWrapper(),
         );
       },
     );

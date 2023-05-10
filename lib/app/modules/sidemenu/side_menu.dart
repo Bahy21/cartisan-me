@@ -5,6 +5,7 @@ import 'package:cartisan/app/modules/sidemenu/orders/all_orders.dart';
 import 'package:cartisan/app/modules/sidemenu/settings/setting_view.dart';
 import 'package:cartisan/app/modules/sidemenu/transactions/transaction_view.dart';
 import 'package:cartisan/app/services/translation_service.dart';
+import 'package:cartisan/app/services/user_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -74,7 +75,9 @@ class SideMenu extends StatelessWidget {
           ),
           SideMenuItem(
             title: 'Log Out',
-            onTap: () {},
+            onTap: () {
+              UserAuthService().signOut();
+            },
           ),
         ],
       ),

@@ -6,18 +6,19 @@ import * as express from "express";
 const router = express.Router();
 
 // fetch timeline posts
-router.get("/api/timeline/fetchPosts/:userId", async(req,res)=>{
+router.get("/api/timeline/fetchPosts/:userId/:count", async(req,res)=>{
   try {
     
     const userId: string = req.params.userId;
+    const count: number = parseInt(req.params.count);
     const lastPostId: string = req.body.lastPostId;
     const postRef: CollectionReference = db.postsCollection;
     let queryDocs: QuerySnapshot;
     if (lastPostId == null){
-      queryDocs  = await postRef.orderBy("timestamp","desc").limit(10).get();
+      queryDocs  = await postRef.orderBy("timestamp","desc").limit(count).get();
     } else {
       const startAt = await postRef.doc(lastPostId).get();
-        queryDocs  = await postRef.orderBy("timestamp","desc").startAfter(startAt).limit(10).get();
+        queryDocs  = await postRef.orderBy("timestamp","desc").startAfter(startAt).limit(count).get();
     }
     let blockList:string[] = <string[]>[];
     await db

@@ -1,4 +1,3 @@
-import 'package:cartisan/app/controllers/auth_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/auth/components/cartisan_logo.dart';
 import 'package:cartisan/app/modules/auth/components/custom_login_field.dart';
@@ -9,6 +8,7 @@ import 'package:cartisan/app/modules/widgets/buttons/custom_text_button.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/services/translation_service.dart';
+import 'package:cartisan/app/services/user_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -26,7 +26,12 @@ class _LoginPageState extends State<LoginPage> {
   final _emailFocus = FocusNode();
   final TextEditingController _passwordController = TextEditingController();
   final _passwordFocus = FocusNode();
-  final ac = Get.find<AuthController>();
+
+  Future<void> _handleLogin() async {
+    await UserAuthService().signInWithEmailAndPassword(
+        email: _emailController.text, password: _passwordController.text);
+  }
+
   @override
   void dispose() {
     _emailFocus.dispose();
@@ -113,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                 PrimaryButton(
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
-                      Get.to<Widget>(() => const LandingPage());
+                      _handleLogin();
                     }
                   },
                   text: TranslationsService.sigInPageTranslation.signIn,

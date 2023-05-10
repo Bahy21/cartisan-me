@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/profile/components/custom_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -5,10 +8,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class EditStoreView extends StatelessWidget {
-  const EditStoreView({super.key});
-
+  EditStoreView({super.key});
+  final UserController uc = Get.find<UserController>();
+  final _avatarSize = 90;
   @override
   Widget build(BuildContext context) {
+    log(uc.currentUser.toString());
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -22,7 +27,10 @@ class EditStoreView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                log('stripe button pressed');
+                // TODO: ADD STRIPE.
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.kBlue,
                 shape: RoundedRectangleBorder(
@@ -47,25 +55,34 @@ class EditStoreView extends StatelessWidget {
                 border: Border.all(color: AppColors.kPrimary),
                 shape: BoxShape.circle,
               ),
-              child: Container(
-                height: 90.h,
-                width: 90.w,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      'https://randomuser.me/api/portraits/men/81.jpg',
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              child: SizedBox(
+                height: _avatarSize.w,
+                width: _avatarSize.w,
+                child: uc.currentUser?.url.isURL ?? false
+                    ? ClipOval(
+                        child: Image.network(
+                          uc.currentUser!.url,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : ClipOval(
+                        child: Material(
+                          child: Icon(
+                            Icons.person,
+                            size: 100.w,
+                            color: AppColors.kPrimary,
+                          ),
+                        ),
+                      ),
+                // TODO: FUCKING CENTER THAT ICON.
               ),
             ),
           ),
           SizedBox(height: 17.h),
-          Text('Thrift Store', style: AppTypography.kMedium16),
+          Text(uc.currentUser?.username ?? 'New User',
+              style: AppTypography.kMedium16),
           Text(
-            'Thriftstore@example.com',
+            uc.currentUser?.email ?? 'email',
             style:
                 AppTypography.kMedium14.copyWith(color: AppColors.kHintColor),
           ),

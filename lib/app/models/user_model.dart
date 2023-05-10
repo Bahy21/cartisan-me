@@ -47,7 +47,8 @@ class UserModel {
   String customerId;
 
   String uniqueStoreName;
-
+  int followerCount;
+  int followingCount;
   Database db = Database();
 
   /// Cost in Cents to ship to customer.
@@ -88,6 +89,8 @@ class UserModel {
     this.city = '',
     this.isSeller,
     this.uniqueStoreName = '',
+    this.followerCount = 0,
+    this.followingCount = 0,
   });
 
   @override
@@ -180,6 +183,8 @@ class UserModel {
       state: doc['state'] as String? ?? '',
       isSeller: doc['isSeller'] as bool? ?? false,
       uniqueStoreName: doc['uniqueStoreName'] as String? ?? '',
+      followerCount: doc['followerCount'] as int? ?? 0,
+      followingCount: doc['followingCount'] as int? ?? 0,
     );
 
     return user;
@@ -224,6 +229,8 @@ class UserModel {
       city: map['city'] as String? ?? '',
       uniqueStoreName: map['uniqueStoreName'] as String? ?? '',
       isSeller: map['isSeller'] as bool? ?? false,
+      followerCount: map['followerCount'] as int? ?? 0,
+      followingCount: map['followingCount'] as int? ?? 0,
     );
   }
 
@@ -264,6 +271,8 @@ class UserModel {
       'state': state,
       'city': city,
       'uniqueStoreName': uniqueStoreName,
+      'followerCount': followerCount,
+      'followingCount': followingCount,
     };
   }
 
@@ -281,6 +290,8 @@ class UserModel {
       'freeShipping': freeShipping,
       'freeDelivery': freeDelivery,
       'uniqueStoreName': uniqueStoreName,
+      'followerCount': followerCount,
+      'followingCount': followingCount,
     };
   }
 

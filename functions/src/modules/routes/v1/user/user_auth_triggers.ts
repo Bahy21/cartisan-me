@@ -3,6 +3,7 @@ import { UserModel } from "../../../../models/user_model";
 import * as db from "../../../../services/database";
 import * as functions from "firebase-functions";
 import { Request, Response } from "express";
+import { log } from "firebase-functions/logger";
 exports.createUserFireStore = functions.auth.user().onCreate(async (user) =>  {
     try {
     const userId = user.uid;
@@ -43,10 +44,16 @@ exports.createUserFireStore = functions.auth.user().onCreate(async (user) =>  {
       newUser.isSeller =  false;
       newUser.customerId = "";
       newUser.uniqueStoreName =  "";
-      await db.userCollection.doc(userId).set(newUser.toMap());
-      await db.userFollowingCollection(userId).doc(userId).set({userId: true})
+      const userDoc = await db.userCollection.doc(userId).get()
+      if(userDoc.exists){
+        await userDoc.ref.update(newUser.toMap());
+      } else {
+        await userDoc.ref.set(newUser.toMap());
+      }
+      await db.userFollowingCollection(userId).doc(userId).set({timestamp: Date.now()})
     } catch (error) {
-      await db.errorReportReference.add({error: error, date: Date.now()});
+      log(error);
+      await db.errorReportReference.add({error: JSON.stringify(error), date: Date.now()});
     }
   });
 exports.deleteUserFireStore = functions.auth.user().onDelete(async (user) =>  {
@@ -58,7 +65,8 @@ exports.deleteUserFireStore = functions.auth.user().onDelete(async (user) =>  {
       }
     );
   } catch (error) {
-    await db.errorReportReference.add({error: error, date: Date.now()});
+    log(error);
+    await db.errorReportReference.add({error: JSON.stringify(error), date: Date.now()});
   }
 });
 
