@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 class GlobalFunctions {
   static Future<void> initServicesAndControllers() async {
-    await Get.putAsync<AuthService>(() async => AuthService());
+    await Get..putAsync<AuthService>(() async => AuthService()); 
+    ..putAsync<CartService>(() async => CartService());
   }
 }

@@ -7,7 +7,7 @@ export class NotificationModel {
     timestamp: number;
     username: string;
     userProfileImg: string;
-    constructor({ownerId,userId,timestamp,username,type,userProfileImg}:{
+    constructor({ownerId,userId,timestamp,username,type}:{
       ownerId: string,
       userId: string,
       timestamp: number,

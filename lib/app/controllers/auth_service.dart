@@ -5,7 +5,7 @@ class AuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Rx<User?> firebaseUser = Rx<User?>(null);
 
-  User? get user => firebaseUser.value;
+  User? get currentUser => firebaseUser.value;
   bool get isLoading => _isLoading.value;
   set isLoading(bool value) => _isLoading.value = value;
   // ignore: prefer_final_fields
