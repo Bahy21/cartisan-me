@@ -110,4 +110,17 @@ class UserRepo {
       return false;
     }
   }
+  Future<bool> getUserFollowers(String userId,) async{
+    try{
+      final result = dio.get(_apiCalls.getApiCalls.getUserFollowers(userId:userId));
+      if(result.status != 200){
+        throw Exception('Something went wrong');
+      }
+      return true;
+    } on Exception catch(e){
+      log(e.toString());
+      Get.snackbar('Error', 'Something went wrong');
+      return false;
+    }
+  }
 }

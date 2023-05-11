@@ -30,6 +30,7 @@ class CartPageController extends GetxController {
   }
   
   
+  
   Future<void> getCart(){
     final result = dio.get(apiCalls.getApiCalls.getCart(_currentUid));
     if(result.isEmpty){
