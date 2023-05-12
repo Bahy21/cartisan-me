@@ -18,7 +18,8 @@ router.get("/api/timeline/fetchPosts/:userId/:count", async(req,res)=>{
       queryDocs  = await postRef.orderBy("timestamp","desc").limit(count).get();
     } else {
       const startAt = await postRef.doc(lastPostId).get();
-        queryDocs  = await postRef.orderBy("timestamp","desc").startAfter(startAt).limit(count).get();
+      const startPost = postFromDoc(startAt);
+        queryDocs  = await postRef.orderBy("timestamp","desc").startAfter(startPost.timestamp).limit(count).get();
     }
     let blockList:string[] = <string[]>[];
     await db

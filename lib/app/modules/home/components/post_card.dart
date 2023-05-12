@@ -1,5 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
@@ -7,7 +6,7 @@ import 'package:cartisan/app/modules/home/components/custom_drop_down.dart';
 import 'package:cartisan/app/modules/home/components/expandable_text.dart';
 import 'package:cartisan/app/modules/home/components/product_option_dialog.dart';
 import 'package:cartisan/app/modules/home/components/quantity_card.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cartisan/app/repositories/user_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -29,11 +28,10 @@ class PostCard extends StatelessWidget {
     super.key,
     this.buyNowCallback,
   });
-  final uc = Get.find<UserController>();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserModel?>(
-      future: uc.fetchUser(post.ownerId),
+      future: UserRepo().fetchUser(post.ownerId),
       builder: (
         context,
         snapshot,
@@ -51,6 +49,7 @@ class PostCard extends StatelessWidget {
           delay: Duration(milliseconds: index * 50),
           duration: Duration(milliseconds: (index * 50) + 800),
           child: Container(
+            margin: EdgeInsets.only(bottom: 20.h),
             padding: EdgeInsets.only(
               left: 9.w,
               right: AppSpacing.eightHorizontal,
@@ -71,7 +70,7 @@ class PostCard extends StatelessWidget {
                       radius: 30.r,
                       backgroundColor: AppColors.kPrimary,
                       child: user.url.isURL
-                          ? ClipOval(child: Image.network(user.url))
+                          ? ClipOval(child: imageWithCatch(user.url))
                           : Text(
                               user.username,
                               style: AppTypography.kMedium18
@@ -190,5 +189,13 @@ class PostCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget imageWithCatch(String url) {
+    try {
+      return Image.network(url);
+    } on Exception catch (e) {
+      return Icon(Icons.person_2_rounded, color: Colors.pink.shade800);
+    }
   }
 }

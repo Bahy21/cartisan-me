@@ -26,3 +26,5 @@ router.get("/api/notifications/getNotifications/:userId", async (req, res) => {
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
+
+module.exports = router;

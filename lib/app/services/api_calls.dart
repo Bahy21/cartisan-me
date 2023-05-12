@@ -1,64 +1,85 @@
-class ApiCalls{
-  static String apiRoot =
+const String apiRoot =
     'http://10.0.2.2:5001/cloud-function-practice-f911f/us-central1/app/v1';
 
+class ApiCalls {
   GetApiCalls getApiCalls = GetApiCalls();
   PostApiCalls postApiCalls = PostApiCalls();
   PutApiCalls putApiCalls = PutApiCalls();
   DeleteApiCalls deleteApiCalls = DeleteApiCalls();
 }
 
-
-
-class GetApiCalls{
-  static String createUser(String userId)=> '/api/user/getUser/$userId';
-  static String getAllUserPosts(String userId)=> '/api/user/getAllPosts/$userId';
-  static String getPost(String postId) => '/api/post/getPost/$postId';
-  static String isFollowing({required String userId, required String followId}) => '/api/social/isFollowing/$userId/$followId';
-  static String getFollowing(String userId) => '/api/social/getFollowing/$userId';
-  static String getFollowers(String userId) => '/api/social/getFollowers/$userId';
-  static String isBlocked({required String blockerId, required String blockedId}) => '/api/social/isBlocked/$blockerId/$blockedId'
-  static String getBlockList(String userId) => '/api/social/getBlockList/$userId';
-  static String getPostsFromCart(String userId) => 'api/user/getPostsFromCart/$userId';
-  static String getCart(String userId) => 'api/user/getCart/$userId';
-  static String getTimeline(String userId) => '/api/timeline/fetchPosts/$userId';
-  static String isLiked({required String userId, required String postId}) => '/api/social/isLiked/$userId/$postId';
-  static String getLikes(String postId) => '/api/social/getLikes/$postId';
-  static String getComments(String postId) => '/api/post/comments/getComments/$postId';
-  static String getOrderItems(String orderId) => '/api/order/getOrders/$orderId';
-}
-class PostApiCalls{
-  static String createUser(String userId) => '/api/user/createUser/$userId';
-  static String createPost(String userId) => '/api/newPost/$userId';
-  static String createReview(String postId) => '/api/review/postReview/$postId';
-  static String createComment(String postId) => '/api/post/comments/newComment/$postId';
-  static String createOrder(String userId) => '/api/order/newOrder/$userId';
-}
-
-class PutApiCalls{
-  static String addAddress(String userId) => '/api/user/addAddress/$userId';
-  static String updateArea(String userId) => '/api/user/updateArea/$userId';
-  static String updateDeliveryInfo(String userId) => '/api/user/updateDeliveryInfo/$userId';
-  static String followUser({required String userId, required String followId}) => '/api/user/followUser/$userId/$followId';
-  static String blockUser({required String blockerId, required String blockedId}) => '/api/social/blockUser/$blockerId/$blockedId';
-  static String addToCart({required String postId, required String userId}) => '/api/cart/addToCart/$userId/$postId';
-  static String likePost({required String userId, required String postId}) => '/api/post/likePost/$userId/$postId';
-  static String updateOrderStatus(String orderId) => '/api/order/updateOrderStatus/$orderId';
-  static String updateOrderItemStatus(String orderId) => '/api/order/updateOrderItemStatus/$orderId';
-
+class GetApiCalls {
+  String getUser(String userId) => '$apiRoot/api/user/getUser/$userId';
+  String getAllUserPosts(String userId) =>
+      '$apiRoot/api/user/getAllPosts/$userId';
+  String getPost(String postId) => '$apiRoot/api/post/getPost/$postId';
+  String isFollowing({required String userId, required String followId}) =>
+      '$apiRoot/api/social/isFollowing/$userId/$followId';
+  String getFollowing(String userId) =>
+      '$apiRoot/api/social/getFollowing/$userId';
+  String getFollowers(String userId) =>
+      '$apiRoot/api/social/getFollowers/$userId';
+  String isBlocked({required String blockerId, required String blockedId}) =>
+      '$apiRoot/api/social/isBlocked/$blockerId/$blockedId';
+  String getBlockList(String userId) =>
+      '$apiRoot/api/social/getBlockList/$userId';
+  String getPostsFromCart(String userId) => 'api/user/getPostsFromCart/$userId';
+  String getCart(String userId) => 'api/user/getCart/$userId';
+  String getTimeline(String userId, {int count = 10}) =>
+      '$apiRoot/api/timeline/fetchPosts/$userId/$count';
+  String isLiked({required String userId, required String postId}) =>
+      '$apiRoot/api/social/isLiked/$userId/$postId';
+  String getLikes(String postId) => '$apiRoot/api/social/getLikes/$postId';
+  String getComments(String postId) =>
+      '$apiRoot/api/post/comments/getComments/$postId';
+  String getOrderItems(String orderId) =>
+      '$apiRoot/api/order/getOrders/$orderId';
+  String getNotifications(String userId) =>
+      '$apiRoot/api/notifications/getNotifications/$userId';
 }
 
-class DeleteApiCalls{
-  static String deletePost(String uid) => '/api/post/deletePost/$postId';
-  static String unfollowUser(String uid) => '/api/user/unfollowUser/$userId';
-  static String unblockUser({required String blockerId, required String blockedId}) =>'/api/social/unblockUser/$blockerId/$blockedId'
-  static String deleteFromCart({required String postId, required String uid}) => '/api/cart/deleteFromCart/$userId/$postId';
-  static String clearCart(String uid) => '/api/cart/clearCart/$userId';
-  static String unlikePost({required String userId, required String postId}) => '/api/post/unlikePost/$userId/$postId';
-  static String deleteComment({required String postId, required String commentId}) =>'/api/post/comments/deleteComment/$postId/$commentId';
-  static String cancelOrder(String orderId) => '/api/order/deleteOrder/$orderId';
+class PostApiCalls {
+  String createUser(String userId) => '$apiRoot/api/user/createUser/$userId';
+  String createPost(String userId) => '$apiRoot/api/newPost/$userId';
+  String createReview(String postId) =>
+      '$apiRoot/api/review/postReview/$postId';
+  String createComment(String postId) =>
+      '$apiRoot/api/post/comments/newComment/$postId';
+  String createOrder(String userId) => '$apiRoot/api/order/newOrder/$userId';
 }
 
+class PutApiCalls {
+  String addAddress(String userId) => '$apiRoot/api/user/addAddress/$userId';
+  String updateArea(String userId) => '$apiRoot/api/user/updateArea/$userId';
+  String updateDeliveryInfo(String userId) =>
+      '$apiRoot/api/user/updateDeliveryInfo/$userId';
+  String followUser({required String userId, required String followId}) =>
+      '$apiRoot/api/user/followUser/$userId/$followId';
+  String blockUser({required String blockerId, required String blockedId}) =>
+      '$apiRoot/api/social/blockUser/$blockerId/$blockedId';
+  String addToCart({required String postId, required String userId}) =>
+      '$apiRoot/api/cart/addToCart/$userId/$postId';
+  String likePost({required String userId, required String postId}) =>
+      '$apiRoot/api/post/likePost/$userId/$postId';
+  String updateOrderStatus(String orderId) =>
+      '$apiRoot/api/order/updateOrderStatus/$orderId';
+  String updateOrderItemStatus(String orderId) =>
+      '$apiRoot/api/order/updateOrderItemStatus/$orderId';
+}
 
-
-
+class DeleteApiCalls {
+  String deletePost(String postId) => '$apiRoot/api/post/deletePost/$postId';
+  String unfollowUser({required String userId, required String followId}) =>
+      '$apiRoot/api/user/unfollowUser/$userId/$followId';
+  String unblockUser({required String blockerId, required String blockedId}) =>
+      '$apiRoot/api/social/unblockUser/$blockerId/$blockedId';
+  String deleteFromCart({required String postId, required String userId}) =>
+      '$apiRoot/api/cart/deleteFromCart/$userId/$postId';
+  String clearCart(String userId) => '$apiRoot/api/cart/clearCart/$userId';
+  String unlikePost({required String userId, required String postId}) =>
+      '$apiRoot/api/post/unlikePost/$userId/$postId';
+  String deleteComment({required String postId, required String commentId}) =>
+      '$apiRoot/api/post/comments/deleteComment/$postId/$commentId';
+  String cancelOrder(String orderId) =>
+      '$apiRoot/api/order/deleteOrder/$orderId';
+}

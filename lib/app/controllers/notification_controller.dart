@@ -1,42 +1,58 @@
-class NotificationController extends GetXController{
-  Rx<List<NotificationModel>> _notifications = Rx<List<NotificationModel>>(<NotificationModel>[]);
+import 'dart:developer';
+import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/models/notification_model.dart';
+import 'package:cartisan/app/services/api_calls.dart';
+import 'package:dio/dio.dart';
+import 'package:get/get.dart';
+
+class NotificationController extends GetxController {
+  final dio = Dio();
+  final apiCalls = ApiCalls();
+  final as = Get.find<AuthService>();
+
   List<NotificationModel> get notifications => _notifications.value;
-
-
-  Rxbool _isLoading = true.obs;
   bool get isLoading => _isLoading.value;
-  RxInt _totalNotificationsLoaded = 0.obs;
-  int get totalNotificationsLoaded => _totalPostsLoaded.value;
-  Rxbool _isNotifcationsLoading = false.obs;
+  int get totalNotificationsLoaded => _totalNotificationsLoaded.value;
   bool get isNotifcationsLoading => _isNotifcationsLoading.value;
 
-  String get _currentUid => FirebaseAuth.instance.currentUser!.uid;
+  Rx<List<NotificationModel>> _notifications =
+      Rx<List<NotificationModel>>(<NotificationModel>[]);
+  RxBool _isLoading = true.obs;
+  RxInt _totalNotificationsLoaded = 0.obs;
+  RxBool _isNotifcationsLoading = false.obs;
 
+  String get _currentUid => as.currentUser!.uid;
 
   Future<void> fetchNotifications({bool isRefresh = false}) async {
     _isNotifcationsLoading.value = true;
-    if(isRefresh) {
+    if (isRefresh) {
       _isLoading.value = true;
     }
-    List<NotificationModel> newPosts = <NotificationModel>[];
+    List<NotificationModel> newNotificatoins = <NotificationModel>[];
     log('fetching posts on init');
     String? lastId;
-    if(timelinePosts.value.length.isNotEmpty && !isRefresh){
-      lastId = timelinePosts.value.last.postId;s
+    if (_notifications.value.isNotEmpty && !isRefresh) {
+      lastId = _notifications.value.last.notificationId;
     }
-    final results = dio.get(apiCalls.getApiCalls.getNotifications(_currentUid), data:{'lastNotificationId': lastNotificationId});
-    if (results.isEmpty){
+    final results = await dio.get<Map>(
+      apiCalls.getApiCalls.getNotifications(_currentUid),
+      data: {'lastNotificationId': lastId},
+    );
+    final notificationsGotten = results.data!['data'] as List;
+    if (notificationsGotten.isEmpty) {
       _isNotifcationsLoading.value = false;
       _isLoading.value = false;
       return;
     }
+    List<NotificationModel> newNotifications = [];
     _totalNotificationsLoaded.value = isRefresh
-        ? results.length
-        : _totalNotificationsLoaded.value + results.length;
-    for(final post in results){
-      newPosts.add(NotificationModels.fromMap(post.data() as Map<String, dynamic>));
+        ? notificationsGotten.length
+        : _totalNotificationsLoaded.value + notificationsGotten.length;
+    for (final notification in notificationsGotten) {
+      newNotifications
+          .add(NotificationModel.fromMap(notification as Map<String, dynamic>));
     }
-    _notifications.value = [...notifications,...newPosts];
+    _notifications.value = [...notifications, ...newNotifications];
     _isNotifcationsLoading.value = false;
     _isLoading.value = false;
   }

@@ -20,7 +20,7 @@ class AuthWrapper extends StatelessWidget {
           ),
         );
       }
-      if (authService.user == null) {
+      if (authService.currentUser == null) {
         return const LoginPage();
       }
       return GetBuilder(

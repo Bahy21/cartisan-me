@@ -2,6 +2,7 @@ import 'package:cartisan/app/controllers/timeline_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/cart/cart_view_pages.dart';
+import 'package:cartisan/app/modules/home/components/custom_post_scroller.dart';
 import 'package:cartisan/app/modules/home/components/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +25,6 @@ class _HomeViewState extends State<HomeView> {
   final tc = Get.find<TimelineController>();
 
   final ScrollController _scrollController = ScrollController();
- 
 
   @override
   Widget build(BuildContext context) {
@@ -62,19 +62,21 @@ class _HomeViewState extends State<HomeView> {
         children: [
           SizedBox(height: AppSpacing.twentyFourVertical),
           Expanded(
-            child: CustomPostScroller(
-              children: [
-                for (final post in tc.timelinePosts)
-                  PostCard(
-                    post: post,
-                    index: tc.timelinePosts.indexOf(post),
-                  ),
-              ],
-              scrollController: _scrollController,
+            child: GetX<TimelineController>(
+              builder: (controller) => CustomPostScroller(
+                children: [
+                  for (final post in tc.timelinePosts)
+                    PostCard(
+                      post: post,
+                      index: tc.timelinePosts.indexOf(post),
+                    ),
+                ],
+                scrollController: _scrollController,
+              ),
             ),
           ),
         ],
-      )
+      ),
     );
   }
 }
