@@ -15,25 +15,53 @@ class CartController extends GetxController {
   List<CartItemModel> get cart => _cart.value;
   Rx<List<CartItemModel>> _cart = Rx<List<CartItemModel>>([]);
   String get _currentUid => as.currentUser!.uid;
-  RxBool _isCartEmpty = false.obs;
+  RxBool _isCartEmpty = true.obs;
   @override
-  void onReady() {
+  void onInit() {
     getCart();
     super.onInit();
   }
 
   Future<void> getCart() async {
+    _cart.value = [];
+    log('get cart called');
     final result =
         await dio.get<Map>(apiCalls.getApiCalls.getCart(_currentUid));
     final cartItems = result.data!['data'] as List;
     if (cartItems.isEmpty) {
+      _isCartEmpty.value = true;
       log('cart is empty');
+      return;
+    }
+    if (cartItems.isEmpty) {
       return;
     }
     for (final cartItem in cartItems) {
       cart.add(CartItemModel.fromMap(cartItem as Map<String, dynamic>));
     }
     _isCartEmpty.value = false;
+  }
+
+  Future<void> deleteCartItem(String cartItemId) async {
+    final confirmation =
+        await dio.delete<Map>(apiCalls.deleteApiCalls.deleteCartItem(
+      userId: _currentUid,
+      itemId: cartItemId,
+    ));
+    if (confirmation.statusCode != 200) {
+      log(confirmation.toString());
+      Get.snackbar('Error', 'Something went wrong');
+      return;
+    }
+    for (var cartItem in cart) {
+      if (cartItem.cartItemId == cartItemId) {
+        cart.remove(cartItem);
+        break;
+      }
+    }
+    if (cart.isEmpty) {
+      _isCartEmpty.value = true;
+    }
   }
 
   Future<void> clearCart() async {

@@ -31,7 +31,13 @@ class _CartViewState extends State<CartView> {
                     cartItem: controller.cart[index],
                     deleteCallback: () {
                       Get.dialog<void>(DeleteCartItemDialog(
-                        deleteConfirmationCallback: () {},
+                        deleteConfirmationCallback: () {
+                          controller.deleteCartItem(
+                            controller.cart[index].cartItemId,
+                          );
+                          Get.back<void>();
+                          controller.getCart();
+                        },
                       ));
                     },
                   ),

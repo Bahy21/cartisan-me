@@ -1,6 +1,7 @@
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ExploreCard extends StatelessWidget {
   final PostModel post;
@@ -17,10 +18,13 @@ class ExploreCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(post.images.first),
-            fit: BoxFit.cover,
-          ),
+          image: post.images.first.isURL
+              ? DecorationImage(
+                  image: NetworkImage(post.images.first),
+                  fit: BoxFit.cover,
+                )
+              : null,
+          color: AppColors.kGrey2,
         ),
       ),
     );

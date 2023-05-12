@@ -35,7 +35,7 @@ class _LandingPageState extends State<LandingPage> {
     ];
     return Scaffold(
       key: scaffoldKey,
-      drawer: const SideMenu(),
+      drawer: SideMenu(),
       body: pages[_currentIndex],
       bottomNavigationBar: CustomBottomBar(
         currentIndex: _currentIndex,

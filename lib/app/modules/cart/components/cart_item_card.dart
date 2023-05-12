@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/cart_item_model.dart';
 import 'package:cartisan/app/modules/home/components/quantity_card.dart';
+import 'package:cartisan/app/services/api_calls.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class CartItemCard extends StatelessWidget {
   final CartItemModel cartItem;
@@ -15,6 +21,28 @@ class CartItemCard extends StatelessWidget {
     this.isOrderSummaryView = false,
     super.key,
   });
+  Future<void> setNewAmount(int quantity) async {
+    final result = await Dio().put<Map>(
+      ApiCalls().putApiCalls.setCartItemCount(
+            userId: FirebaseAuth.instance.currentUser!.uid,
+            cartItemId: cartItem.cartItemId,
+          ),
+      data: jsonEncode(
+        {
+          'amount': quantity,
+        },
+      ),
+    );
+    if (result.statusCode == 200) {
+      cartItem.quantity = quantity;
+    } else {
+      Get.snackbar(
+        'Error',
+        'Something went wrong',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +64,12 @@ class CartItemCard extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(6.r),
                 ),
+                child: cartItem.images.isNotEmpty
+                    ? Image.network(
+                        cartItem.images.first,
+                        fit: BoxFit.contain,
+                      )
+                    : SizedBox.shrink(),
               ),
               SizedBox(width: 10.w),
               Column(
@@ -46,7 +80,7 @@ class CartItemCard extends StatelessWidget {
                     style: AppTypography.kExtraLight12,
                   ),
                   SizedBox(
-                    width: 100.w,
+                    width: 170.w,
                     child: Text(
                       cartItem.description,
                       style: AppTypography.kBold14,
@@ -79,7 +113,8 @@ class CartItemCard extends StatelessWidget {
                   SizedBox(height: 30.h),
                   if (!isOrderSummaryView)
                     QuantityCard(
-                      onChanged: (quantity) {},
+                      quantity: cartItem.quantity,
+                      onChanged: setNewAmount,
                       isCartView: true,
                     )
                   else

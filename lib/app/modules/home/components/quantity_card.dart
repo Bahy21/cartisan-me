@@ -5,7 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class QuantityCard extends StatefulWidget {
   final ValueChanged<int> onChanged;
   final bool isCartView;
-  const QuantityCard({
+  int quantity;
+  QuantityCard({
+    required this.quantity,
     required this.onChanged,
     this.isCartView = false,
     super.key,
@@ -16,21 +18,20 @@ class QuantityCard extends StatefulWidget {
 }
 
 class _QuantityCardState extends State<QuantityCard> {
-  int quantity = 1;
-
   void incrementQuantity() {
     setState(() {
-      quantity++;
+      widget.quantity++;
     });
-    widget.onChanged(quantity);
+    widget.onChanged(widget.quantity);
   }
 
   void decrementQuantity() {
-    setState(() {
-      quantity--;
-    });
-
-    widget.onChanged(quantity);
+    if (widget.quantity > 1) {
+      setState(() {
+        widget.quantity--;
+      });
+      widget.onChanged(widget.quantity);
+    }
   }
 
   @override
@@ -46,19 +47,21 @@ class _QuantityCardState extends State<QuantityCard> {
         Row(
           children: [
             QuantityValueCard(
+              isDisabled: widget.quantity <= 1,
               onTap: decrementQuantity,
               icon: Icons.remove,
               isCartView: widget.isCartView,
             ),
             SizedBox(width: AppSpacing.thirteenHorizontal),
             Text(
-              quantity.toString(),
+              widget.quantity.toString(),
               style: widget.isCartView
                   ? AppTypography.kMedium14
                   : AppTypography.kMedium16,
             ),
             SizedBox(width: AppSpacing.thirteenHorizontal),
             QuantityValueCard(
+              isDisabled: false,
               onTap: incrementQuantity,
               icon: Icons.add,
               isCartView: widget.isCartView,
@@ -71,10 +74,12 @@ class _QuantityCardState extends State<QuantityCard> {
 }
 
 class QuantityValueCard extends StatelessWidget {
+  final bool isDisabled;
   final VoidCallback onTap;
   final IconData icon;
   final bool isCartView;
   const QuantityValueCard({
+    required this.isDisabled,
     required this.onTap,
     required this.icon,
     this.isCartView = false,
@@ -83,6 +88,7 @@ class QuantityValueCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final buttonColor = AppColors.kWhite.withOpacity(isDisabled ? 0.5 : 1);
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -92,11 +98,15 @@ class QuantityValueCard extends StatelessWidget {
           borderRadius:
               BorderRadius.circular(isCartView ? 100.h : AppSpacing.tenRadius),
           border: Border.all(
-            color: AppColors.kWhite,
+            color: buttonColor,
             width: 1.w,
           ),
         ),
-        child: Icon(icon, size: isCartView ? 10.sp : 16.sp),
+        child: Icon(
+          icon,
+          size: isCartView ? 10.sp : 16.sp,
+          color: buttonColor,
+        ),
       ),
     );
   }

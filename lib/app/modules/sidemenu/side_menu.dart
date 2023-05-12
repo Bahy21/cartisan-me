@@ -1,3 +1,4 @@
+import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/sidemenu/components/custom_drawer_header.dart';
 import 'package:cartisan/app/modules/sidemenu/components/side_menu_item.dart';
@@ -11,7 +12,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class SideMenu extends StatelessWidget {
-  const SideMenu({super.key});
+  final uc = Get.find<UserController>();
+  SideMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +31,28 @@ class SideMenu extends StatelessWidget {
                   bottom: 0,
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 60.r,
-                        backgroundImage: const NetworkImage(
-                          'https://randomuser.me/api/portraits/men/81.jpg',
+                      if (uc.currentUser?.url.isURL ?? false)
+                        CircleAvatar(
+                          radius: 60.r,
+                          backgroundImage: const NetworkImage(
+                            'https://randomuser.me/api/portraits/men/81.jpg',
+                          ),
+                        )
+                      else
+                        ClipOval(
+                          child: Material(
+                            child: Icon(
+                              Icons.person,
+                              size: 100.w,
+                              color: AppColors.kPrimary,
+                            ),
+                          ),
                         ),
-                      ),
                       SizedBox(height: 14.h),
-                      Text('Thrift Store', style: AppTypography.kBold16),
+                      Text(uc.currentUser?.username ?? 'New User',
+                          style: AppTypography.kBold16),
                       Text(
-                        'Example@zeepalm.com',
+                        uc.currentUser?.email ?? 'No email found',
                         style: AppTypography.kBold14
                             .copyWith(color: AppColors.kHintColor),
                       ),

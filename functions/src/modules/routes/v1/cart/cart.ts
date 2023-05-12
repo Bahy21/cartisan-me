@@ -122,6 +122,22 @@ router.get("/api/user/getCart/:userId", async(req,res)=>{
   }
 });
 
+// set cart item count
+router.put("/api/user/setCartItemCount/:userId/:cartItemId", async(req,res)=>{
+  try {
+    const userId: string = req.params.userId;
+    const itemId: string = req.params.cartItemId;
+    const amount: number = parseInt(req.body.amount) ; 
+    const cartRef = db.userCartCollection(userId).doc(itemId);
+    cartRef.update({'quantity': amount});
+    return res.status(200).send({status: "Success"});
+  } catch (error) {
+    log(error);
+    return res.status(500).send({status: "Failed", msg: error.message});
+  }
+});
+
+
 async function deleteQueryBatch(db, query, resolve) {
   const snapshot = await query.get();
 

@@ -68,6 +68,16 @@ class PutApiCalls {
       '$apiRoot/api/order/updateOrderItemStatus/$orderId';
   String updateUserDetails(String userId) =>
       '$apiRoot/api/user/updateUser/$userId';
+  String setCartItemCount({
+    required String userId,
+    required String cartItemId,
+  }) =>
+      '$apiRoot/api/user/setCartItemCount/$userId/$cartItemId';
+  String decrementCartItem({
+    required String userId,
+    required String cartItemId,
+  }) =>
+      '$apiRoot/api/user/decrementCartItem/$userId/$cartItemId';
 }
 
 class DeleteApiCalls {
@@ -76,8 +86,8 @@ class DeleteApiCalls {
       '$apiRoot/api/user/unfollowUser/$userId/$followId';
   String unblockUser({required String blockerId, required String blockedId}) =>
       '$apiRoot/api/social/unblockUser/$blockerId/$blockedId';
-  String deleteFromCart({required String postId, required String userId}) =>
-      '$apiRoot/api/cart/deleteFromCart/$userId/$postId';
+  String deleteCartItem({required String itemId, required String userId}) =>
+      '$apiRoot/api/user/deleteFromCart/$userId/$itemId';
   String clearCart(String userId) => '$apiRoot/api/cart/clearCart/$userId';
   String unlikePost({required String userId, required String postId}) =>
       '$apiRoot/api/post/unlikePost/$userId/$postId';

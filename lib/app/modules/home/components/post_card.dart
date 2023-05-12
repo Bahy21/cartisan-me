@@ -19,8 +19,7 @@ class PostCard extends StatelessWidget {
   final VoidCallback? addToCartCallback;
   final VoidCallback? buyNowCallback;
   final VoidCallback? reportCallback;
-  int quantity = 0;
-  PostCard({
+  const PostCard({
     required this.index,
     required this.post,
     this.addToCartCallback,
@@ -166,8 +165,9 @@ class PostCard extends StatelessWidget {
                   Expanded(
                     flex: 6,
                     child: QuantityCard(
+                      quantity: post.quantity,
                       onChanged: (quantity) {
-                        quantity = quantity;
+                        post.quantity = quantity;
                       },
                     ),
                   ),
