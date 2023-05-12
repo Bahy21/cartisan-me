@@ -5,7 +5,9 @@ class CustomSwitch extends StatelessWidget {
   final String text;
   final bool value;
   final Function(bool) onChanged;
+  final bool isDisabled;
   const CustomSwitch({
+    required this.isDisabled,
     required this.text,
     required this.value,
     required this.onChanged,
@@ -20,22 +22,24 @@ class CustomSwitch extends StatelessWidget {
         Text(
           text,
           style: AppTypography.kExtraLight12.copyWith(
-            color: value?AppColors.kPrimary:AppColors.kHintColor,
+            color: value
+                ? AppColors.kPrimary.withOpacity(isDisabled ? 0.5 : 1)
+                : AppColors.kHintColor.withOpacity(isDisabled ? 0.5 : 1),
           ),
         ),
         Switch(
           value: value,
-          activeColor: AppColors.kPrimary,
+          activeColor: AppColors.kPrimary.withOpacity(isDisabled ? 0.5 : 1),
           inactiveThumbColor: AppColors.kLightGrey,
           trackColor: MaterialStateProperty.resolveWith<Color>(
             (states) {
               if (states.contains(MaterialState.disabled)) {
-                return AppColors.kWhite;
+                return AppColors.kWhite.withOpacity(isDisabled ? 0.5 : 1);
               }
-              return AppColors.kWhite;
+              return AppColors.kWhite.withOpacity(isDisabled ? 0.5 : 1);
             },
           ),
-          onChanged: onChanged,
+          onChanged: isDisabled ? null : onChanged,
         ),
       ],
     );

@@ -1,13 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+
 import 'package:cartisan/app/models/delivery_options.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/services/database.dart';
 
 class CartItemModel {
-  String itemId;
+  String cartItemId;
   String postId;
-  String ownerId;
+  String sellerId;
+  String username;
   String description;
   String productname;
   String brand;
@@ -21,7 +26,7 @@ class CartItemModel {
   int priceInCents;
   int discountInCents;
   List<String> images;
-  String variant;
+  String selectedVariant;
   List<String> variants;
   int quantity;
 
@@ -31,9 +36,10 @@ class CartItemModel {
   double get netPrice => price - discount;
 
   CartItemModel({
-    required this.itemId,
+    required this.cartItemId,
     required this.postId,
-    required this.ownerId,
+    required this.sellerId,
+    required this.username,
     required this.description,
     required this.productname,
     required this.brand,
@@ -43,83 +49,39 @@ class CartItemModel {
     required this.priceInCents,
     required this.discountInCents,
     required this.images,
-    required this.variant,
-    required this.quantity,
+    required this.selectedVariant,
     required this.variants,
+    required this.quantity,
   });
 
   factory CartItemModel.fromMap(Map<String, dynamic> map) {
     return CartItemModel(
-      itemId: map['itemId'] as String,
+      cartItemId: map['cartItemId'] as String,
       postId: map['postId'] as String,
-      ownerId: map['ownerId'] as String,
+      sellerId: map['sellerId'] as String,
+      username: map['username'] as String,
       description: map['description'] as String,
       productname: map['productname'] as String,
       brand: map['brand'] as String,
-      price: map['price'] as double,
-      discount: map['discount'] as double,
-      priceInCents: map['priceInCents'] as int,
-      discountInCents: map['discountInCents'] as int,
-      images: map['images'] as List<String>,
-      variant: map['variant'] as String,
-      quantity: map['quantity'] as int,
-      variants: map['variants'] as List<String>,
       deliveryOptions: map['deliveryOptions'] != null
           ? DeliveryOptions.values[map['deliveryOptions'] as int]
           : null,
+      price: (map['price'] as num).toDouble(),
+      discount: (map['discount'] as num).toDouble(),
+      priceInCents: map['priceInCents'] as int,
+      discountInCents: map['discountInCents'] as int,
+      images: (map['images'] as List<dynamic>).cast<String>(),
+      selectedVariant: map['selectedVariant'] as String,
+      variants: (map['variants'] as List<dynamic>).cast<String>(),
+      quantity: map['quantity'] as int,
     );
   }
-
-  factory CartItemModel.fromJson(String source) =>
-      CartItemModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  CartItemModel fromPost(PostModel post) {
-    return CartItemModel(
-      itemId: '',
-      postId: post.postId,
-      ownerId: post.ownerId,
-      description: post.description,
-      productname: post.productName,
-      brand: post.brand,
-      price: post.price,
-      discount: 0,
-      priceInCents: (price * 100).toInt(),
-      discountInCents: (discount * 100).toInt(),
-      images: post.images,
-      quantity: post.quantity,
-      variant: post.selectedVariant,
-      variants: post.variants,
-      deliveryOptions: post.deliveryOptions,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'itemId': itemId,
-      'postId': postId,
-      'ownerId': ownerId,
-      'description': description,
-      'productname': productname,
-      'brand': brand,
-      'price': price,
-      'discount': discount,
-      'priceInCents': priceInCents,
-      'discountInCents': discountInCents,
-      'images': images,
-      'variant': variant,
-      'quantity': quantity,
-      'variants': variants,
-      'deliveryOptions':
-          deliveryOptions != null ? deliveryOptions!.index : null,
-    };
-  }
-
-  String toJson() => json.encode(toMap());
 
   CartItemModel copyWith({
-    String? itemId,
+    String? cartItemId,
     String? postId,
-    String? ownerId,
+    String? sellerId,
+    String? username,
     String? description,
     String? productname,
     String? brand,
@@ -129,14 +91,15 @@ class CartItemModel {
     int? priceInCents,
     int? discountInCents,
     List<String>? images,
-    List<String>? options,
-    String? option,
+    String? selectedVariant,
+    List<String>? variants,
     int? quantity,
   }) {
     return CartItemModel(
-      itemId: itemId ?? this.itemId,
+      cartItemId: cartItemId ?? this.cartItemId,
       postId: postId ?? this.postId,
-      ownerId: ownerId ?? this.ownerId,
+      sellerId: sellerId ?? this.sellerId,
+      username: username ?? this.username,
       description: description ?? this.description,
       productname: productname ?? this.productname,
       brand: brand ?? this.brand,
@@ -146,27 +109,82 @@ class CartItemModel {
       priceInCents: priceInCents ?? this.priceInCents,
       discountInCents: discountInCents ?? this.discountInCents,
       images: images ?? this.images,
-      variants: options ?? this.variants,
-      variant: option ?? this.variant,
+      selectedVariant: selectedVariant ?? this.selectedVariant,
+      variants: variants ?? this.variants,
       quantity: quantity ?? this.quantity,
     );
   }
 
-  Future<int> getDeliveryCostInCents() async {
-    final doc = await db.userCollection.doc(ownerId).get();
-    final user = UserModel.fromDocument(doc);
-    switch (deliveryOptions) {
-      case DeliveryOptions.pickup:
-        return 0;
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'cartItemId': cartItemId,
+      'postId': postId,
+      'sellerId': sellerId,
+      'username': username,
+      'description': description,
+      'productname': productname,
+      'brand': brand,
+      'deliveryOptions': deliveryOptions,
+      'price': price,
+      'discount': discount,
+      'priceInCents': priceInCents,
+      'discountInCents': discountInCents,
+      'images': images,
+      'selectedVariant': selectedVariant,
+      'variants': variants,
+      'quantity': quantity,
+    };
+  }
 
-      case DeliveryOptions.delivery:
-        return user.deliveryCostInCents;
+  String toJson() => json.encode(toMap());
 
-      case DeliveryOptions.shipping:
-        return user.shippingCostInCents;
+  factory CartItemModel.fromJson(String source) =>
+      CartItemModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
-      default:
-        return 0;
-    }
+  @override
+  String toString() {
+    return 'CartItemModel(cartItemId: $cartItemId, postId: $postId, sellerId: $sellerId, username: $username, description: $description, productname: $productname, brand: $brand, deliveryOptions: $deliveryOptions, price: $price, discount: $discount, priceInCents: $priceInCents, discountInCents: $discountInCents, images: $images, selectedVariant: $selectedVariant, variants: $variants, quantity: $quantity)';
+  }
+
+  @override
+  bool operator ==(covariant CartItemModel other) {
+    if (identical(this, other)) return true;
+
+    return other.cartItemId == cartItemId &&
+        other.postId == postId &&
+        other.sellerId == sellerId &&
+        other.username == username &&
+        other.description == description &&
+        other.productname == productname &&
+        other.brand == brand &&
+        other.deliveryOptions == deliveryOptions &&
+        other.price == price &&
+        other.discount == discount &&
+        other.priceInCents == priceInCents &&
+        other.discountInCents == discountInCents &&
+        listEquals(other.images, images) &&
+        other.selectedVariant == selectedVariant &&
+        listEquals(other.variants, variants) &&
+        other.quantity == quantity;
+  }
+
+  @override
+  int get hashCode {
+    return cartItemId.hashCode ^
+        postId.hashCode ^
+        sellerId.hashCode ^
+        username.hashCode ^
+        description.hashCode ^
+        productname.hashCode ^
+        brand.hashCode ^
+        deliveryOptions.hashCode ^
+        price.hashCode ^
+        discount.hashCode ^
+        priceInCents.hashCode ^
+        discountInCents.hashCode ^
+        images.hashCode ^
+        selectedVariant.hashCode ^
+        variants.hashCode ^
+        quantity.hashCode;
   }
 }

@@ -1,7 +1,7 @@
 import { log } from "firebase-functions/logger";
 import { Address } from "../../../../models/address";
 import { UserModel } from "../../../../models/user_model";
-import { addressFromMap, postFromDoc, userFromDoc } from "../../../../services/functions";
+import { addressFromMap, postFromDoc, userFromDoc, userFromMap } from "../../../../services/functions";
 import * as db from "../../../../services/database";
 import { CollectionReference, DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
 import { PostModel } from "../../../../models/post_model";
@@ -148,5 +148,20 @@ router.put("/api/user/updateDeliveryInfo/:userId", async (req, res) => {
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
+
+// update delivery info
+router.put("/api/user/updateUser/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userDoc: DocumentReference = db.userCollection.doc(userId);
+    const updatedUser = userFromMap(req.body);
+    userDoc.update(updatedUser.toMap());
+    return res.status(200).send({status: "Success", data: `Successfully updated delivery info for ${userId}`});
+  } catch (error) {
+    log(error);
+    return res.status(500).send({status: "Failed", msg: error.message});
+  }
+});
+
 
 module.exports = router;

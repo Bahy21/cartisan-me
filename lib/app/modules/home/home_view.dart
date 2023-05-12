@@ -1,9 +1,15 @@
+import 'dart:developer';
+
+import 'package:cartisan/app/controllers/cart_service.dart';
+import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/controllers/timeline_controller.dart';
+import 'package:cartisan/app/controllers/timeline_scroll_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/cart/cart_view_pages.dart';
 import 'package:cartisan/app/modules/home/components/custom_post_scroller.dart';
 import 'package:cartisan/app/modules/home/components/post_card.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -23,8 +29,16 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final tc = Get.find<TimelineController>();
+  final tsc = Get.find<TimelineScrollController>();
 
-  final ScrollController _scrollController = ScrollController();
+  void buynow(PostModel post) async {
+    final result = await Get.find<CartService>().addToCart(post);
+    if (result) {
+      showToast('Item added to cart');
+    } else {
+      Get.snackbar('Error', 'Something went wrong');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,39 +72,50 @@ class _HomeViewState extends State<HomeView> {
           SizedBox(width: AppSpacing.fourteenHorizontal),
         ],
       ),
-      body: Column(
-        children: [
-          SizedBox(height: AppSpacing.twentyFourVertical),
-          Expanded(
-            child: Obx(
-              () {
-                if (tc.isLoading) {
-                  return Center(
-                    child: CircularProgressIndicator.adaptive(
-                      strokeWidth: 1.5,
-                      valueColor: AlwaysStoppedAnimation(
-                          Theme.of(context).primaryColor),
-                    ),
-                  );
-                }
-                if (tc.timelinePosts.isEmpty) {
-                  return const Center(child: SizedBox.shrink());
-                } else {
-                  return CustomPostScroller(
-                    children: [
-                      for (final post in tc.timelinePosts)
-                        PostCard(
-                          post: post,
-                          index: tc.timelinePosts.indexOf(post),
+      body: Obx(
+        () {
+          if (tc.isLoading) {
+            return Center(
+              child: CircularProgressIndicator.adaptive(
+                strokeWidth: 1.5,
+                valueColor: AlwaysStoppedAnimation(
+                  Theme.of(context).primaryColor,
+                ),
+              ),
+            );
+          }
+          if (tc.errorLoading) {
+            return const Center(child: Text('No posts found'));
+          } else {
+            return CustomPostScroller(
+              children: [
+                ...List.generate(
+                  tc.timelinePosts.length,
+                  (index) => PostCard(
+                    index: index,
+                    post: tc.timelinePosts[index],
+                    addToCartCallback: () {
+                      buynow(tc.timelinePosts[index]);
+                    },
+                  ),
+                ),
+                if (tc.isPostLoading)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.h),
+                    child: Center(
+                      child: CircularProgressIndicator.adaptive(
+                        strokeWidth: 1.5,
+                        valueColor: AlwaysStoppedAnimation(
+                          Theme.of(context).primaryColor,
                         ),
-                    ],
-                    scrollController: _scrollController,
-                  );
-                }
-              },
-            ),
-          ),
-        ],
+                      ),
+                    ),
+                  ),
+              ],
+              scrollController: tsc.timelineController,
+            );
+          }
+        },
       ),
     );
   }

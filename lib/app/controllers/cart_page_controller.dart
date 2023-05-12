@@ -1,52 +1,22 @@
-import 'dart:developer';
-
-import 'package:cartisan/app/controllers/auth_service.dart';
-import 'package:cartisan/app/models/cart_Item_model.dart';
-import 'package:cartisan/app/services/api_calls.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CartPageController extends GetxController {
-  final as = Get.find<AuthService>();
-  final dio = Dio();
-  final apiCalls = ApiCalls();
+  RxList<bool> _statuses = [true, false, false, false].obs;
+
   PageController initialScreenController = PageController();
 
-  String get _currentUid => as.currentUser!.uid;
-
+  RxInt initialPageControllerIndex = 0.obs;
+  int get initialPageIndex => initialPageControllerIndex.value;
+  // ignore: invalid_use_of_protected_member
   List<bool> get statusesValue => _statuses.value;
 
   set initialPageIndex(int index) {
     initialPageControllerIndex.value = index;
   }
 
-  int get initialPageIndex => initialPageControllerIndex.value;
-
-  RxList<bool> _statuses = [true, false, false, false].obs;
-  Rx<List<CartItemModel>> _cart = Rx<List<CartItemModel>>(<CartItemModel>[]);
-  RxInt initialPageControllerIndex = 0.obs;
-
   void updateStatus({required int index, required bool status}) {
     _statuses[index] = status;
-  }
-
-  Future<void> getCart() async {
-    final result =
-        await dio.get<Map>(apiCalls.getApiCalls.getCart(_currentUid));
-    final cartItems = result.data!['data'] as List;
-    if (cartItems.isEmpty) {
-      log('cart is empty');
-      return;
-    }
-    for (final cart in cartItems) {
-      _cart.value.add(CartItemModel.fromMap(cart as Map<String, dynamic>));
-    }
-  }
-
-  Future<void> clearCart() async {
-    await dio.delete<Map>(apiCalls.deleteApiCalls.clearCart(_currentUid));
-    _cart.value = [];
   }
 
   void reset() {

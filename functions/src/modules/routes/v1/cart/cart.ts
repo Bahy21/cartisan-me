@@ -85,7 +85,7 @@ router.delete("/api/user/clearCart/:userId", async(req,res)=>{
 }});
 
 // get posts from cart
-router.get("api/user/getPostsFromCart/:userId", async (req, res) => {
+router.get("/api/user/getPostsFromCart/:userId", async (req, res) => {
   try {
     const userId: string = req.params.userId;
     const cartRef = db.userCartCollection(userId);
@@ -104,16 +104,17 @@ router.get("api/user/getPostsFromCart/:userId", async (req, res) => {
 });
 
 // get cart items
-router.get("api/user/getCart/:userId", async(req,res)=>{
+router.get("/api/user/getCart/:userId", async(req,res)=>{
   try {
     const userId: string = req.params.userId;
     const cartRef = db.userCartCollection(userId);
     const cartItems = await cartRef.get();
-    let itemsFromCart: CartItemModel[] = <CartItemModel[]>[];
-    cartItems.forEach(async (cartItem)=>{
-      const item: CartItemModel = cartItemFromDoc(await cartItem.ref.get());
+    let itemsFromCart: CartItemModel[] = [];
+    for(const cartItem of cartItems.docs){
+      const item: CartItemModel = cartItemFromDoc(cartItem);
       itemsFromCart.push(item);
-    });
+    }
+    log(`itemsFromCart ${itemsFromCart}`);
     return res.status(200).send({status: "Success", data: itemsFromCart});
   } catch (error) {
     log(error);

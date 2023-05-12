@@ -1,13 +1,16 @@
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/models/cart_item_model.dart';
 import 'package:cartisan/app/modules/home/components/quantity_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CartItemCard extends StatelessWidget {
+  final CartItemModel cartItem;
   final VoidCallback? deleteCallback;
   final bool isOrderSummaryView;
   const CartItemCard({
+    required this.cartItem,
     this.deleteCallback,
     this.isOrderSummaryView = false,
     super.key,
@@ -24,6 +27,7 @@ class CartItemCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 height: 71.h,
@@ -38,16 +42,21 @@ class CartItemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'The Special Scents',
+                    cartItem.productname,
                     style: AppTypography.kExtraLight12,
                   ),
-                  Text(
-                    'Scent Candle',
-                    style: AppTypography.kBold14,
+                  SizedBox(
+                    width: 100.w,
+                    child: Text(
+                      cartItem.description,
+                      style: AppTypography.kBold14,
+                      overflow: TextOverflow.fade,
+                      maxLines: 2,
+                    ),
                   ),
                   SizedBox(height: 16.h),
                   Text(
-                    r' $200.00',
+                    ' \$${cartItem.price}',
                     style: AppTypography.kBold14
                         .copyWith(color: AppColors.kPrimary),
                   ),
@@ -75,7 +84,7 @@ class CartItemCard extends StatelessWidget {
                     )
                   else
                     Text(
-                      'Quantity x 1',
+                      cartItem.quantity.toString(),
                       style: AppTypography.kLight14
                           .copyWith(color: AppColors.kHintColor),
                     ),

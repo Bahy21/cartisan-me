@@ -143,4 +143,22 @@ class UserRepo {
       return false;
     }
   }
+
+  Future<bool> updateUserDetails(
+      {required String userId, required UserModel newUser}) async {
+    try {
+      final result = await dio.put<Map>(
+        _apiCalls.putApiCalls.updateUserDetails(userId),
+        data: newUser.toJson(),
+      );
+      if (result.statusCode != 200) {
+        throw Exception('Something went wrong');
+      }
+      return true;
+    } on Exception catch (e) {
+      log(e.toString());
+      Get.snackbar('Error', 'Something went wrong');
+      return false;
+    }
+  }
 }

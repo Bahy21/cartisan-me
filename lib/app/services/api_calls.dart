@@ -23,8 +23,9 @@ class GetApiCalls {
       '$apiRoot/api/social/isBlocked/$blockerId/$blockedId';
   String getBlockList(String userId) =>
       '$apiRoot/api/social/getBlockList/$userId';
-  String getPostsFromCart(String userId) => 'api/user/getPostsFromCart/$userId';
-  String getCart(String userId) => 'api/user/getCart/$userId';
+  String getPostsFromCart(String userId) =>
+      '/api/user/getPostsFromCart/$userId';
+  String getCart(String userId) => '$apiRoot/api/user/getCart/$userId';
   String getTimeline(String userId, {int count = 10}) =>
       '$apiRoot/api/timeline/fetchPosts/$userId/$count';
   String isLiked({required String userId, required String postId}) =>
@@ -58,13 +59,15 @@ class PutApiCalls {
   String blockUser({required String blockerId, required String blockedId}) =>
       '$apiRoot/api/social/blockUser/$blockerId/$blockedId';
   String addToCart({required String postId, required String userId}) =>
-      '$apiRoot/api/cart/addToCart/$userId/$postId';
+      '$apiRoot/api/user/addToCart/$userId/$postId';
   String likePost({required String userId, required String postId}) =>
       '$apiRoot/api/post/likePost/$userId/$postId';
   String updateOrderStatus(String orderId) =>
       '$apiRoot/api/order/updateOrderStatus/$orderId';
   String updateOrderItemStatus(String orderId) =>
       '$apiRoot/api/order/updateOrderItemStatus/$orderId';
+  String updateUserDetails(String userId) =>
+      '$apiRoot/api/user/updateUser/$userId';
 }
 
 class DeleteApiCalls {

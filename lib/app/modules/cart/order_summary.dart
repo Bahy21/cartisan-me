@@ -38,14 +38,11 @@ class OrderSummary extends StatelessWidget {
           ),
           SizedBox(height: AppSpacing.fourteenVertical),
           ListView.separated(
-            itemCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            separatorBuilder: (context, index) => SizedBox(height: 15.h),
-            itemBuilder: (context, index) => const CartItemCard(
-              isOrderSummaryView: true,
-            ),
-          ),
+              itemCount: 2,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              separatorBuilder: (context, index) => SizedBox(height: 15.h),
+              itemBuilder: (context, index) => Placeholder()),
           SizedBox(height: AppSpacing.fourteenVertical),
           Text(
             'Order Summary',

@@ -8,6 +8,7 @@ import { OrderModel } from "../models/order_model";
 import { CommentModel } from "../models/comment_model";
 import { DocumentSnapshot } from "firebase-admin/firestore";
 import { OrderItemModel } from "../models/order_item_model";
+import { log } from "firebase-functions/logger";
 
 
 export function postFromDoc(doc:firestore.DocumentSnapshot): PostModel{
@@ -96,6 +97,39 @@ export function userFromDoc(doc:firestore.DocumentSnapshot): UserModel{
   return user;
 }
 
+export function userFromMap(map: Map<string,any>): UserModel{
+  log(map);
+  const user = new UserModel(
+   { id: map['id'],
+    username: map['username'],
+    url : map['url'],
+    email: map['email']}
+  );
+  user.profileName = map['profileName'] ?? "";
+  user.unreadMessageCount = map['unreadMessageCount'] ?? 0;
+  user.taxPercentage = map['taxPercentage'] ?? 0;
+  user.bio = map['bio'] ?? "";
+  user.shippingCost = map['shippingCost'] ?? 0;
+  user.deliveryCost = map['deliveryCost'] ?? 0;
+  user.freeShipping = map['freeShipping'] ?? 0;
+  user.freeDelivery = map['freeDelivery'] ?? 0;
+  user.activeShipping = map['activeShipping'] ?? false;
+  user.pickup = map['pickup'] ?? false;
+  user.isDeliveryAvailable = map['isDeliveryAvailable'] ?? false;
+  user.sellerID = map['sellerID'] ?? "";
+  user.buyerID = map['buyerID'] ?? "";
+  user.defaultAddress = (map['defaultAddress']==null || typeof map['defaultAddress'] === 'undefined') ? null : addressFromMap(map['defaultAddress']);
+  user.country = map['country'] ?? "";
+  user.state = map['state'] ?? "";
+  user.city = map['city'] ?? "";
+  user.isSeller = map['isSeller'] ?? false;
+  user.customerId = map['customerId'] ?? "";
+  user.uniqueStoreName = map['uniqueStoreName'] ?? "";
+  user.followerCount = map['followerCount'] ?? 0;
+  user.followingCount = map['followingCount'] ?? 0;
+  return user;
+}
+
 
 export function cartFromDoc(doc:firestore.DocumentSnapshot) : CartItemModel[]{
   let cartList = <CartItemModel[]>[];
@@ -159,9 +193,6 @@ export function addressesFromMap(map): Address[]{
   return addresses;
 }
 export function addressFromMap(map:Map<any,any>): Address{
-  if (map==null || map.keys.length == 0){
-    return null;
-  }
   return new Address({
     userID: map['userID']?? "",
     addressID: map['addressID']?? "",
