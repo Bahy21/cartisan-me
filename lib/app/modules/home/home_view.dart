@@ -62,17 +62,32 @@ class _HomeViewState extends State<HomeView> {
         children: [
           SizedBox(height: AppSpacing.twentyFourVertical),
           Expanded(
-            child: GetX<TimelineController>(
-              builder: (controller) => CustomPostScroller(
-                children: [
-                  for (final post in tc.timelinePosts)
-                    PostCard(
-                      post: post,
-                      index: tc.timelinePosts.indexOf(post),
+            child: Obx(
+              () {
+                if (tc.isLoading) {
+                  return Center(
+                    child: CircularProgressIndicator.adaptive(
+                      strokeWidth: 1.5,
+                      valueColor: AlwaysStoppedAnimation(
+                          Theme.of(context).primaryColor),
                     ),
-                ],
-                scrollController: _scrollController,
-              ),
+                  );
+                }
+                if (tc.timelinePosts.isEmpty) {
+                  return const Center(child: SizedBox.shrink());
+                } else {
+                  return CustomPostScroller(
+                    children: [
+                      for (final post in tc.timelinePosts)
+                        PostCard(
+                          post: post,
+                          index: tc.timelinePosts.indexOf(post),
+                        ),
+                    ],
+                    scrollController: _scrollController,
+                  );
+                }
+              },
             ),
           ),
         ],
