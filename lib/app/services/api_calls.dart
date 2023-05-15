@@ -5,10 +5,7 @@ class ApiCalls {
   DeleteApiCalls deleteApiCalls = DeleteApiCalls();
 }
 
-class GetApiCalls {
-  String getNotifications(String userId) =>
-      '$BASE_URL/notifications/getNotifications/$userId';
-}
+class GetApiCalls {}
 
 class PostApiCalls {}
 

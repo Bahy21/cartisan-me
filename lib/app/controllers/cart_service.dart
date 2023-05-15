@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:cartisan/app/api_controllers.dart/cart_api.dart';
+import 'package:cartisan/app/api_classes/cart_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:get/get.dart';

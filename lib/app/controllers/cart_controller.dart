@@ -1,4 +1,4 @@
-import 'package:cartisan/app/api_controllers.dart/cart_api.dart';
+import 'package:cartisan/app/api_classes/cart_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/cart_item_model.dart';
