@@ -5,12 +5,21 @@ import 'package:cartisan/app/controllers/timeline_scroll_controller.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/services/api_calls.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TimelineController extends GetxController {
   final as = Get.find<AuthService>();
-  final dio = Dio();
+  final dio = Dio(
+    BaseOptions(
+      headers: <String, dynamic>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': Get.find<AuthService>().userToken,
+      },
+    ),
+  );
   final apiCalls = ApiCalls();
 
   List<PostModel> get timelinePosts => _timelinePosts.value;
@@ -54,11 +63,16 @@ class TimelineController extends GetxController {
       if (_timelinePosts.value.isNotEmpty && !isRefresh) {
         lastId = _timelinePosts.value.last.postId;
       }
-      final results = await dio.get<Map>(
-        apiCalls.getApiCalls.getTimeline(_currentUid),
-        data: jsonEncode({'lastPostId': lastId}),
-      );
-      final postsGotten = results.data!['result'] as List;
+      log(apiCalls.getApiCalls.getTimeline(_currentUid));
+      var res = await dio.get<String>(
+          "https://us-central1-cloud-function-practice-f911f.cloudfunctions.net/app/v1/api/timeline/fetchPosts/C0S69tOm0EUM7EgHKbYuoCzkxSw2/10");
+      log(res.data.toString());
+      // final response = await dio.get<String>(
+      //   apiCalls.getApiCalls.getTimeline(_currentUid),
+      //   data: jsonEncode({'lastPostId': lastId}),
+      // );
+      final results = jsonDecode(res.data.toString()) as Map<String, dynamic>;
+      final postsGotten = results!['result'] as List;
       if (postsGotten.isEmpty) {
         _arePostsLoading.value = false;
         _firstLoading.value = false;
@@ -75,7 +89,7 @@ class TimelineController extends GetxController {
         newPosts.add(PostModel.fromMap(post as Map<String, dynamic>));
       }
       _timelinePosts.value = [...timelinePosts, ...newPosts];
-      if(firstLoading){
+      if (firstLoading) {
         _arePostsLoading.value = false;
       }
       _firstLoading.value = false;

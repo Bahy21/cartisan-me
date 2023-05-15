@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
@@ -10,11 +12,16 @@ class AuthService extends GetxService {
   set isLoading(bool value) => _isLoading.value = value;
   // ignore: prefer_final_fields
   RxBool _isLoading = true.obs;
+  String userToken = '';
 
   @override
   void onInit() {
     firebaseUser.bindStream(_auth.authStateChanges());
     handleEmailVerification();
+    ever(firebaseUser, (callback) async {
+      userToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+      log("Set the token to $userToken");
+    });
     super.onInit();
   }
 

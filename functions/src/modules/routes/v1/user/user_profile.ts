@@ -149,7 +149,7 @@ router.put("/api/user/updateDeliveryInfo/:userId", async (req, res) => {
   }
 });
 
-// update delivery info
+// update user info
 router.put("/api/user/updateUser/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;

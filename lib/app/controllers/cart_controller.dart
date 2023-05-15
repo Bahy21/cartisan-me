@@ -1,71 +1,61 @@
-import 'dart:developer';
-
+import 'package:cartisan/app/api_controllers.dart/cart_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/cart_item_model.dart';
-import 'package:cartisan/app/services/api_calls.dart';
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 class CartController extends GetxController {
-  final as = Get.find<AuthService>();
-  final dio = Dio();
-  final apiCalls = ApiCalls();
-
+  final cartAPI = CartAPI();
   bool get isCartEmpty => _isCartEmpty.value;
   List<CartItemModel> get cart => _cart.value;
+  // ignore: prefer_final_fields
   Rx<List<CartItemModel>> _cart = Rx<List<CartItemModel>>([]);
-  String get _currentUid => as.currentUser!.uid;
+  // ignore: prefer_final_fields
   RxBool _isCartEmpty = true.obs;
+  String get _currentUid => Get.find<AuthService>().currentUser!.uid;
   @override
   void onInit() {
     getCart();
     super.onInit();
   }
 
-  Future<void> getCart() async {
-    _cart.value = [];
-    log('get cart called');
-    final result =
-        await dio.get<Map>(apiCalls.getApiCalls.getCart(_currentUid));
-    final cartItems = result.data!['data'] as List;
-    if (cartItems.isEmpty) {
+  void checkCartEmpty() {
+    if (_cart.value.isEmpty) {
       _isCartEmpty.value = true;
-      log('cart is empty');
-      return;
+    } else {
+      _isCartEmpty.value = false;
     }
-    if (cartItems.isEmpty) {
-      return;
-    }
-    for (final cartItem in cartItems) {
-      cart.add(CartItemModel.fromMap(cartItem as Map<String, dynamic>));
-    }
-    _isCartEmpty.value = false;
+  }
+
+  Future<void> getCart() async {
+    _cart.value = await cartAPI.getCart(_currentUid);
+    checkCartEmpty();
   }
 
   Future<void> deleteCartItem(String cartItemId) async {
-    final confirmation =
-        await dio.delete<Map>(apiCalls.deleteApiCalls.deleteCartItem(
+    final success = await cartAPI.deleteCartItem(
       userId: _currentUid,
-      itemId: cartItemId,
-    ));
-    if (confirmation.statusCode != 200) {
-      log(confirmation.toString());
-      Get.snackbar('Error', 'Something went wrong');
-      return;
-    }
-    for (var cartItem in cart) {
-      if (cartItem.cartItemId == cartItemId) {
-        cart.remove(cartItem);
-        break;
+      cartItemId: cartItemId,
+    );
+    if (success) {
+      for (final cartItem in cart) {
+        if (cartItem.cartItemId == cartItemId) {
+          cart.remove(cartItem);
+          break;
+        }
       }
-    }
-    if (cart.isEmpty) {
-      _isCartEmpty.value = true;
+      checkCartEmpty();
+    } else {
+      await showErrorDialog('Error deleting item from cart');
     }
   }
 
   Future<void> clearCart() async {
-    await dio.delete<Map>(apiCalls.deleteApiCalls.clearCart(_currentUid));
-    _cart.value = [];
+    if (await cartAPI.clearCart(_currentUid)) {
+      _cart.value = [];
+      checkCartEmpty();
+    } else {
+      await showErrorDialog('Error clearing cart');
+    }
   }
 }

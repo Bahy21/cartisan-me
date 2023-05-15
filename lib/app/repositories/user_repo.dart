@@ -1,4 +1,7 @@
 import 'dart:developer';
+import 'package:cartisan/app/api_controllers.dart/user_api.dart';
+import 'package:cartisan/app/controllers/controllers.dart';
+import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/address__model.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
@@ -11,9 +14,8 @@ import 'package:get/get.dart';
 
 class UserRepo {
   final userDb = UserDatabase();
-  final Dio dio = Dio();
-  final ApiCalls _apiCalls = ApiCalls();
-  String get _currentUid => FirebaseAuth.instance.currentUser!.uid;
+  final userApi = UserAPI();
+  String get _currentUid => Get.find<AuthService>().currentUser!.uid;
 
   Stream<UserModel?> currentUserStream() {
     return userDb.usersCollection
@@ -23,34 +25,7 @@ class UserRepo {
   }
 
   Future<UserModel?> fetchUser(String userId) async {
-    try {
-      final link = _apiCalls.getApiCalls.getUser(userId);
-      final result = await dio.get<Map>(link);
-      final userMap = result.data!['data'] as Map<String, dynamic>;
-      final newUser = UserModel.fromMap(userMap);
-      return newUser;
-    } on Exception catch (e) {
-      log(e.toString());
-      return null;
-    }
-  }
-
-  Future<List<PostModel>> fetchUserPosts(String userId) async {
-    try {
-      final result =
-          await dio.get<Map>(_apiCalls.getApiCalls.getAllUserPosts(userId));
-      if (result.statusCode != 200) {
-        return [];
-      }
-      List<PostModel> posts = [];
-      for (final post in result.data!['data']) {
-        posts.add(PostModel.fromMap(post as Map<String, dynamic>));
-      }
-      return posts;
-    } on Exception catch (e) {
-      log(e.toString());
-      return [];
-    }
+    return userApi.getUser(userId);
   }
 
   Future<bool> addUserAddress(AddressModel address) async {
@@ -158,6 +133,19 @@ class UserRepo {
     } on Exception catch (e) {
       log(e.toString());
       Get.snackbar('Error', 'Something went wrong');
+      return false;
+    }
+  }
+
+  Future<bool> addToCart(PostModel post) async {
+    try {
+      return userAPI.addToCart(
+        postId: post.postId,
+        userId: _currentUid,
+        selectedVariant: post.selectedVariant,
+      );
+    } on Exception catch (e) {
+      log(e.toString());
       return false;
     }
   }

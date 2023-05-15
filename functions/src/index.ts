@@ -23,7 +23,7 @@ import * as triggerFunctions from './modules/module';
 
 export const authMiddleware = async (req, res, next) => {
   try {
-    const idToken = req.headers.authorization.split('Bearer ')[1];
+    const idToken = req.headers.authorization;
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     req.user = decodedToken;
     next();
