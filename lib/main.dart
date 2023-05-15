@@ -29,16 +29,6 @@ void main() async {
     name: "Cartisan",
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  if (kDebugMode) {
-    try {
-      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-      FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
-      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-      await FirebaseStorage.instance.useStorageEmulator('localhost', 9199);
-    } on FirebaseException catch (e) {
-      log(e.toString());
-    }
-  }
   await GlobalFunctions.initServicesAndControllers();
   FlutterNativeSplash.remove();
   runApp(const Main());

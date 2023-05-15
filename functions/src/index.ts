@@ -1,7 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-const serviceAccount = require('../../service-account.json');
-admin.initializeApp({credential: admin.credential.cert(serviceAccount)}); 
+admin.initializeApp(functions.config().firebase); 
 import * as cors from 'cors';
 const posts = require('./modules/routes/v1/posts/posts');
 const userProfile = require('./modules/routes/v1/user/user_profile');
@@ -38,16 +37,18 @@ functions.logger.log('running');
 firestore.settings({ timestampInSnapshots: true });
 
 
-if(process.env.FUNCTIONS_EMULATOR){
-  functions.logger.log('Running emulators Locally');
-  const populator = new FakeDataPopulator(firestore);
+
+const populator = new FakeDataPopulator(firestore);
+
+const app = express();
+exports.firebasePopulator = functions.https.onCall(async (req,res)=>{
+  await populator.generateFakeUsers();
+});
+app.post('/populateFirebase'), async (req, res) => {
   populator.generateFakeUsers();
 }
-const app = express();
-
-
 app.use(cors({origin: true}));
-// app.use(authMiddleware);
+app.use(authMiddleware);
 // app load check
 app.get('/',(req, res) => {
   return res.status(200).send('app loaded succesfully');

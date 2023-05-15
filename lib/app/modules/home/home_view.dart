@@ -10,6 +10,9 @@ import 'package:cartisan/app/modules/cart/cart_view_pages.dart';
 import 'package:cartisan/app/modules/home/components/custom_post_scroller.dart';
 import 'package:cartisan/app/modules/home/components/post_card.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/toast.dart';
+import 'package:cartisan/app/services/api_calls.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -84,37 +87,34 @@ class _HomeViewState extends State<HomeView> {
               ),
             );
           }
-          if (tc.errorLoading) {
-            return const Center(child: Text('No posts found'));
-          } else {
-            return CustomPostScroller(
-              children: [
-                ...List.generate(
-                  tc.timelinePosts.length,
-                  (index) => PostCard(
-                    index: index,
-                    post: tc.timelinePosts[index],
-                    addToCartCallback: () {
-                      addToCart(tc.timelinePosts[index]);
-                    },
-                  ),
+
+          return CustomPostScroller(
+            children: [
+              ...List.generate(
+                tc.timelinePosts.length,
+                (index) => PostCard(
+                  index: index,
+                  post: tc.timelinePosts[index],
+                  addToCartCallback: () {
+                    addToCart(tc.timelinePosts[index]);
+                  },
                 ),
-                if (tc.arePostsostLoading)
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.h),
-                    child: Center(
-                      child: CircularProgressIndicator.adaptive(
-                        strokeWidth: 1.5,
-                        valueColor: AlwaysStoppedAnimation(
-                          Theme.of(context).primaryColor,
-                        ),
+              ),
+              if (tc.arePostsostLoading)
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                  child: Center(
+                    child: CircularProgressIndicator.adaptive(
+                      strokeWidth: 1.5,
+                      valueColor: AlwaysStoppedAnimation(
+                        Theme.of(context).primaryColor,
                       ),
                     ),
                   ),
-              ],
-              scrollController: tsc.timelineController,
-            );
-          }
+                ),
+            ],
+            scrollController: tsc.timelineController,
+          );
         },
       ),
     );

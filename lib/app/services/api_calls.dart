@@ -1,5 +1,5 @@
 const String apiRoot =
-    'http://10.0.2.2:5001/cloud-function-practice-f911f/us-central1/app/v1';
+    'https://us-central1-cloud-function-practice-f911f.cloudfunctions.net/app';
 
 class ApiCalls {
   GetApiCalls getApiCalls = GetApiCalls();
@@ -49,6 +49,7 @@ class PostApiCalls {
   String createComment(String postId) =>
       '$apiRoot/api/post/comments/newComment/$postId';
   String createOrder(String userId) => '$apiRoot/api/order/newOrder/$userId';
+  String get populate => '$apiRoot/populateFirebase';
 }
 
 class PutApiCalls {

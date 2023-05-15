@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:cartisan/app/models/address__model.dart';
+import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/repositories/user_repo.dart';
 import 'package:cartisan/app/services/database.dart';
 import 'package:cartisan/app/services/user_database.dart';
@@ -37,31 +39,21 @@ class UserAuthService {
         password: password,
       );
       if (creds.user != null) {
+        final id = _firebaseAuth.currentUser!.uid;
         await creds.user!.updateDisplayName(name);
         final userCollectionRef = UserDatabase().usersCollection;
-        final userDoc =
-            await userCollectionRef.doc(_firebaseAuth.currentUser!.uid).get();
-        if (userDoc.exists) {
-          await userCollectionRef.doc(creds.user!.uid).update({
-            'isSeller': isSeller,
-            'taxPercentage': taxPercentage,
-            'city': city,
-            'country': country,
-            'state': state,
-            'username': name,
-            'profileName': name,
-          });
-        } else {
-          await Database().userCollection.doc(creds.user!.uid).set({
-            'isSeller': isSeller,
-            'taxPercentage': taxPercentage,
-            'city': city,
-            'country': country,
-            'state': state,
-            'username': name,
-            'profileName': name,
-          });
-        }
+        final userDoc = await userCollectionRef.doc(id);
+        final newUser = await initFirebaseUser(
+          email: email,
+          name: name,
+          isSeller: isSeller,
+          taxPercentage: taxPercentage,
+          city: city,
+          country: country,
+          state: state,
+          id: id,
+        );
+        await userDoc.set(newUser);
       }
     } on Exception catch (e) {
       log(e.toString());
@@ -74,5 +66,51 @@ class UserAuthService {
     } on FirebaseAuthException catch (e) {
       log(e.message.toString());
     }
+  }
+
+  Future<UserModel> initFirebaseUser({
+    required String email,
+    required String name,
+    required bool isSeller,
+    required double taxPercentage,
+    required String city,
+    required String country,
+    required String state,
+    required String id,
+  }) async {
+    final newUser = UserModel(id: id, username: name, url: '', email: email);
+    newUser.profileName = name;
+    newUser.unreadMessageCount = 0;
+    newUser.taxPercentage = taxPercentage;
+    newUser.bio = "";
+    newUser.shippingCost = 0;
+    newUser.deliveryCost = 0;
+    newUser.freeShipping = 0;
+    newUser.freeDelivery = 0;
+    newUser.activeShipping = false;
+    newUser.pickup = false;
+    newUser.isDeliveryAvailable = false;
+    newUser.sellerID = '';
+    newUser.buyerID = '';
+    final defAddress = AddressModel(
+      userID: id,
+      addressID: '',
+      addressLine1: '',
+      addressLine2: '',
+      addressLine3: '',
+      postalCode: '',
+      contactNumber: '',
+      fullname: '',
+      city: city,
+      state: state,
+    );
+    newUser.defaultAddress = defAddress;
+    newUser.country = country;
+    newUser.state = defAddress.state;
+    newUser.city = defAddress.city;
+    newUser.isSeller = isSeller;
+    newUser.customerId = "";
+    newUser.uniqueStoreName = "";
+    return newUser;
   }
 }

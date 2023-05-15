@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:cartisan/app/models/address__model.dart';
 
 import 'package:cartisan/app/services/database.dart';
@@ -10,9 +9,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
   final String id;
-  final String profileName;
   final String username;
   final String email;
+  String profileName;
 
   int unreadMessageCount;
 
@@ -22,6 +21,7 @@ class UserModel {
   String? bio;
 
   /// Cost in USD to ship to customer. Set by seller.
+
   double? shippingCost;
 
   /// Cost in USD to deliver to customer.
