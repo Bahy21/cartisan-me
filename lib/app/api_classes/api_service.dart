@@ -4,6 +4,9 @@ import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:dio/dio.dart' as dioClient;
 import 'package:get/get.dart';
 
+const BASE_URL =
+    'https://us-central1-cloud-function-practice-f911f.cloudfunctions.net/app/v1/api';
+
 class APIService {
   final dio = dioClient.Dio(
     dioClient.BaseOptions(

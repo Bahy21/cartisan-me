@@ -1,15 +1,12 @@
+import 'package:cartisan/app/api_classes/search_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/models/search_model.dart';
-import 'package:cartisan/app/services/api_calls.dart';
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 class SearchPageController extends GetxController {
-  final Dio dio = Dio();
-  final ApiCalls apiCalls = ApiCalls();
-  final as = Get.find<AuthService>();
+  final searchApi = SearchAPI();
 
-  String get _currentUid => as.currentUser!.uid;
+  String get _currentUid => Get.find<AuthService>().currentUser!.uid;
 
   List<SearchModel> get searchPosts => _searchPosts.value;
   bool get isLoading => _isLoading.value;
@@ -22,12 +19,7 @@ class SearchPageController extends GetxController {
   }
 
   Future<void> populateSearchPosts() async {
-    final result = await dio
-        .get<Map>(apiCalls.getApiCalls.getSearches(_currentUid, count: 20));
-    final postsGotten = result.data!['result'] as List;
-    for (var postGotten in postsGotten) {
-      searchPosts.add(SearchModel.fromMap(postGotten as Map<String, dynamic>));
-    }
+    _searchPosts.value = await searchApi.getSearches(_currentUid);
     _isLoading.value = false;
   }
 }

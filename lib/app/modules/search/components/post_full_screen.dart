@@ -1,7 +1,7 @@
+import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/home/components/post_card.dart';
-import 'package:cartisan/app/repositories/posts_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +12,7 @@ class PostFullScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<PostModel?>(
-      future: PostsRepo().fetchPost(postId),
+      future: PostAPI().getPost(postId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
