@@ -19,7 +19,7 @@ class TimelineScrollController extends GetxController {
   void loadListener() {
     log('All posts sroll sontroller online');
     final pos = timelineController.position;
-    if (pos.pixels == pos.maxScrollExtent) {
+    if (pos.pixels == pos.maxScrollExtent && !tc.arePostsostLoading) {
       log('condition true, gfetting new posts');
       if (tc.hasMore) {
         tc.fetchPosts();

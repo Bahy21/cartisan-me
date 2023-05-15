@@ -37,6 +37,8 @@ class GetApiCalls {
       '$apiRoot/api/order/getOrders/$orderId';
   String getNotifications(String userId) =>
       '$apiRoot/api/notifications/getNotifications/$userId';
+  String getSearches(String userId, {int count = 20}) =>
+      '$apiRoot/api/search/fetchPosts/$userId/$count';
 }
 
 class PostApiCalls {

@@ -15,16 +15,16 @@ class TimelineController extends GetxController {
 
   List<PostModel> get timelinePosts => _timelinePosts.value;
   bool get hasMore => _hasMore.value;
-  bool get isLoading => _isLoading.value;
+  bool get firstLoading => _firstLoading.value;
   int get totalPostsLoaded => _totalPostsLoaded.value;
-  bool get isPostLoading => _isPostLoading.value;
+  bool get arePostsostLoading => _arePostsLoading.value;
   bool get errorLoading => _errorLoading.value;
   ScrollController get contrller => _scrollController.value;
   Rx<List<PostModel>> _timelinePosts = Rx<List<PostModel>>(<PostModel>[]);
   RxBool _hasMore = true.obs;
-  RxBool _isLoading = true.obs;
+  RxBool _firstLoading = true.obs;
   RxInt _totalPostsLoaded = 0.obs;
-  RxBool _isPostLoading = false.obs;
+  RxBool _arePostsLoading = false.obs;
   RxBool _errorLoading = false.obs;
   Rx<ScrollController> _scrollController =
       Rx<ScrollController>(ScrollController());
@@ -45,9 +45,9 @@ class TimelineController extends GetxController {
 
   Future<void> fetchPosts({bool isRefresh = false}) async {
     try {
-      _isPostLoading.value = true;
+      _arePostsLoading.value = true;
       if (isRefresh) {
-        _isLoading.value = true;
+        _firstLoading.value = true;
       }
       List<PostModel> newPosts = <PostModel>[];
       String? lastId;
@@ -60,9 +60,12 @@ class TimelineController extends GetxController {
       );
       final postsGotten = results.data!['result'] as List;
       if (postsGotten.isEmpty) {
-        _isPostLoading.value = false;
-        _isLoading.value = false;
+        _arePostsLoading.value = false;
+        _firstLoading.value = false;
         _hasMore.value = false;
+        if (_timelinePosts.value.isEmpty) {
+          _errorLoading.value = true;
+        }
         return;
       }
       _totalPostsLoaded.value = isRefresh
@@ -72,10 +75,14 @@ class TimelineController extends GetxController {
         newPosts.add(PostModel.fromMap(post as Map<String, dynamic>));
       }
       _timelinePosts.value = [...timelinePosts, ...newPosts];
-      _isPostLoading.value = false;
-      _isLoading.value = false;
+      if(firstLoading){
+        _arePostsLoading.value = false;
+      }
+      _firstLoading.value = false;
     } on Exception catch (e) {
       log(e.toString());
+      _arePostsLoading.value = false;
+      _firstLoading.value = false;
       _errorLoading.value = true;
     }
   }

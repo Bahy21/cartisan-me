@@ -12,8 +12,10 @@ const cartFunctions = require("./modules/routes/v1/cart/cart");
 const timelineFunctions = require("./modules/routes/v1/timeline/timeline");
 const commentFunctions = require("./modules/routes/v1/posts/comments");
 const orderFunctions = require("./modules/routes/v1/order/order");
+const searchFunctions = require('./modules/routes/v1/search/search');
 const adminOnly = require("./modules/routes/v1/admin_only/admin_only");
 const versionCheck = require("./modules/routes/v2/version_check");
+
 import * as express from "express";
 import { FakeDataPopulator } from './services/fakeDataPopulator';
 
@@ -61,6 +63,7 @@ app.use("/v1", cartFunctions);
 app.use("/v1", timelineFunctions);
 app.use("/v1", commentFunctions);
 app.use("/v1", orderFunctions);
+app.use("/v1", searchFunctions);
 app.use("/v1", adminOnly);
 app.use("/v2", versionCheck);
 

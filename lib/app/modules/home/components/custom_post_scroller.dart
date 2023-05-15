@@ -24,11 +24,10 @@ class _CustomPostScrollerState extends State<CustomPostScroller> {
       onRefresh: () async => tc.refreshActivity(),
       triggerMode: RefreshIndicatorTriggerMode.onEdge,
       color: Theme.of(context).primaryColor,
-      child: ScrollConfiguration(
-        behavior: const ScrollBehavior(),
-        child: ListView(
-          controller: widget.scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
+      child: SingleChildScrollView(
+        controller: widget.scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
           children: widget.children,
         ),
       ),

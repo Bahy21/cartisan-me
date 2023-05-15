@@ -31,7 +31,7 @@ class _HomeViewState extends State<HomeView> {
   final tc = Get.find<TimelineController>();
   final tsc = Get.find<TimelineScrollController>();
 
-  void buynow(PostModel post) async {
+  void addToCart(PostModel post) async {
     final result = await Get.find<CartService>().addToCart(post);
     if (result) {
       showToast('Item added to cart');
@@ -74,7 +74,7 @@ class _HomeViewState extends State<HomeView> {
       ),
       body: Obx(
         () {
-          if (tc.isLoading) {
+          if (tc.firstLoading) {
             return Center(
               child: CircularProgressIndicator.adaptive(
                 strokeWidth: 1.5,
@@ -95,11 +95,11 @@ class _HomeViewState extends State<HomeView> {
                     index: index,
                     post: tc.timelinePosts[index],
                     addToCartCallback: () {
-                      buynow(tc.timelinePosts[index]);
+                      addToCart(tc.timelinePosts[index]);
                     },
                   ),
                 ),
-                if (tc.isPostLoading)
+                if (tc.arePostsostLoading)
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                     child: Center(

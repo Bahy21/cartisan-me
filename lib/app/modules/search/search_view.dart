@@ -1,6 +1,7 @@
 import 'package:cartisan/app/controllers/search_page_controller.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/search/components/explore_card.dart';
+import 'package:cartisan/app/modules/search/components/post_full_screen.dart';
 import 'package:cartisan/app/modules/search/components/searchfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -48,7 +49,11 @@ class SearchView extends StatelessWidget {
                         child: Hero(
                           tag: 'explore_card_1',
                           child: ExploreCard(
-                            onTap: () {},
+                            onTap: () => Get.to<Widget>(
+                              PostFullScreen(
+                                postId: controller.searchPosts[index].postId,
+                              ),
+                            ),
                             post: controller.searchPosts[index],
                           ),
                         ),
