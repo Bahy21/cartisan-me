@@ -1,8 +1,5 @@
-import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
-import 'package:cartisan/app/models/post_response.dart';
-import 'package:cartisan/app/modules/home/components/post_card.dart';
 import 'package:cartisan/app/modules/profile/components/user_own_post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

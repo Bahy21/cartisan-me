@@ -1,7 +1,6 @@
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 class StoreFacilityColumn extends StatelessWidget {
   final String iconPath;

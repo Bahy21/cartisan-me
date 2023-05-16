@@ -1,7 +1,6 @@
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/models/post_model.dart';
-import 'package:cartisan/app/modules/home/components/post_card.dart';
 import 'package:cartisan/app/modules/profile/components/user_explore_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

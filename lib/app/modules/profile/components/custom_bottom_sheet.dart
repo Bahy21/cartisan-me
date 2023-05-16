@@ -2,7 +2,6 @@ import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
-import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/profile/components/custom_switch.dart';
 import 'package:cartisan/app/modules/profile/components/custom_textformfield.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';

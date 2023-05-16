@@ -1,11 +1,7 @@
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
-import 'package:cartisan/app/models/delivery_options.dart';
 import 'package:cartisan/app/models/post_model.dart';
-import 'package:cartisan/app/models/post_response.dart';
-import 'package:cartisan/app/models/search_model.dart';
 import 'package:cartisan/app/modules/profile/components/user_explore_card.dart';
-import 'package:cartisan/app/modules/search/components/explore_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';

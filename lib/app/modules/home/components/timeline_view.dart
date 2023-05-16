@@ -1,6 +1,5 @@
 import 'package:cartisan/app/api_classes/timeline_api.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
-import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/modules/home/components/post_card.dart';
 import 'package:flutter/material.dart';

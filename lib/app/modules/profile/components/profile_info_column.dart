@@ -1,6 +1,5 @@
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileInfoColumn extends StatelessWidget {
   final String numbers;
