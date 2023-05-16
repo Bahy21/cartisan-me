@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/user_model.dart';
-import 'package:cartisan/app/services/api_calls.dart';
 
 const String IS_FOLLOWING = '$BASE_URL/social/isFollowing';
 const String GET_FOLLOWING = '$BASE_URL/social/getFollowing';

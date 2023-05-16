@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
@@ -6,7 +7,6 @@ import 'package:cartisan/app/modules/home/components/custom_drop_down.dart';
 import 'package:cartisan/app/modules/home/components/expandable_text.dart';
 import 'package:cartisan/app/modules/home/components/product_option_dialog.dart';
 import 'package:cartisan/app/modules/home/components/quantity_card.dart';
-import 'package:cartisan/app/repositories/user_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -30,7 +30,7 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserModel?>(
-      future: UserRepo().fetchUser(post.ownerId),
+      future: UserAPI().getUser(post.ownerId),
       builder: (
         context,
         snapshot,

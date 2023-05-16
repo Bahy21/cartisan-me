@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/cart_item_model.dart';
 import 'package:cartisan/app/models/post_model.dart';
-import 'package:cartisan/app/services/api_calls.dart';
 
 const String GET_POSTS_FROM_CART = '$BASE_URL/user/getPostsFromCart';
 const String ADD_TO_CART = '$BASE_URL/user/addToCart';

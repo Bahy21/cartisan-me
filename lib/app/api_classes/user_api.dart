@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/address__model.dart';
 import 'package:cartisan/app/models/user_model.dart';
-import 'package:cartisan/app/services/api_calls.dart';
 
 const String GET_USER = '$BASE_URL/user/getUser';
 const String GET_ALL_USER_POSTS = '$BASE_URL/user/getAllPosts';

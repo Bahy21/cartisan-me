@@ -5,7 +5,6 @@ import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/comment_model.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/review_model.dart';
-import 'package:cartisan/app/services/api_calls.dart';
 
 const String GET_POST = '$BASE_URL/post/getPost';
 const String GET_COMMENTS = '$BASE_URL/post/comments/getComments';

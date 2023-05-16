@@ -1,18 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/search_model.dart';
-import 'package:cartisan/app/services/api_calls.dart';
 
 const String GET_SEARCH_POSTS = '$BASE_URL/search/fetchPosts';
-String getOrderItems(String orderId) => '$BASE_URL/order/getOrders/$orderId';
-String createOrder(String userId) => '$BASE_URL/order/newOrder/$userId';
-String updateOrderStatus(String orderId) =>
-    '$BASE_URL/order/updateOrderStatus/$orderId';
-String updateOrderItemStatus(String orderId) =>
-    '$BASE_URL/order/updateOrderItemStatus/$orderId';
-String cancelOrder(String orderId) => '$BASE_URL/order/deleteOrder/$orderId';
 
 class SearchAPI {
   final apiService = APIService();

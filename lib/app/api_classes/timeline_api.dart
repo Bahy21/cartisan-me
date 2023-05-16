@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/post_model.dart';
-import 'package:cartisan/app/services/api_calls.dart';
 
 const String FETCH_TIMELINE = '$BASE_URL/timeline/fetchPosts';
 
