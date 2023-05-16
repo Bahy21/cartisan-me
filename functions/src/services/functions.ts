@@ -6,9 +6,10 @@ import { Address } from "../models/address";
 import { CartItemModel } from "../models/cart_item_model";
 import { OrderModel } from "../models/order_model";
 import { CommentModel } from "../models/comment_model";
-import { DocumentSnapshot } from "firebase-admin/firestore";
+import { DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
 import { OrderItemModel } from "../models/order_item_model";
 import { log } from "firebase-functions/logger";
+import { userCollection } from "./database";
 
 
 export function postFromDoc(doc:firestore.DocumentSnapshot): PostModel{
@@ -410,5 +411,22 @@ export function deliveryOptionFromIndex(index: number,): DeliveryOptions{
       return DeliveryOptions.pickup;
   }
 }
+
+ export async function getUserFromPost(userId:string): Promise<UserModel>{
+  try {
+    const userDoc: DocumentReference = userCollection.doc(userId);
+    const userDocSnap: DocumentSnapshot  = await userDoc.get();
+    if (!userDocSnap.exists){
+      return null;
+    }
+    const user: UserModel = userFromDoc(userDocSnap);
+    return user;
+  } catch (error) {
+    log(error);
+    return null;
+  }
+
+}
+
 
 

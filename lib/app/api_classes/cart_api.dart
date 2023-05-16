@@ -17,13 +17,13 @@ class CartAPI {
 
   Future<List<PostModel>> getPostsFromCart(String userId) async {
     try {
-      final result = await apiService.get<String>(
+      final result = await apiService.get<Map>(
         '$GET_POSTS_FROM_CART/$userId',
       );
       if (result.statusCode != 200) {
         throw Exception('Error fetching user');
       }
-      final data = jsonDecode(result.data.toString()) as List;
+      final data = result.data!['result'] as List;
       final posts = <PostModel>[];
       for (final post in data) {
         posts.add(PostModel.fromMap(post as Map<String, dynamic>));
@@ -37,13 +37,13 @@ class CartAPI {
 
   Future<List<CartItemModel>> getCart(String userId) async {
     try {
-      final result = await apiService.get<String>(
+      final result = await apiService.get<Map>(
         '$GET_CART/$userId',
       );
       if (result.statusCode != 200) {
         throw Exception('Error fetching user');
       }
-      final data = jsonDecode(result.data.toString()) as List;
+      final data = result.data!['result'] as List;
       final cart = <CartItemModel>[];
       for (final cartItem in data) {
         cart.add(CartItemModel.fromMap(cartItem as Map<String, dynamic>));
@@ -61,7 +61,7 @@ class CartAPI {
     required String selectedVariant,
   }) async {
     try {
-      final result = await apiService.put<String>(
+      final result = await apiService.put<Map>(
         '$ADD_TO_CART/$userId/$postId',
         jsonEncode({'selectedVariant': selectedVariant}),
       );
@@ -81,7 +81,7 @@ class CartAPI {
     required int amount,
   }) async {
     try {
-      final result = await apiService.put<String>(
+      final result = await apiService.put<Map>(
         '$SET_CART_ITEM_COUNT/$userId/$cartItemId',
         jsonEncode({'amount', amount}),
       );
@@ -95,10 +95,12 @@ class CartAPI {
     }
   }
 
-  Future<bool> deleteCartItem(
-      {required String cartItemId, required String userId}) async {
+  Future<bool> deleteCartItem({
+    required String cartItemId,
+    required String userId,
+  }) async {
     try {
-      final result = await apiService.delete<String>(
+      final result = await apiService.delete<Map>(
         '$DELETE_CART_ITEM/$userId/$cartItemId',
       );
       if (result.statusCode != 200) {
@@ -113,7 +115,7 @@ class CartAPI {
 
   Future<bool> clearCart(String userId) async {
     try {
-      final result = await apiService.delete<String>(
+      final result = await apiService.delete<Map>(
         '$CLEAR_CART/$userId',
       );
       if (result.statusCode != 200) {

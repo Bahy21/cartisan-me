@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:dio/dio.dart' as dioClient;
@@ -19,16 +20,17 @@ class APIService {
   );
 
   Future<dioClient.Response<T>> get<T>(
-    String url,
-  ) {
-    return dio.get<T>(url);
+    String url, {
+    Map<String, dynamic>? queryParameters,
+  }) {
+    return dio.get<T>(url, queryParameters: queryParameters);
   }
 
   Future<dioClient.Response<T>> getPaginate<T>(
     String url,
-    dynamic data,
+    Map<String, dynamic> queryParameters,
   ) {
-    return dio.get<T>(url, data: jsonEncode(data));
+    return dio.get<T>(url, queryParameters: queryParameters);
   }
 
   Future<dioClient.Response<T>> post<T>(String url, dynamic data) {

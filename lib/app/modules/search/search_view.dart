@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class SearchView extends StatelessWidget {
   final TextEditingController _searchController = TextEditingController();
@@ -24,6 +25,7 @@ class SearchView extends StatelessWidget {
             child: CircularProgressIndicator.adaptive(),
           );
         }
+
         return Scaffold(
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 20.w),

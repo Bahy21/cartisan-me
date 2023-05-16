@@ -12,7 +12,7 @@ router.get("/api/search/fetchPosts/:userId/:count", async(req,res)=>{
     
     const userId: string = req.params.userId;
     const count: number = parseInt(req.params.count);
-    const lastPostId: string = req.body.lastPostId;
+    const lastPostId: string = req.query.lastPostId.toString();
     const postRef: CollectionReference = db.postsCollection;
     let queryDocs: QuerySnapshot;
     if (lastPostId == null){

@@ -70,7 +70,14 @@ router.get("/api/user/getUser/:userId", async (req, res) => {
 router.get("/api/user/getAllPosts/:userId", async (req, res) => {
   try {
     const userId: string = req.params.userId;
-    const userPostsCollection = db.postsCollection.where("ownerId", "==", userId);
+    const lastPostId: string = req.query.lastPostId.toString();
+    let userPostsCollection;
+    if (lastPostId == null || lastPostId == ""){
+      userPostsCollection = db.postsCollection.where("ownerId", "==", userId).orderBy("timestamp","desc").limit(9);
+    } else{
+      const startAt = await db.postsCollection.doc(lastPostId).get();
+      userPostsCollection = db.postsCollection.where("ownerId", "==", userId).orderBy("timestamp", "desc").startAfter(startAt).limit(9);
+    }
     let posts:PostModel[] = <PostModel[]>[];
     const postCollection = await userPostsCollection.get();
     postCollection.docs.map((doc:DocumentSnapshot)=>{

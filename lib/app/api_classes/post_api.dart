@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/comment_model.dart';
 import 'package:cartisan/app/models/post_model.dart';
+import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/models/review_model.dart';
 
 const String GET_POST = '$BASE_URL/post/getPost';
@@ -20,7 +21,7 @@ class PostAPI {
 
   Future<bool> deletePost(String postId) async {
     try {
-      final result = await apiService.delete<String>('$UNLIKE_POST/$postId');
+      final result = await apiService.delete<Map>('$UNLIKE_POST/$postId');
       if (result.statusCode != 200) {
         throw Exception('Error unliking post');
       }
@@ -31,11 +32,13 @@ class PostAPI {
     }
   }
 
-  Future<bool> unlikePost(
-      {required String userId, required String postId}) async {
+  Future<bool> unlikePost({
+    required String userId,
+    required String postId,
+  }) async {
     try {
       final result =
-          await apiService.delete<String>('$UNLIKE_POST/$userId/$postId');
+          await apiService.delete<Map>('$UNLIKE_POST/$userId/$postId');
       if (result.statusCode != 200) {
         throw Exception('Error unliking post');
       }
@@ -46,10 +49,12 @@ class PostAPI {
     }
   }
 
-  Future<bool> deleteComment(
-      {required String postId, required String commentId}) async {
+  Future<bool> deleteComment({
+    required String postId,
+    required String commentId,
+  }) async {
     try {
-      final result = await apiService.delete<String>(
+      final result = await apiService.delete<Map>(
         '$DELETE_COMMENT/$postId/$commentId',
       );
       if (result.statusCode != 200) {
@@ -67,7 +72,7 @@ class PostAPI {
     required CommentModel newComment,
   }) async {
     try {
-      final result = await apiService.post<String>(
+      final result = await apiService.post<Map>(
         '$CREATE_COMMENT/$postId',
         newComment.toMap(),
       );
@@ -86,7 +91,7 @@ class PostAPI {
     required ReviewModel newReview,
   }) async {
     try {
-      final result = await apiService.post<String>(
+      final result = await apiService.post<Map>(
         '$CREATE_REVIEW/$postId',
         newReview.toMap(),
       );
@@ -105,7 +110,7 @@ class PostAPI {
     required PostModel newPost,
   }) async {
     try {
-      final result = await apiService.post<String>(
+      final result = await apiService.post<Map>(
         '$CREATE_POST/$userId',
         newPost.toMap(),
       );
@@ -119,14 +124,14 @@ class PostAPI {
     }
   }
 
-  Future<PostModel?> getPost(String postId) async {
+  Future<PostResponse?> getPost(String postId) async {
     try {
-      final result = await apiService.get<String>('$GET_POST/$postId');
+      final result = await apiService.get<Map>('$GET_POST/$postId');
       if (result.statusCode != 200) {
         throw Exception('Error fetching post');
       }
-      final data = jsonDecode(result.data.toString()) as Map<String, dynamic>;
-      return PostModel.fromMap(data);
+      final data = result.data!['result'] as Map<String, dynamic>;
+      return PostResponse.fromMap(data);
     } on Exception catch (e) {
       log(e.toString());
       return null;
@@ -138,9 +143,9 @@ class PostAPI {
     String? lastCommentId,
   }) async {
     try {
-      final result = await apiService.getPaginate<String>(
+      final result = await apiService.getPaginate<Map>(
         '$GET_COMMENTS/$postId',
-        {'lastCommentId': lastCommentId},
+        <String, dynamic>{'lastCommentId': lastCommentId},
       );
       if (result.statusCode != 200) {
         throw Exception('Error fetching comments');

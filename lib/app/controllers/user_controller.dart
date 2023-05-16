@@ -15,7 +15,7 @@ class UserController extends GetxController {
   UserModel? get currentUser => _userModel.value;
   // ignore: prefer_final_fields
   Rx<UserModel?> _userModel = Rx<UserModel?>(null);
-
+  set updateUserInController(UserModel user) => _userModel.value = user;
   @override
   void onInit() {
     _userModel.bindStream(UserRepo().currentUserStream());

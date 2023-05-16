@@ -25,7 +25,7 @@ class SocialAPI {
   }) async {
     try {
       final result =
-          await apiService.put<String>('$LIKE_POST/$userId/$postId', null);
+          await apiService.put<Map>('$LIKE_POST/$userId/$postId', null);
       if (result.statusCode != 200) {
         throw Exception('Error liking post');
       }
@@ -36,11 +36,13 @@ class SocialAPI {
     }
   }
 
-  Future<bool> blockUser(
-      {required String blockerId, required String blockedId}) async {
+  Future<bool> blockUser({
+    required String blockerId,
+    required String blockedId,
+  }) async {
     try {
-      final result = await apiService.put<String>(
-          '$BLOCK_USER/$blockerId/$blockedId', null);
+      final result =
+          await apiService.put<Map>('$BLOCK_USER/$blockerId/$blockedId', null);
       if (result.statusCode != 200) {
         throw Exception('Error blocking user');
       }
@@ -56,7 +58,7 @@ class SocialAPI {
     required String blockedId,
   }) async {
     try {
-      final result = await apiService.post<String>(
+      final result = await apiService.post<Map>(
         '$UNBLOCK_USER/$blockerId/$blockedId',
         {'blockerId': blockerId, 'blockedId': blockedId},
       );
@@ -75,7 +77,7 @@ class SocialAPI {
     required String followId,
   }) async {
     try {
-      final result = await apiService.get<String>(
+      final result = await apiService.get<Map>(
         '$IS_FOLLOWING/$userId/$followId',
       );
       if (result.statusCode != 200) {
@@ -91,9 +93,9 @@ class SocialAPI {
   Future<List<UserModel>> getFollowing(String userId,
       {String? lastSentFollowingId}) async {
     try {
-      final result = await apiService.getPaginate<String>(
+      final result = await apiService.getPaginate<Map>(
         '$GET_FOLLOWING/$userId',
-        {'lastSentFollowingId': lastSentFollowingId},
+        <String, dynamic>{'lastSentFollowingId': lastSentFollowingId},
       );
       if (result.statusCode != 200) {
         throw Exception('Error fetching following');
@@ -115,9 +117,9 @@ class SocialAPI {
     String? lastSentFollowerId,
   }) async {
     try {
-      final result = await apiService.getPaginate<String>(
+      final result = await apiService.getPaginate<Map>(
         '$GET_FOLLOWERS/$userId',
-        {'lastSentFollowerId': lastSentFollowerId},
+        <String, dynamic>{'lastSentFollowerId': lastSentFollowerId},
       );
       if (result.statusCode != 200) {
         throw Exception('Error fetching followers');
@@ -139,7 +141,7 @@ class SocialAPI {
     required String blockedId,
   }) async {
     try {
-      final result = await apiService.get<String>(
+      final result = await apiService.get<Map>(
         'IS_BLOCKED/$blockerId/$blockedId',
       );
       if (result.statusCode != 200) {
@@ -152,16 +154,16 @@ class SocialAPI {
     }
   }
 
-  Future<List<String>> getBlockList(String userId) async {
+  Future<List<Map>> getBlockList(String userId) async {
     try {
-      final result = await apiService.get<String>(
+      final result = await apiService.get<Map>(
         '$GET_BLOCK_LIST/$userId',
       );
       if (result.statusCode != 200) {
         throw Exception('Error fetching block list');
       }
       final data = jsonDecode(result.data.toString()) as List;
-      return data.cast<String>();
+      return data.cast<Map>();
     } on Exception catch (e) {
       log(e.toString());
       return [];
@@ -170,7 +172,7 @@ class SocialAPI {
 
   Future<bool> isLiked({required String userId, required String postId}) async {
     try {
-      final result = await apiService.get<String>(
+      final result = await apiService.get<Map>(
         '$IS_LIKED/$userId/$postId',
       );
       if (result.statusCode != 200) {
@@ -186,7 +188,7 @@ class SocialAPI {
 
   Future<List<UserModel>> fetchLikes(String postId) async {
     try {
-      final result = await apiService.get<String>('GET_LIKES/$postId');
+      final result = await apiService.get<Map>('GET_LIKES/$postId');
       if (result.statusCode != 200) {
         throw Exception('Error fetching likes');
       }
@@ -207,7 +209,7 @@ class SocialAPI {
     required String followId,
   }) async {
     try {
-      final result = await apiService.delete<String>(
+      final result = await apiService.delete<Map>(
         '$UNFOLLOW_USER/$userId/$followId',
       );
       if (result.statusCode != 200) {
@@ -226,7 +228,7 @@ class SocialAPI {
   }) async {
     try {
       final result =
-          await apiService.put<String>('$FOLLOW_USER/$userId/$followId', null);
+          await apiService.put<Map>('$FOLLOW_USER/$userId/$followId', null);
       if (result.statusCode != 200) {
         throw Exception('Error updating user delivery');
       }

@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cartisan/app/bindings/initial_bindings.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/global_functions.dart';
@@ -57,27 +56,4 @@ class Main extends StatelessWidget {
       },
     );
   }
-}
-
-Future<void> initializeNotifications() async {
-  await AwesomeNotifications().initialize(
-    null,
-    [
-      NotificationChannel(
-        channelGroupKey: 'basic_channel_group',
-        channelKey: 'basic_channel',
-        channelName: 'Basic notifications',
-        channelDescription: 'Notification channel for basic tests',
-        defaultColor: Colors.pink,
-        ledColor: Colors.white,
-      ),
-    ],
-    channelGroups: [
-      NotificationChannelGroup(
-        channelGroupKey: 'basic_channel_group',
-        channelGroupName: 'Basic group',
-      ),
-    ],
-    debug: true,
-  );
 }

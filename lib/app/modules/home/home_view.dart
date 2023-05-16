@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cartisan/app/controllers/cart_service.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/controllers/timeline_controller.dart';
@@ -9,10 +8,8 @@ import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/cart/cart_view_pages.dart';
 import 'package:cartisan/app/modules/home/components/custom_post_scroller.dart';
 import 'package:cartisan/app/modules/home/components/post_card.dart';
+import 'package:cartisan/app/modules/home/components/timeline_view.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/toast.dart';
-import 'package:cartisan/app/services/api_calls.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,9 +28,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final tc = Get.find<TimelineController>();
-  final tsc = Get.find<TimelineScrollController>();
-
   void addToCart(PostModel post) async {
     final result = await Get.find<CartService>().addToCart(post);
     if (result) {
@@ -75,48 +69,7 @@ class _HomeViewState extends State<HomeView> {
           SizedBox(width: AppSpacing.fourteenHorizontal),
         ],
       ),
-      body: Obx(
-        () {
-          if (tc.firstLoading) {
-            return Center(
-              child: CircularProgressIndicator.adaptive(
-                strokeWidth: 1.5,
-                valueColor: AlwaysStoppedAnimation(
-                  Theme.of(context).primaryColor,
-                ),
-              ),
-            );
-          }
-
-          return CustomPostScroller(
-            children: [
-              ...List.generate(
-                tc.timelinePosts.length,
-                (index) => PostCard(
-                  index: index,
-                  post: tc.timelinePosts[index],
-                  addToCartCallback: () {
-                    addToCart(tc.timelinePosts[index]);
-                  },
-                ),
-              ),
-              if (tc.arePostsostLoading)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.h),
-                  child: Center(
-                    child: CircularProgressIndicator.adaptive(
-                      strokeWidth: 1.5,
-                      valueColor: AlwaysStoppedAnimation(
-                        Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-            scrollController: tsc.timelineController,
-          );
-        },
-      ),
+      body: const TimelineView(),
     );
   }
 }

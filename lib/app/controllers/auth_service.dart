@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,16 +14,28 @@ class AuthService extends GetxService {
   // ignore: prefer_final_fields
   RxBool _isLoading = true.obs;
   String userToken = '';
+  Timer? timer;
+
+  void initAuthToken() async {
+    userToken = await FirebaseAuth.instance.currentUser!.getIdToken(true);
+  }
 
   @override
   void onInit() {
     firebaseUser.bindStream(_auth.authStateChanges());
     handleEmailVerification();
-    ever(firebaseUser, (callback) async {
-      userToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    initAuthToken();
+    timer = Timer.periodic(45.minutes, (callback) async {
+      userToken = await FirebaseAuth.instance.currentUser!.getIdToken(true);
       log("Set the token to $userToken");
     });
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    timer?.cancel();
+    super.onClose();
   }
 
   void handleEmailVerification() {

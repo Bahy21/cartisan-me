@@ -38,10 +38,13 @@ class ProfileCard extends StatelessWidget {
                 )
               : ClipOval(
                   child: Material(
-                    child: Icon(
-                      Icons.person,
-                      size: 100.w,
-                      color: AppColors.kPrimary,
+                    child: Transform.translate(
+                      offset: Offset(-8.w, 0),
+                      child: Icon(
+                        Icons.person,
+                        size: 100.w,
+                        color: AppColors.kPrimary,
+                      ),
                     ),
                   ),
                 ),

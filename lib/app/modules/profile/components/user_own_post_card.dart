@@ -1,39 +1,22 @@
 import 'dart:developer';
-import 'package:cartisan/app/api_classes/post_api.dart';
-import 'package:cartisan/app/api_classes/user_api.dart';
-import 'package:cartisan/app/controllers/post_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
-import 'package:cartisan/app/models/post_response.dart';
-import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/home/components/custom_drop_down.dart';
 import 'package:cartisan/app/modules/home/components/expandable_text.dart';
-import 'package:cartisan/app/modules/home/components/product_option_dialog.dart';
 import 'package:cartisan/app/modules/home/components/quantity_card.dart';
-import 'package:cartisan/app/repositories/post_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 
 // ignore: must_be_immutable
-class PostCard extends StatelessWidget {
-  final PostResponse postResponse;
-  final VoidCallback? addToCartCallback;
-  final VoidCallback? buyNowCallback;
-  final VoidCallback? reportCallback;
-  const PostCard({
-    required this.postResponse,
-    this.addToCartCallback,
-    this.reportCallback,
+class UserOwnPostCard extends StatelessWidget {
+  final PostModel post;
+  const UserOwnPostCard({
+    required this.post,
     super.key,
-    this.buyNowCallback,
   });
 
   @override
   Widget build(BuildContext context) {
-    final user = postResponse.owner;
-    final post = postResponse.post;
     return Container(
       margin: EdgeInsets.only(bottom: 20.h),
       padding: EdgeInsets.only(
@@ -50,64 +33,6 @@ class PostCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 30.r,
-                backgroundColor: AppColors.kPrimary,
-                child: user.url.isURL
-                    ? ClipOval(child: Image.network(user.url))
-                    : Text(
-                        user.username,
-                        style: AppTypography.kMedium18
-                            .copyWith(color: AppColors.kWhite),
-                      ),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user.username,
-                      style: AppTypography.kBold14,
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      post.location,
-                      style: AppTypography.kBold14
-                          .copyWith(color: AppColors.kHintColor),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: addToCartCallback,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                icon: SvgPicture.asset(
-                  AppAssets.kCart,
-                  height: 24.h,
-                  width: 24.w,
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.kPrimary,
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
-              SizedBox(width: 16.w),
-              IconButton(
-                onPressed: () {
-                  Get.dialog<void>(ProductOptionDialog(
-                    reportCallback: reportCallback!,
-                  ));
-                },
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                icon: const Icon(Icons.more_vert),
-              ),
-            ],
-          ),
           SizedBox(height: 13.h),
           Container(
             height: 168.h,
@@ -129,7 +54,7 @@ class PostCard extends StatelessWidget {
                 style: AppTypography.kBold18,
               ),
               ElevatedButton(
-                onPressed: buyNowCallback,
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.kPrimary,
                   padding: EdgeInsets.all(13.h),
@@ -138,7 +63,7 @@ class PostCard extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Buy Now | ${post.price}',
+                  'Priced at | ${post.price}',
                   style: AppTypography.kBold14,
                 ),
               ),

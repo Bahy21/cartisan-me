@@ -1,11 +1,12 @@
 import { log } from "firebase-functions/logger";
 import * as db from "../../../../services/database";
-import { deliveryOptionFromIndex, postFromDoc } from "../../../../services/functions";
+import { deliveryOptionFromIndex, getUserFromPost, postFromDoc, userFromDoc } from "../../../../services/functions";
 import { PostModel } from "../../../../models/post_model";
 import * as express from "express";
+import { DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
+import { UserModel } from "../../../../models/user_model";
 
 const router = express.Router();
-
 
 
 // get post
@@ -17,7 +18,8 @@ router.get("/api/post/getPost/:postId", async (req, res) => {
     const doc = await docref.get();
     if (doc.exists) {
       const post = postFromDoc(doc);
-      return res.status(200).send({ status: "Success", data: post.toMap() });
+      const owner = await getUserFromPost(post.ownerId);
+      return res.status(200).send({ status: "Success", data: {'post':post.toMap(), 'owner':owner.toMap() } });
     } else {
       return res.status(500).send({ status: "Failed", msg: `Document ${req.params.postId} does not exist` });
     }

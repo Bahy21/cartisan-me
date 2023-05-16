@@ -4,7 +4,7 @@ import 'package:cartisan/app/modules/home/home_view.dart';
 import 'package:cartisan/app/modules/landingPage/components/custom_bottom_bar.dart';
 import 'package:cartisan/app/modules/landingPage/components/custom_bottom_bar_item.dart';
 import 'package:cartisan/app/modules/notification/notification_page_view.dart';
-import 'package:cartisan/app/modules/profile/store_view.dart';
+import 'package:cartisan/app/modules/profile/components/user_seller_wrapper.dart';
 import 'package:cartisan/app/modules/search/search_view.dart';
 import 'package:cartisan/app/modules/sidemenu/side_menu.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +29,7 @@ class _LandingPageState extends State<LandingPage> {
       SearchView(),
       const CameraView(),
       const NotificationPageView(),
-      StoreView(
-        isProfileOwner: true,
-      ),
+      const UserSellerWrapper(),
     ];
     return Scaffold(
       key: scaffoldKey,

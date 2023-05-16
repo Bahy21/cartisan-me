@@ -1,6 +1,7 @@
 import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
+import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/modules/home/components/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,7 +12,7 @@ class PostFullScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<PostModel?>(
+    return FutureBuilder<PostResponse?>(
       future: PostAPI().getPost(postId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -38,10 +39,11 @@ class PostFullScreen extends StatelessWidget {
             ),
           );
         }
-        final post = snapshot.data;
+        final postResponse = snapshot.data;
+
         return Scaffold(
           appBar: AppBar(
-            title: Text(post!.productName),
+            title: Text(postResponse!.post.productName),
             leading: IconButton(
               onPressed: () => Get.back<void>(),
               icon: const Icon(
@@ -50,7 +52,7 @@ class PostFullScreen extends StatelessWidget {
               ),
             ),
           ),
-          body: PostCard(index: 0, post: post),
+          body: PostCard(postResponse: postResponse),
         );
       },
     );

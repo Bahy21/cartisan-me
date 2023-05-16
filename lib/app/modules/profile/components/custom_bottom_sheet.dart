@@ -1,9 +1,11 @@
+import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/data/global_functions/error_dialog.dart';
+import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/profile/components/custom_switch.dart';
 import 'package:cartisan/app/modules/profile/components/custom_textformfield.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
-import 'package:cartisan/app/repositories/user_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,6 +19,7 @@ class CustomBottomSheet extends StatefulWidget {
 
 class _CustomBottomSheetState extends State<CustomBottomSheet> {
   final uc = Get.find<UserController>();
+  final userApi = UserAPI();
   ScrollController _scrollController = ScrollController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
@@ -65,15 +68,18 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
       isDeliveryAvailable: _deliveryAvailable,
       pickup: _pickUpAvailable,
       activeShipping: _shippingAvailable,
+      isSeller: _isSeller,
     );
-    final value = await UserRepo().updateUserDetails(
+    final value = await userApi.updateUserDetails(
       userId: uc.currentUser!.id,
       newUser: newUser,
     );
 
     if (value) {
+      uc.updateUserInController = newUser;
       _initWidgetParams();
     } else {
+      await showErrorDialog('Error updating user details');
       setState(() {
         loaded = true;
       });
@@ -164,6 +170,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                                   onChanged: (value) {
                                     setState(() {
                                       _isSeller = value;
+                                      _deliveryAvailable = false;
+                                      _shippingAvailable = false;
+                                      _pickUpAvailable = false;
                                     });
                                   },
                                 ),

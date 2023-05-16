@@ -31,7 +31,7 @@ dependencies:
   firebase_storage:
   cloud_functions:
   dio: ^5.1.2
-  awesome_notifications:
+  infinite_scroll_pagination: ^3.2.0
   
 
 dev_dependencies: 

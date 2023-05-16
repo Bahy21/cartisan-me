@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 
 import 'package:cartisan/app/models/delivery_options.dart';
 import 'package:cartisan/app/models/post_model.dart';
-import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/services/database.dart';
 
 class CartItemModel {

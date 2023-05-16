@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/address__model.dart';
+import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
 
 const String GET_USER = '$BASE_URL/user/getUser';
@@ -18,32 +18,37 @@ class UserAPI {
 
   Future<UserModel?> getUser(String userId) async {
     try {
-      final result = await apiService.get<String>(
-        '$GET_USER/$userId',
+      final link = '$GET_USER/$userId';
+      final result = await apiService.get<Map>(
+        link,
       );
+
       if (result.statusCode != 200) {
         throw Exception('Error fetching user');
       }
-      final data = jsonDecode(result.data.toString()) as Map<String, dynamic>;
-      return UserModel.fromMap(data['result'] as Map<String, dynamic>);
+      return UserModel.fromMap(result.data!['data'] as Map<String, dynamic>);
     } on Exception catch (e) {
       log(e.toString());
       return null;
     }
   }
 
-  Future<List<UserModel>> getAllUserPosts(String userId) async {
+  Future<List<PostModel>> getAllUserPosts(
+    String userId, {
+    String? lastPostId,
+  }) async {
     try {
-      final result = await apiService.get<String>(
+      final result = await apiService.getPaginate<Map>(
         '$GET_ALL_USER_POSTS/$userId',
+        <String, dynamic>{'lastPostId': lastPostId},
       );
       if (result.statusCode != 200) {
         throw Exception('Error fetching user');
       }
-      final data = jsonDecode(result.data.toString()) as List;
-      final posts = <UserModel>[];
+      final data = result.data!['result'] as List;
+      final posts = <PostModel>[];
       for (final post in data) {
-        posts.add(UserModel.fromMap(post as Map<String, dynamic>));
+        posts.add(PostModel.fromMap(post as Map<String, dynamic>));
       }
       return posts;
     } on Exception catch (e) {
@@ -58,7 +63,7 @@ class UserAPI {
   }) async {
     try {
       final result =
-          await apiService.post<String>('$CREATE_USER/$userId', user.toMap());
+          await apiService.post<Map>('$CREATE_USER/$userId', user.toMap());
       if (result.statusCode != 200) {
         throw Exception('Error creating user');
       }
@@ -74,7 +79,7 @@ class UserAPI {
     required Map<String, dynamic> newDelivery,
   }) async {
     try {
-      final result = await apiService.put<String>(
+      final result = await apiService.put<Map>(
         '$UPDATE_DELIVERY_INFO/$userId',
         newDelivery,
       );
@@ -93,9 +98,13 @@ class UserAPI {
     required UserModel newUser,
   }) async {
     try {
-      final result = await apiService.put<String>(
-        '$UPDATE_USER_DETAILS/$userId',
-        newUser.toJson(),
+      final url = '$UPDATE_USER_DETAILS/$userId';
+      final payload = newUser.toMap();
+      log(url);
+      log(payload.toString());
+      final result = await apiService.put<Map>(
+        url,
+        payload,
       );
       if (result.statusCode != 200) {
         throw Exception('Error updating user details');
@@ -112,7 +121,7 @@ class UserAPI {
     required AddressModel newAddress,
   }) async {
     try {
-      final result = await apiService.put<String>(
+      final result = await apiService.put<Map>(
         '$ADD_ADDRESS/$userId',
         newAddress.toMap(),
       );
@@ -131,7 +140,7 @@ class UserAPI {
     required Map<String, dynamic> newAreaMap,
   }) async {
     try {
-      final result = await apiService.put<String>(
+      final result = await apiService.put<Map>(
         '$UPDATE_AREA/$userId',
         newAreaMap,
       );
