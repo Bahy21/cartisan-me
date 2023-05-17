@@ -7,10 +7,12 @@ import 'package:get/get.dart';
 class CartController extends GetxController {
   final cartAPI = CartAPI();
   bool get isCartEmpty => _isCartEmpty.value;
+  bool get isLoading => _isLoading.value;
   List<CartItemModel> get cart => _cart.value;
   // ignore: prefer_final_fields
   Rx<List<CartItemModel>> _cart = Rx<List<CartItemModel>>([]);
   // ignore: prefer_final_fields
+  RxBool _isLoading = true.obs;
   RxBool _isCartEmpty = true.obs;
   String get _currentUid => Get.find<AuthService>().currentUser!.uid;
   @override
@@ -25,9 +27,11 @@ class CartController extends GetxController {
     } else {
       _isCartEmpty.value = false;
     }
+    _isLoading.value = false;
   }
 
   Future<void> getCart() async {
+    _isLoading.value = true;
     _cart.value = await cartAPI.getCart(_currentUid);
     checkCartEmpty();
   }

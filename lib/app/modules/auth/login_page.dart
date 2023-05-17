@@ -106,7 +106,6 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       Get.dialog<Widget>(
                         const ResetPasswordDialog(),
-                        barrierDismissible: false,
                       );
                     },
                     text:

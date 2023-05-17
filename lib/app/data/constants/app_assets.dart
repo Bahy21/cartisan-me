@@ -22,6 +22,7 @@ class AppAssets {
   static String kChevronRight = 'assets/icons/chevron-right.svg';
   static String kDelete = 'assets/icons/delete.svg';
   static String kCancel = 'assets/icons/cancel.svg';
+  static String kNoPostIcon = 'assets/icons/no_post_icon.svg';
 
   // Images.
   static String kProduct1 = 'assets/images/product1.png';

@@ -41,7 +41,7 @@ class TranslationService extends Translations {
           'local_delivery': 'Local Delivery',
           'posts': 'Posts',
           'followers': 'Followers',
-          'following': 'Followings',
+          'following': 'Following',
           'follow': 'Follow',
           'chat': 'Chat',
         },

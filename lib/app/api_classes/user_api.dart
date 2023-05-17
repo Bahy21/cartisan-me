@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/address__model.dart';
@@ -12,6 +11,7 @@ const String UPDATE_DELIVERY_INFO = '$BASE_URL/user/updateDeliveryInfo';
 const String UPDATE_USER_DETAILS = '$BASE_URL/user/updateUser';
 const String ADD_ADDRESS = '$BASE_URL/user/addAddress';
 const String UPDATE_AREA = '$BASE_URL/user/updateArea';
+const String GET_USER_POST_COUNT = '$BASE_URL/user/getPostCount';
 
 class UserAPI {
   APIService apiService = APIService();
@@ -33,6 +33,23 @@ class UserAPI {
     }
   }
 
+  Future<int> getUserPostCount(String userId) async {
+    try {
+      final link = '$GET_USER_POST_COUNT/$userId';
+      final result = await apiService.get<Map>(
+        link,
+      );
+
+      if (result.statusCode != 200) {
+        throw Exception('Error fetching user');
+      }
+      return result.data!['data'] as int;
+    } on Exception catch (e) {
+      log(e.toString());
+      return 0;
+    }
+  }
+
   Future<List<PostModel>> getAllUserPosts(
     String userId, {
     String? lastPostId,
@@ -45,7 +62,7 @@ class UserAPI {
       if (result.statusCode != 200) {
         throw Exception('Error fetching user');
       }
-      final data = result.data!['result'] as List;
+      final data = result.data!['data'] as List;
       final posts = <PostModel>[];
       for (final post in data) {
         posts.add(PostModel.fromMap(post as Map<String, dynamic>));
@@ -100,8 +117,6 @@ class UserAPI {
     try {
       final url = '$UPDATE_USER_DETAILS/$userId';
       final payload = newUser.toMap();
-      log(url);
-      log(payload.toString());
       final result = await apiService.put<Map>(
         url,
         payload,

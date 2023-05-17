@@ -19,13 +19,11 @@ class UserExploreCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          image: post.images.first.isURL
-              ? DecorationImage(
-                  image: NetworkImage(post.images.first),
-                  fit: BoxFit.cover,
-                )
-              : null,
-          color: AppColors.kGrey2,
+          image: DecorationImage(
+            image: NetworkImage(post.images.first),
+            fit: BoxFit.cover,
+          ),
+          color: Colors.red,
         ),
       ),
     );

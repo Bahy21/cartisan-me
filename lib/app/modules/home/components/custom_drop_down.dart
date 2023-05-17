@@ -25,7 +25,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
         Text('Choose :', style: AppTypography.kBold14),
         SizedBox(height: AppSpacing.thirteenVertical),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 2.h),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6.r),
             border: Border.all(color: AppColors.kWhite),
@@ -52,7 +52,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
             underline: const SizedBox(),
             hint: Text(
               'Select',
-              style: AppTypography.kExtraLight12,
+              style: AppTypography.kExtraLight15,
             ),
           ),
         ),

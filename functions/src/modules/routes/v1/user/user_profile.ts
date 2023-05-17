@@ -171,4 +171,18 @@ router.put("/api/user/updateUser/:userId", async (req, res) => {
 });
 
 
+// get user post count
+router.get("/api/user/getPostCount/:userId", async (req, res) => {
+  try {
+    
+    const query = db.postsCollection.where('ownerId', '==', req.params.userId).count();
+    const queryResult = await query.get();
+    const postCount = queryResult.data().count;
+    return res.status(200).send({ status: "Success", data: postCount });
+  } catch (error) {
+    log(error);
+    return res.status(500).send({ status: "Failed", msg: error.message });
+  }
+});
+
 module.exports = router;

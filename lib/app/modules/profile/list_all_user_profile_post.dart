@@ -1,57 +1,59 @@
+import 'dart:developer';
+
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/models/post_model.dart';
-import 'package:cartisan/app/modules/profile/components/user_explore_card.dart';
+import 'package:cartisan/app/models/post_response.dart';
+import 'package:cartisan/app/models/user_model.dart';
+import 'package:cartisan/app/modules/home/components/post_card.dart';
+import 'package:cartisan/app/modules/profile/components/empty_post_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-class ListViewProfilePost extends StatelessWidget {
-  const ListViewProfilePost({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: 5, // TODO: ADD ACTUAL LENGTH
-      separatorBuilder: (context, index) => SizedBox(height: 10.h),
-      padding: EdgeInsets.symmetric(horizontal: 18.w),
-      itemBuilder: (context, index) {
-        // return PostCard(
-        //   post: posts[index],
-        //   index: index,
-        // );
-        return Placeholder();
-      },
-    );
-  }
-}
+import 'package:cartisan/app/controllers/store_page_controller.dart';
 
 class ListAllUserPosts extends StatefulWidget {
-  const ListAllUserPosts({super.key});
+  final String? userId;
+  const ListAllUserPosts({
+    this.userId,
+    super.key,
+  });
 
   @override
   State<ListAllUserPosts> createState() => _ListAllUserPosts();
 }
 
 class _ListAllUserPosts extends State<ListAllUserPosts> {
+  bool errorFetching = false;
   static const _pageSize = 9;
   final userApi = UserAPI();
   final PagingController<int, PostModel> _pagingController =
       PagingController(firstPageKey: 0);
 
+  UserModel? currentlyViewedUser;
   @override
   void initState() {
+    currentlyViewedUser = widget.userId == null
+        ? Get.find<UserController>().currentUser
+        : Get.find<StorePageController>().storeOwner;
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
     super.initState();
   }
 
+  void errorFetchingFunction() {
+    setState(() {
+      errorFetching = true;
+    });
+  }
+
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final uid = Get.find<AuthService>().currentUser!.uid;
+      final uid = widget.userId ?? Get.find<AuthService>().currentUser!.uid;
       final allItems = _pagingController.value.itemList;
       final newItems = await userApi.getAllUserPosts(
         uid,
@@ -59,14 +61,19 @@ class _ListAllUserPosts extends State<ListAllUserPosts> {
             ? allItems![pageKey - 1].postId
             : null,
       );
+
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
+        if (allItems == null || allItems.isEmpty) {
+          errorFetchingFunction();
+        }
         _pagingController.appendLastPage(newItems);
       } else {
         final nextPageKey = pageKey + newItems.length;
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } on Exception catch (error) {
+      errorFetchingFunction();
       _pagingController.error = error;
     }
   }
@@ -79,13 +86,19 @@ class _ListAllUserPosts extends State<ListAllUserPosts> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedListView<int, PostModel>(
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<PostModel>(
-        itemBuilder: (context, item, index) => UserExploreCard(
-          post: item,
-        ),
-      ),
-    );
+    return errorFetching &&
+            ((_pagingController.value.itemList == null ||
+                _pagingController.value.itemList!.isEmpty))
+        ? const EmptyPostMessage()
+        : PagedListView<int, PostModel>(
+            shrinkWrap: true,
+            pagingController: _pagingController,
+            builderDelegate: PagedChildBuilderDelegate<PostModel>(
+              itemBuilder: (context, item, index) => PostCard(
+                postResponse:
+                    PostResponse(owner: currentlyViewedUser!, post: item),
+              ),
+            ),
+          );
   }
 }

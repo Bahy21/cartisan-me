@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/user_model.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 const String IS_FOLLOWING = '$BASE_URL/social/isFollowing';
 const String GET_FOLLOWING = '$BASE_URL/social/getFollowing';
@@ -11,8 +13,8 @@ const String IS_BLOCKED = '$BASE_URL/social/isBlocked';
 const String GET_BLOCK_LIST = '$BASE_URL/social/getBlockList';
 const String IS_LIKED = '$BASE_URL/social/isLiked';
 const String GET_LIKES = '$BASE_URL/social/getLikes';
-const String UNFOLLOW_USER = '$BASE_URL/user/unfollowUser';
-const String FOLLOW_USER = '$BASE_URL/user/followUser';
+const String UNFOLLOW_USER = '$BASE_URL/social/unfollowUser';
+const String FOLLOW_USER = '$BASE_URL/social/followUser';
 const String UNBLOCK_USER = '$BASE_URL/social/unblockUser';
 const String BLOCK_USER = '$BASE_URL/social/blockUser';
 const String LIKE_POST = '$BASE_URL/post/likePost';
@@ -77,6 +79,7 @@ class SocialAPI {
     required String followId,
   }) async {
     try {
+      log('LINK: $IS_FOLLOWING/$userId/$followId');
       final result = await apiService.get<Map>(
         '$IS_FOLLOWING/$userId/$followId',
       );
@@ -212,6 +215,7 @@ class SocialAPI {
       final result = await apiService.delete<Map>(
         '$UNFOLLOW_USER/$userId/$followId',
       );
+      log(result.toString());
       if (result.statusCode != 200) {
         throw Exception('Error unfollowing user');
       }
@@ -227,13 +231,17 @@ class SocialAPI {
     required String followId,
   }) async {
     try {
+      if (kDebugMode) {
+        print('$FOLLOW_USER/$userId/$followId');
+      }
       final result =
           await apiService.put<Map>('$FOLLOW_USER/$userId/$followId', null);
+      log(result.toString());
       if (result.statusCode != 200) {
         throw Exception('Error updating user delivery');
       }
       return true;
-    } on Exception catch (e) {
+    } on DioError catch (e) {
       log(e.toString());
       return false;
     }

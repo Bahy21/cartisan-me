@@ -34,6 +34,8 @@ dependencies:
   infinite_scroll_pagination: ^3.2.0
   
 
+
+
 dev_dependencies: 
   flutter_lints: ^2.0.0
   flutter_test: 
@@ -46,7 +48,10 @@ flutter_native_splash:
 
 flutter: 
   uses-material-design: true
-
+  fonts:
+    - family: aero_regular
+      fonts:
+        - asset: assets/fonts/aero_regular.ttf
   assets:
     - assets/images/
     - assets/icons/

@@ -10,6 +10,8 @@ import 'package:cartisan/app/modules/home/components/custom_drop_down.dart';
 import 'package:cartisan/app/modules/home/components/expandable_text.dart';
 import 'package:cartisan/app/modules/home/components/product_option_dialog.dart';
 import 'package:cartisan/app/modules/home/components/quantity_card.dart';
+import 'package:cartisan/app/modules/profile/other_store_view.dart';
+import 'package:cartisan/app/modules/profile/store_view.dart';
 import 'package:cartisan/app/repositories/post_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,6 +31,10 @@ class PostCard extends StatelessWidget {
     super.key,
     this.buyNowCallback,
   });
+
+  void toToOtherProfile(String userId) {
+    Get.to<Widget>(OtherStoreView(userId: userId));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,33 +58,43 @@ class PostCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 30.r,
-                backgroundColor: AppColors.kPrimary,
-                child: user.url.isURL
-                    ? ClipOval(child: Image.network(user.url))
-                    : Text(
-                        user.username,
-                        style: AppTypography.kMedium18
-                            .copyWith(color: AppColors.kWhite),
-                      ),
+              InkWell(
+                onTap: () {
+                  toToOtherProfile(post.ownerId);
+                },
+                child: CircleAvatar(
+                  radius: 30.r,
+                  backgroundColor: AppColors.kPrimary,
+                  child: user.url.isURL
+                      ? ClipOval(child: Image.network(user.url))
+                      : Text(
+                          user.username,
+                          style: AppTypography.kMedium18
+                              .copyWith(color: AppColors.kWhite),
+                        ),
+                ),
               ),
               SizedBox(width: 12.w),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user.username,
-                      style: AppTypography.kBold14,
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      post.location,
-                      style: AppTypography.kBold14
-                          .copyWith(color: AppColors.kHintColor),
-                    ),
-                  ],
+                child: InkWell(
+                  onTap: () {
+                    toToOtherProfile(post.ownerId);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.username,
+                        style: AppTypography.kBold14,
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        post.location,
+                        style: AppTypography.kBold14
+                            .copyWith(color: AppColors.kHintColor),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               IconButton(
@@ -110,13 +126,13 @@ class PostCard extends StatelessWidget {
           ),
           SizedBox(height: 13.h),
           Container(
-            height: 168.h,
+            height: 250.h,
             width: double.maxFinite,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6.0.r),
               image: DecorationImage(
                 image: NetworkImage(post.images.first),
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               ),
             ),
           ),
@@ -164,7 +180,9 @@ class PostCard extends StatelessWidget {
                 flex: 4,
                 child: CustomDropDown(
                   items: post.variants,
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    post.selectedVariant = value;
+                  },
                 ),
               ),
             ],

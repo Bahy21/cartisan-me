@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/camera/components/custom_checkbox.dart';
 import 'package:cartisan/app/modules/camera/components/images_card.dart';
-import 'package:cartisan/app/services/image_picker_service.dart';
+import 'package:cartisan/app/services/image_picker_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,10 +22,7 @@ class _CameraViewState extends State<CameraView> {
   final List<bool> _selectedRecentList = List.filled(10, false);
   File? image;
   VoidCallback _handlePickImage() {
-    return () async {
-      image = await ImagePickerService().pickImageFromGallery();
-      // Do something with the selected image.
-    };
+    return () async {};
   }
 
   @override

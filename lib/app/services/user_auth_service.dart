@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/address__model.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/repositories/user_repo.dart';
@@ -18,8 +19,9 @@ class UserAuthService {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-    } on Exception catch (e) {
+    } on FirebaseAuthException catch (e) {
       log(e.toString());
+      showErrorDialog('Error signing in\n ${e.message}');
     }
   }
 

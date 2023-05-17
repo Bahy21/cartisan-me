@@ -6,6 +6,8 @@ class AppTypography {
   // Extra Light - 400.
   static TextStyle kExtraLight12 =
       GoogleFonts.inter(fontSize: 12.sp, fontWeight: FontWeight.w400);
+  static TextStyle kExtraLight13 =
+      GoogleFonts.inter(fontSize: 13.5.sp, fontWeight: FontWeight.w400);
   static TextStyle kExtraLight15 =
       GoogleFonts.inter(fontSize: 15.sp, fontWeight: FontWeight.w400);
   static TextStyle kExtraLight16 =

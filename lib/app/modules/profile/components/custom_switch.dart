@@ -21,7 +21,7 @@ class CustomSwitch extends StatelessWidget {
       children: [
         Text(
           text,
-          style: AppTypography.kExtraLight12.copyWith(
+          style: AppTypography.kExtraLight13.copyWith(
             color: value
                 ? AppColors.kPrimary.withOpacity(isDisabled ? 0.5 : 1)
                 : AppColors.kHintColor.withOpacity(isDisabled ? 0.5 : 1),

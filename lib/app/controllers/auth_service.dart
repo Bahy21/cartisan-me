@@ -41,4 +41,9 @@ class AuthService extends GetxService {
   void handleEmailVerification() {
     100.milliseconds.delay().then((dynamic _) => _isLoading.value = false);
   }
+
+  Future<void> handlePasswordReset(String email) async {
+    log('Sending password reset email to $email');
+    await _auth.sendPasswordResetEmail(email: email);
+  }
 }

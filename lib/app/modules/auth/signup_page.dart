@@ -27,15 +27,14 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final _confirmPasswordFocus = FocusNode();
-  final TextEditingController _sellerController = TextEditingController();
-  final _sellerFocus = FocusNode();
+  bool _isSeller = false;
 
   Future<void> _handleRegistration() async {
     await UserAuthService().signUpWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
       name: _nameController.text,
-      isSeller: false,
+      isSeller: _isSeller,
       taxPercentage: 0,
       city: 'Miami',
       country: 'America',
@@ -50,7 +49,6 @@ class _SignUpPageState extends State<SignUpPage> {
     _passwordFocus.dispose();
     _nameFocus.dispose();
     _confirmPasswordFocus.dispose();
-    _sellerFocus.dispose();
     super.dispose();
   }
 
@@ -118,7 +116,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     if (value!.isEmpty) {
                       return TranslationsService
                           .sigInPageTranslation.passwordRequired;
-                    } else if (value.length <= 8) {
+                    } else if (value.length <= 6) {
                       return TranslationsService
                           .sigInPageTranslation.validPassword;
                     }
@@ -139,7 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     if (value!.isEmpty) {
                       return TranslationsService
                           .sigInPageTranslation.passwordRequired;
-                    } else if (value.length <= 8) {
+                    } else if (value.length <= 6) {
                       return TranslationsService
                           .sigInPageTranslation.validPassword;
                     } else if (_passwordController.text !=
@@ -151,21 +149,26 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                 ),
                 SizedBox(height: AppSpacing.tenVertical),
-                CustomLoginField(
-                  controller: _sellerController,
-                  focusNode: _sellerFocus,
-                  isSeller: true,
-                  hintText: TranslationsService.sigUpPageTranslation.areYouSell,
-                  iconPath: AppAssets.kCheckSquare,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.done,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return TranslationsService
-                          .sigUpPageTranslation.fieldRequired;
-                    }
-                    return null;
-                  },
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColors.kFilledColor,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  child: CheckboxListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 18.w),
+                    title: Text(
+                      TranslationsService.sigUpPageTranslation.areYouSell,
+                      style: AppTypography.kLight14
+                          .copyWith(color: AppColors.kLightGrey),
+                    ),
+                    activeColor: AppColors.kPrimary,
+                    value: _isSeller,
+                    onChanged: (newState) {
+                      setState(() {
+                        _isSeller = newState!;
+                      });
+                    },
+                  ),
                 ),
                 SizedBox(height: 32.h),
                 PrimaryButton(
@@ -177,22 +180,23 @@ class _SignUpPageState extends State<SignUpPage> {
                   text: TranslationsService.sigInPageTranslation.signUp,
                   width: 211.w,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      TranslationsService
-                          .sigUpPageTranslation.alreadyHaveAccount,
-                      style: AppTypography.kLight14
-                          .copyWith(color: AppColors.kPrimary),
-                    ),
-                    CustomTextButton(
-                      onPressed: () {
-                        Get.back<void>();
-                      },
-                      text: TranslationsService.sigInPageTranslation.signIn,
-                    ),
-                  ],
+                SizedBox(
+                  height: 10.h,
+                ),
+                InkWell(
+                  onTap: () {
+                    Get.back<void>();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${TranslationsService.sigUpPageTranslation.alreadyHaveAccount} ${TranslationsService.sigInPageTranslation.signIn}',
+                        style: AppTypography.kLight14
+                            .copyWith(color: AppColors.kPrimary),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 52.h),
                 RichText(

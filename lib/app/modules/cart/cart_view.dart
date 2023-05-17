@@ -21,27 +21,30 @@ class _CartViewState extends State<CartView> {
       init: CartController(),
       builder: (controller) {
         return Scaffold(
-          body: controller.isCartEmpty
-              ? Center(child: Text('Cart is empty'))
-              : ListView.separated(
-                  itemCount: controller.cart.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 15.h),
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  itemBuilder: (context, index) => CartItemCard(
-                    cartItem: controller.cart[index],
-                    deleteCallback: () {
-                      Get.dialog<void>(DeleteCartItemDialog(
-                        deleteConfirmationCallback: () {
-                          controller.deleteCartItem(
-                            controller.cart[index].cartItemId,
-                          );
-                          Get.back<void>();
-                          controller.getCart();
+          body: controller.isLoading
+              ? Center(child: CircularProgressIndicator.adaptive())
+              : controller.isCartEmpty
+                  ? Center(child: Text('Cart is empty'))
+                  : ListView.separated(
+                      itemCount: controller.cart.length,
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 15.h),
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      itemBuilder: (context, index) => CartItemCard(
+                        cartItem: controller.cart[index],
+                        deleteCallback: () {
+                          Get.dialog<void>(DeleteCartItemDialog(
+                            deleteConfirmationCallback: () {
+                              controller.deleteCartItem(
+                                controller.cart[index].cartItemId,
+                              );
+                              Get.back<void>();
+                              controller.getCart();
+                            },
+                          ));
                         },
-                      ));
-                    },
-                  ),
-                ),
+                      ),
+                    ),
           bottomSheet: Semantics(
             button: true,
             child: InkWell(

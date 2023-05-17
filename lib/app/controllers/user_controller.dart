@@ -1,3 +1,4 @@
+import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/repositories/user_repo.dart';
@@ -10,15 +11,27 @@ import 'package:get/get.dart';
 class UserController extends GetxController {
   final dio = Dio();
   final db = Database();
-  Map cache = <String, UserModel>{};
   AuthService ac = Get.find<AuthService>();
   UserModel? get currentUser => _userModel.value;
+  int get userPostCount => _userPostCount.value;
   // ignore: prefer_final_fields
+  RxInt _userPostCount = 0.obs;
   Rx<UserModel?> _userModel = Rx<UserModel?>(null);
   set updateUserInController(UserModel user) => _userModel.value = user;
   @override
   void onInit() {
     _userModel.bindStream(UserRepo().currentUserStream());
     super.onInit();
+  }
+
+  void getUserPostCount() async {
+    _userPostCount.value =
+        await UserAPI().getUserPostCount(ac.currentUser!.uid);
+  }
+
+  @override
+  void onReady() {
+    getUserPostCount();
+    super.onReady();
   }
 }

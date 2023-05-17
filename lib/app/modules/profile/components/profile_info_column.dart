@@ -13,12 +13,13 @@ class ProfileInfoColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(numbers, style: AppTypography.kMedium18),
+        Text(numbers, style: AppTypography.kMedium16),
         Text(
           headings,
           style:
-              AppTypography.kExtraLight15.copyWith(color: AppColors.kHintColor),
+              AppTypography.kExtraLight13.copyWith(color: AppColors.kHintColor),
         ),
       ],
     );

@@ -51,12 +51,11 @@ class _HomeViewState extends State<HomeView> {
         centerTitle: true,
         title: Text(
           'CARTISAN',
-          style: GoogleFonts.didactGothic(
-            textStyle: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-            ),
+          style: TextStyle(
+            fontFamily: 'aero_regular',
+            fontSize: 22.sp,
+            color: Colors.white,
+            letterSpacing: 1,
           ),
         ),
         actions: [

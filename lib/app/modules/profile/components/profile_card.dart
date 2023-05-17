@@ -11,10 +11,8 @@ class ProfileCard extends StatelessWidget {
   final VoidCallback editCallback;
   final VoidCallback? followCallback;
   final VoidCallback? chatCallback;
-  final bool isProfileOwner;
   ProfileCard({
     required this.editCallback,
-    required this.isProfileOwner,
     this.followCallback,
     this.chatCallback,
     super.key,
@@ -48,14 +46,13 @@ class ProfileCard extends StatelessWidget {
                     ),
                   ),
                 ),
-          // TODO: FUCKING CENTER THAT ICON.
         ),
         SizedBox(width: 16.w),
         Expanded(
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ProfileInfoColumn(
                     numbers: uc.currentUser?.isSeller ?? false ? 'NaN' : '0',
@@ -74,34 +71,10 @@ class ProfileCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 18.h),
-              if (isProfileOwner)
-                CustomOutlinedButton(
-                  onTap: editCallback,
-                  text: TranslationsService.storePageTranslation.editProfile,
-                )
-              else
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomOutlinedButton(
-                        onTap: () {},
-                        text: TranslationsService.storePageTranslation.follow,
-                        btnColor: AppColors.kPrimary,
-                        color: AppColors.kPrimary,
-                        fontColor: AppColors.kWhite,
-                      ),
-                    ),
-                    SizedBox(width: 13.w),
-                    Expanded(
-                      child: CustomOutlinedButton(
-                        onTap: () {},
-                        text: TranslationsService.storePageTranslation.chat,
-                        color: AppColors.kPrimary,
-                        fontColor: AppColors.kPrimary,
-                      ),
-                    ),
-                  ],
-                ),
+              CustomOutlinedButton(
+                onTap: editCallback,
+                text: TranslationsService.storePageTranslation.editProfile,
+              ),
             ],
           ),
         ),

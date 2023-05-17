@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Database {
   final firestore = FirebaseFirestore.instance;
@@ -49,4 +51,19 @@ class Database {
       postsCollection.doc(postId).collection('likes');
   CollectionReference<Map<String, dynamic>> commentsCollection(String postId) =>
       postsCollection.doc(postId).collection('comments');
+
+  Future<String?> uploadImage(File image) async {
+    try {
+      final storageRef = FirebaseStorage.instance.ref();
+      final storagePlace = storageRef.child(
+        'profile_images/${DateTime.now().millisecondsSinceEpoch}-${image.path}',
+      );
+      await storagePlace.putFile(image);
+      final url = await storagePlace.getDownloadURL();
+      return url;
+    } on FirebaseException catch (e) {
+      log('Error uploading image: $e');
+      return null;
+    }
+  }
 }

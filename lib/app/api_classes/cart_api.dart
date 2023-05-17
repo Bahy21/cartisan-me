@@ -43,7 +43,8 @@ class CartAPI {
       if (result.statusCode != 200) {
         throw Exception('Error fetching user');
       }
-      final data = result.data!['result'] as List;
+      log(result.toString());
+      final data = result.data!['data'] as List;
       final cart = <CartItemModel>[];
       for (final cartItem in data) {
         cart.add(CartItemModel.fromMap(cartItem as Map<String, dynamic>));

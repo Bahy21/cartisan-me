@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/data/global_functions/success_dialog.dart';
 import 'package:cartisan/app/modules/auth/components/custom_login_field.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:cartisan/app/services/translation_service.dart';
@@ -14,6 +18,7 @@ class ResetPasswordDialog extends StatefulWidget {
 }
 
 class _ResetPasswordDialogState extends State<ResetPasswordDialog> {
+  final as = Get.find<AuthService>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final _emailFocus = FocusNode();
@@ -32,6 +37,14 @@ class _ResetPasswordDialogState extends State<ResetPasswordDialog> {
     super.dispose();
   }
 
+  void handlePasswordReset() async {
+    await as.handlePasswordReset(_emailController.text);
+    Get.back<void>();
+    await Get.dialog<Widget>(SuccessDialog(
+      message: 'Sent password reset email to ${_emailController.text}',
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -44,7 +57,7 @@ class _ResetPasswordDialogState extends State<ResetPasswordDialog> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
@@ -80,7 +93,7 @@ class _ResetPasswordDialogState extends State<ResetPasswordDialog> {
                 child: PrimaryButton(
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
-                      Get.back<void>();
+                      handlePasswordReset();
                     }
                   },
                   radius: 20.r,
