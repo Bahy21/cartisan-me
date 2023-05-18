@@ -12,6 +12,9 @@ const String UPDATE_USER_DETAILS = '$BASE_URL/user/updateUser';
 const String ADD_ADDRESS = '$BASE_URL/user/addAddress';
 const String UPDATE_AREA = '$BASE_URL/user/updateArea';
 const String GET_USER_POST_COUNT = '$BASE_URL/user/getPostCount';
+const String GET_ALL_USER_ADDRESSES = '$BASE_URL/user/getAllAddresses';
+const String UPDATE_ADDRESS = '$BASE_URL/user/updateAddress';
+const String DELETE_ADDRESS = '$BASE_URL/user/deleteAddress';
 
 class UserAPI {
   APIService apiService = APIService();
@@ -30,6 +33,65 @@ class UserAPI {
     } on Exception catch (e) {
       log(e.toString());
       return null;
+    }
+  }
+
+  Future<bool> deleteAddress({
+    required String userId,
+    required String addressId,
+  }) async {
+    try {
+      final link = '$DELETE_ADDRESS/$userId/$addressId';
+      final result = await apiService.delete<Map>(
+        link,
+      );
+      if (result.statusCode != 200) {
+        throw Exception('Error deleting address');
+      }
+      return true;
+    } on Exception catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> updateAddress({
+    required String userId,
+    required String addressId,
+    required AddressModel address,
+  }) async {
+    try {
+      final link = '$UPDATE_ADDRESS/$userId/$addressId';
+      final result = await apiService.put<Map>(
+        link,
+        address.toMap(),
+      );
+      if (result.statusCode != 200) {
+        throw Exception('Error updating address');
+      }
+      return true;
+    } on Exception catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<List<AddressModel>> getAllUserAddresses(String uid) async {
+    try {
+      final link = '$GET_ALL_USER_ADDRESSES/$uid';
+      final result = await apiService.get<Map>(
+        link,
+      );
+      log(result.toString());
+      final data = result.data!['data'] as List;
+      final addresses = <AddressModel>[];
+      for (final address in data) {
+        addresses.add(AddressModel.fromMap(address as Map<String, dynamic>));
+      }
+      return addresses;
+    } on Exception catch (e) {
+      log(e.toString());
+      return [];
     }
   }
 

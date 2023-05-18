@@ -107,6 +107,52 @@ router.put("/api/user/addAddress/:userId", async (req, res) => {
   }
 });
 
+// get all addresses
+router.get("/api/user/getAllAddresses/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const addressDoc: CollectionReference = db.allUserAddresses(userId);
+    const addresssDocs = await addressDoc.get();
+    let addresses:Address[] = <Address[]>[];
+    addresssDocs.docs.map((doc)=>{
+      addresses.push(addressFromMap(doc.data() as Map<String, any>));
+    });
+    return res.status(200).send({status: "Success", data: addresses});
+  } catch (error) {
+    log(error);
+    return res.status(500).send({status: "Failed", msg: error.message});
+  }
+});
+
+// update address
+router.put("/api/user/updateAddress/:userId/:addressId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const addressId = req.params.addressId;
+    const address:Address = addressFromMap(req.body);
+    const addressDoc: DocumentReference = db.allUserAddresses(userId).doc(addressId);
+    await addressDoc.update(address.toMap());
+    return res.status(200).send({status: "Success", data: `Successfully added address for user ${userId}`});
+  } catch (error) {
+    log(error);
+    return res.status(500).send({status: "Failed", msg: error.message});
+  }
+});
+
+// delete address
+router.delete("/api/user/deleteAddress/:userId/:addressId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const addressId = req.params.addressId;
+    const addressDoc: DocumentReference = db.allUserAddresses(userId).doc(addressId);
+    await addressDoc.delete();
+    return res.status(200).send({status: "Success", data: `Successfully added address for user ${userId}`});
+  } catch (error) {
+    log(error);
+    return res.status(500).send({status: "Failed", msg: error.message});
+  }
+});
+
 // update area
 router.put("/api/user/updateArea/:userId", async (req, res) => {
   try {

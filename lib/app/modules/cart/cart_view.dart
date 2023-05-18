@@ -18,7 +18,6 @@ class _CartViewState extends State<CartView> {
   @override
   Widget build(BuildContext context) {
     return GetX<CartController>(
-      init: CartController(),
       builder: (controller) {
         return Scaffold(
           body: controller.isLoading

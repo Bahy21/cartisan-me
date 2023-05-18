@@ -2,7 +2,6 @@ import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CustomCartAppbar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback leadingCallback;
@@ -24,12 +23,11 @@ class CustomCartAppbar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       title: Text(
         'CARTISAN',
-        style: GoogleFonts.didactGothic(
-          textStyle: TextStyle(
-            fontSize: 24.sp,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+        style: TextStyle(
+          fontFamily: 'aero_regular',
+          fontSize: 22.sp,
+          color: Colors.white,
+          letterSpacing: 1,
         ),
       ),
       actions: [

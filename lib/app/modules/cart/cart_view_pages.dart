@@ -1,3 +1,5 @@
+import 'package:cartisan/app/controllers/address_controller.dart';
+import 'package:cartisan/app/controllers/cart_controller.dart';
 import 'package:cartisan/app/controllers/cart_page_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/cart/address_view.dart';
@@ -29,12 +31,16 @@ class CartViewPages extends GetView<CartPageController> {
   @override
   Widget build(BuildContext context) {
     return GetX<CartPageController>(
+      autoRemove: false,
       init: CartPageController(),
+      initState: (state) {
+        Get.put(CartController());
+        Get.put(AddressController());
+      },
       builder: (statusController) {
         return WillPopScope(
           onWillPop: () async {
             if (statusController.initialPageIndex == 0) {
-              await Get.delete<CartPageController>();
               Get.back<void>();
             } else {
               statusController.updateStatus(

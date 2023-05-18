@@ -13,20 +13,26 @@ class AuthService extends GetxService {
   set isLoading(bool value) => _isLoading.value = value;
   // ignore: prefer_final_fields
   RxBool _isLoading = true.obs;
-  String userToken = '';
+  RxString userToken = ''.obs;
   Timer? timer;
 
   void initAuthToken() async {
-    userToken = await FirebaseAuth.instance.currentUser!.getIdToken(true);
+    userToken.value = await FirebaseAuth.instance.currentUser!.getIdToken(true);
   }
 
   @override
   void onInit() {
     firebaseUser.bindStream(_auth.authStateChanges());
-    handleEmailVerification();
     initAuthToken();
+    handleEmailVerification();
+    ever(firebaseUser, (callback) async {
+      userToken.value =
+          await FirebaseAuth.instance.currentUser!.getIdToken(true);
+      log("Set the token to $userToken");
+    });
     timer = Timer.periodic(45.minutes, (callback) async {
-      userToken = await FirebaseAuth.instance.currentUser!.getIdToken(true);
+      userToken.value =
+          await FirebaseAuth.instance.currentUser!.getIdToken(true);
       log("Set the token to $userToken");
     });
     super.onInit();
@@ -39,7 +45,7 @@ class AuthService extends GetxService {
   }
 
   void handleEmailVerification() {
-    100.milliseconds.delay().then((dynamic _) => _isLoading.value = false);
+    0.milliseconds.delay().then((dynamic _) => _isLoading.value = false);
   }
 
   Future<void> handlePasswordReset(String email) async {

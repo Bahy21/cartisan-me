@@ -18,11 +18,12 @@ class TimelineView extends StatefulWidget {
 }
 
 class _TimelineViewState extends State<TimelineView> {
+  int retries = 0;
   static const _pageSize = 10;
   final cartAPI = CartAPI();
   final PagingController<int, PostResponse> _pagingController =
       PagingController(firstPageKey: 0);
-
+  final as = Get.find<AuthService>();
   @override
   void initState() {
     _fetchPage(0);
@@ -50,6 +51,10 @@ class _TimelineViewState extends State<TimelineView> {
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } on Exception catch (error) {
+      if (retries < 3) {
+        await _fetchPage(pageKey);
+      }
+      retries++;
       _pagingController.error = error;
     }
   }
@@ -74,15 +79,19 @@ class _TimelineViewState extends State<TimelineView> {
   }
 
   @override
-  Widget build(BuildContext context) => PagedListView<int, PostResponse>(
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<PostResponse>(
-          itemBuilder: (context, item, index) => PostCard(
-            addToCartCallback: () {
-              addToCart(item.post);
-            },
-            postResponse: item,
+  Widget build(BuildContext context) => Obx(() => as.userToken.isEmpty
+      ? Center(
+          child: CircularProgressIndicator.adaptive(),
+        )
+      : PagedListView<int, PostResponse>(
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<PostResponse>(
+            itemBuilder: (context, item, index) => PostCard(
+              addToCartCallback: () {
+                addToCart(item.post);
+              },
+              postResponse: item,
+            ),
           ),
-        ),
-      );
+        ));
 }

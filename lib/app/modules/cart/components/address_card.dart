@@ -1,12 +1,15 @@
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/models/address__model.dart';
 import 'package:cartisan/app/modules/widgets/buttons/custom_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddressCard extends StatelessWidget {
   final VoidCallback changeAddressCallback;
+  final AddressModel addressModel;
   const AddressCard({
     required this.changeAddressCallback,
+    required this.addressModel,
     super.key,
   });
 
@@ -27,7 +30,7 @@ class AddressCard extends StatelessWidget {
                 radius: 25.r,
                 backgroundColor: Colors.blue,
                 child: Text(
-                  'J',
+                  addressModel.fullname[0].toUpperCase(),
                   style:
                       AppTypography.kBold20.copyWith(color: AppColors.kWhite),
                 ),
@@ -38,15 +41,15 @@ class AddressCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Jack Milan',
+                      addressModel.fullname,
                       style: AppTypography.kMedium16,
                     ),
                     Text(
-                      'Domen Tikoro Street:  825 Baker Avenue, Dallas,Texas, Zip code  75202',
+                      '${addressModel.addressLine1}, ${addressModel.addressLine2}, ${addressModel.city}, ${addressModel.state}',
                       style: AppTypography.kExtraLight12,
                     ),
                     Text(
-                      'Phone No. 0123-735398900',
+                      'Phone No. ${addressModel.contactNumber}',
                       style: AppTypography.kExtraLight12,
                     ),
                   ],

@@ -138,7 +138,7 @@ class PostModel {
       'commentCount': commentCount,
       'reviewCount': reviewCount,
       'likesCount': likesCount,
-      'deliveryOptions': deliveryOptions,
+      'deliveryOptions': deliveryOptions.index,
     };
   }
 

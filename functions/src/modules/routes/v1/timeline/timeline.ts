@@ -12,11 +12,15 @@ router.get("/api/timeline/fetchPosts/:userId/:count", async(req,res)=>{
    
     const userId: string = req.params.userId;
     const count: number = parseInt(req.params.count);
-    const lastPostId: string = req.query.lastPostId.toString();
-    log(`Fetching timeline posts for user ${userId} and lastPostId: ${lastPostId}` );
+    let lastPostId = req.query.lastPostId;
+    if(lastPostId == null || lastPostId == ""){
+      lastPostId = '';
+    } else {
+      lastPostId = lastPostId.toString();
+    }
     const postRef: CollectionReference = db.postsCollection;
     let queryDocs: QuerySnapshot;
-    if (lastPostId == null || lastPostId == ""){
+    if (lastPostId == null || lastPostId == ''){
       queryDocs  = await postRef.orderBy("timestamp","desc").limit(count).get();
     } else {
       const startAt = await postRef.doc(lastPostId).get();

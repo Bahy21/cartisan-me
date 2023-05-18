@@ -1,19 +1,13 @@
 import 'dart:developer';
-import 'package:cartisan/app/api_classes/post_api.dart';
-import 'package:cartisan/app/api_classes/user_api.dart';
-import 'package:cartisan/app/controllers/post_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
-import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
-import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/home/components/custom_drop_down.dart';
 import 'package:cartisan/app/modules/home/components/expandable_text.dart';
 import 'package:cartisan/app/modules/home/components/product_option_dialog.dart';
 import 'package:cartisan/app/modules/home/components/quantity_card.dart';
 import 'package:cartisan/app/modules/profile/other_store_view.dart';
-import 'package:cartisan/app/modules/profile/store_view.dart';
-import 'package:cartisan/app/repositories/post_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -36,6 +30,7 @@ class PostCard extends StatelessWidget {
     Get.to<Widget>(OtherStoreView(userId: userId));
   }
 
+  int get _avatarSize => 60;
   @override
   Widget build(BuildContext context) {
     final user = postResponse.owner;
@@ -59,21 +54,32 @@ class PostCard extends StatelessWidget {
           Row(
             children: [
               InkWell(
-                onTap: () {
-                  toToOtherProfile(post.ownerId);
-                },
-                child: CircleAvatar(
-                  radius: 30.r,
-                  backgroundColor: AppColors.kPrimary,
-                  child: user.url.isURL
-                      ? ClipOval(child: Image.network(user.url))
-                      : Text(
-                          user.username,
-                          style: AppTypography.kMedium18
-                              .copyWith(color: AppColors.kWhite),
-                        ),
-                ),
-              ),
+                  onTap: () {
+                    toToOtherProfile(post.ownerId);
+                  },
+                  child: SizedBox(
+                    height: _avatarSize.w,
+                    width: _avatarSize.w,
+                    child: user.url.isURL
+                        ? ClipOval(
+                            child: Image.network(
+                              user.url,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : ClipOval(
+                            child: Material(
+                              child: Transform.translate(
+                                offset: Offset(-8.w, 0),
+                                child: Icon(
+                                  Icons.person,
+                                  size: 110.w,
+                                  color: AppColors.kPrimary,
+                                ),
+                              ),
+                            ),
+                          ),
+                  )),
               SizedBox(width: 12.w),
               Expanded(
                 child: InkWell(
@@ -125,17 +131,7 @@ class PostCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 13.h),
-          Container(
-            height: 250.h,
-            width: double.maxFinite,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6.0.r),
-              image: DecorationImage(
-                image: NetworkImage(post.images.first),
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
+          PostImageCarousel(images: post.images),
           SizedBox(height: AppSpacing.seventeenVertical),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -199,5 +195,32 @@ class PostCard extends StatelessWidget {
       log(e.toString());
       return Icon(Icons.person_2_rounded, color: Colors.pink.shade800);
     }
+  }
+}
+
+class PostImageCarousel extends StatefulWidget {
+  final List<String> images;
+  const PostImageCarousel({required this.images, super.key});
+
+  @override
+  State<PostImageCarousel> createState() => _PostImageCarouselState();
+}
+
+class _PostImageCarouselState extends State<PostImageCarousel> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        height: 250.h,
+        width: double.maxFinite,
+        child: CarouselSlider.builder(
+            slideBuilder: (index) {
+              return ClipRRect(
+                  borderRadius: BorderRadius.circular(6.0.r),
+                  child: Image.network(
+                    widget.images[index],
+                    fit: BoxFit.contain,
+                  ));
+            },
+            itemCount: widget.images.length));
   }
 }

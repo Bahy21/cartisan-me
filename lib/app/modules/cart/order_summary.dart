@@ -22,15 +22,15 @@ class OrderSummary extends StatelessWidget {
             style: AppTypography.kMedium16,
           ),
           SizedBox(height: AppSpacing.fourteenVertical),
-          AddressCard(
-            changeAddressCallback: () {
-              Get.find<CartPageController>().jumpToIndex(1);
-              Get.find<CartPageController>().updateStatus(
-                index: 1,
-                status: true,
-              );
-            },
-          ),
+          // AddressCard(
+          //   changeAddressCallback: () {
+          //     Get.find<CartPageController>().jumpToIndex(1);
+          //     Get.find<CartPageController>().updateStatus(
+          //       index: 1,
+          //       status: true,
+          //     );
+          //   },
+          // ),
           SizedBox(height: AppSpacing.fourteenVertical),
           Text(
             'Item Summary',

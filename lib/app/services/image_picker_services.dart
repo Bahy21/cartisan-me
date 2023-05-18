@@ -28,4 +28,14 @@ class ImagePickerServices {
       return null;
     }
   }
+
+  Future<List<File>?> pickMultipleImages() async {
+    final res = await _picker.pickMultiImage();
+    List<File> images = [];
+
+    for (final image in res) {
+      images.addAll([File(image.path)]);
+    }
+    return images;
+  }
 }

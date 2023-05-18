@@ -34,8 +34,8 @@ class SideMenu extends StatelessWidget {
                       if (uc.currentUser?.url.isURL ?? false)
                         CircleAvatar(
                           radius: 60.r,
-                          backgroundImage: const NetworkImage(
-                            'https://randomuser.me/api/portraits/men/81.jpg',
+                          backgroundImage: NetworkImage(
+                            uc.currentUser!.url,
                           ),
                         )
                       else
