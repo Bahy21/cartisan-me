@@ -300,7 +300,7 @@ export function orderItemFromMap(map:Map<any,any>): OrderItemModel{
   const orderItem = new OrderItemModel({
     orderItemID: map['orderItemID'],
     productId: map['productId'],
-    selectedVariant: map['selectedVariant'],
+    productOption: map['productOption'],
     appFeeInCents: map['appFeeInCents'],
     quantity: map['quantity'],
     price : map['price'],

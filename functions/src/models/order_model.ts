@@ -4,19 +4,24 @@ import { OrderItemModel } from "./order_item_model";
 
 export class OrderModel {
     orderId: string;
-    billingAddress: Address;
+    address: Address;
     shippingAddress: Address;
     buyerId: string;
-    orderItems: OrderItemModel[] = [];
+    orderItems: OrderItemModel[];
     total: number;
     timestamp: number;
     involvedSellersList: string[];
     totalInCents: number;
-    orderStatus: OrderItemStatus
+    orderStatus: OrderItemStatus  
+    currency: string;
+    isPaid: boolean;
+
+
+
     get totalInString(): string {
       return this.total.toFixed(2);
     }
-    constructor({orderId,buyerId,orderItems,total,timestamp,involvedSellersList,totalInCents, orderStatus}:
+    constructor({orderId,buyerId,orderItems,total,timestamp,involvedSellersList,totalInCents, orderStatus, address, shippingAddress, currency, isPaid}:
        { orderId: string,
         buyerId: string,
         orderItems: OrderItemModel[],
@@ -24,7 +29,11 @@ export class OrderModel {
         timestamp: number,
         involvedSellersList: string[],
         totalInCents: number, 
-        orderStatus: OrderItemStatus}
+        orderStatus: OrderItemStatus,
+        address: Address,
+        shippingAddress: Address,
+        currency: string,
+        isPaid: boolean}
     ) {
         this.orderId = orderId;
         this.buyerId = buyerId;
@@ -34,13 +43,17 @@ export class OrderModel {
         this.involvedSellersList = involvedSellersList;
         this.totalInCents = totalInCents;
         this.orderStatus = orderStatus;
+        this.address = address;
+        this.shippingAddress = shippingAddress;
+        this.currency = currency;
+        this.isPaid = isPaid;
     }
     // TODO: ADD ADDRESSES
     toMap(){
         let orderItems = [];
-        this.orderItems.forEach((orderItem)=>{
+        for(const orderItem of this.orderItems){
             orderItems.push(orderItem.toMap());
-        }); 
+        }; 
         return {
             orderId: this.orderId,
             buyerId: this.buyerId,
@@ -48,7 +61,13 @@ export class OrderModel {
             total: this.total,
             timestamp: this.timestamp,
             involvedSellersList: this.involvedSellersList,
-            totalInCents: this.totalInCents   
+            totalInCents: this.totalInCents,
+            orderStatus: this.orderStatus,
+            address: this.address.toMap(),
+            shippingAddress: this.shippingAddress.toMap(),
+            currency: this.currency,
+            isPaid: this.isPaid
+            
         }
     }
     toString(){

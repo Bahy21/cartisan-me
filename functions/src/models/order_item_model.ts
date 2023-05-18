@@ -3,7 +3,7 @@ import { DeliveryOptions, OrderItemStatus } from "./enums";
 export class OrderItemModel {
     orderItemID: string;
     productId: string;
-    selectedVariant: string;
+    productOption: string;
     appFeeInCents: number;
     quantity: number;
     price: number;
@@ -16,11 +16,16 @@ export class OrderItemModel {
     sellerStripeId: string;
     status: OrderItemStatus;
     tax: number;
+    currency: string;
+    state: string;
   
+  
+
+
     constructor({
       orderItemID,
       productId,
-      selectedVariant,
+      productOption,
       appFeeInCents,
       quantity,
       price,
@@ -32,10 +37,12 @@ export class OrderItemModel {
       serviceFeeInCents,
       tax,
       status,
+      currency,
+      state,
     }:{
       orderItemID: string;
       productId: string;
-      selectedVariant: string;
+      productOption: string;
       appFeeInCents: number;
       quantity: number;
       price: number;
@@ -47,8 +54,10 @@ export class OrderItemModel {
       serviceFeeInCents: number;
       tax: number;
       status: OrderItemStatus;
+      currency: string;
+      state: string;
     }) {
-      this.selectedVariant = selectedVariant;
+      this.productOption = productOption;
       this.orderItemID = orderItemID;
       this.productId = productId;
       this.appFeeInCents = appFeeInCents;
@@ -60,9 +69,11 @@ export class OrderItemModel {
       this.deliveryCostInCents = deliveryCostInCents;
       this.costBeforeTaxInCents = costBeforeTaxInCents;
       this.serviceFeeInCents = serviceFeeInCents;
-      this.sellerStripeId = "";
       this.tax = tax;
       this.status = status;
+      this.currency = currency;
+      this.state = state;
+
     }
   
     get grossTotal(): number {
@@ -87,7 +98,7 @@ export class OrderItemModel {
 
     toMap(){
         return {
-            selectedVariant: this.selectedVariant,
+          productOption: this.productOption,
             orderItemID: this.orderItemID,
             productId: this.productId,
             appFeeInCents: this.appFeeInCents,
@@ -107,7 +118,7 @@ export class OrderItemModel {
 
     incomplete(){
       return (
-        this.selectedVariant == null ||
+        this.productOption == null ||
         this.orderItemID == null ||
         this.productId == null ||
         this.appFeeInCents == null ||

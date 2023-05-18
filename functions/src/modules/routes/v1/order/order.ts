@@ -1,68 +1,122 @@
 import { log } from "firebase-functions/logger";
 import * as db from "../../../../services/database";
-import {  cartItemFromMap, getOrderItemStatusFromString, orderFromDoc, orderItemFromCartItem, userFromDoc } from "../../../../services/functions";
+import {  addressFromMap, cartItemFromMap, getOrderItemStatusFromString, orderFromDoc, orderItemFromCartItem, userFromDoc } from "../../../../services/functions";
 import { CollectionReference, DocumentReference } from "firebase-admin/firestore";
 import { OrderItemModel } from "../../../../models/order_item_model";
 import { OrderModel } from "../../../../models/order_model";
 import * as express from "express";
 import { CartItemModel } from "../../../../models/cart_item_model";
-import { OrderItemStatus } from "../../../../models/enums";
+import { DeliveryOptions, OrderItemStatus } from "../../../../models/enums";
 import { firestore } from "../../../..";
 const router = express.Router();
+////////////////////////////
+//UNCHANGED BUSINESS LOGIC//
+////////////////////////////
+const app_fee_percent = 0.02;
+const serviceFeeInCents = 100;
+////////////////////////////
+//UNCHANGED BUSINESS LOGIC//
+////////////////////////////
+
 
 router.post("/api/order/newOrder/:userId", async (req, res) => {
     try {
         const userId: string = req.params.userId;
-        const cartRef:CollectionReference = db.userCartCollection(userId);
-        let cart = <CartItemModel[]>[];
-        let cartItemDocSnapshots = <DocumentReference[]>[];
-        // get cart query snapshot
-        const cartQuerySnapshot = await cartRef.get();
-        // get cart items
-        for(const cartItem of cartQuerySnapshot.docs){
-            cart.push(cartItemFromMap(cartItem.data() as Map<string,any>));
-            cartItemDocSnapshots.push(cartItem.ref);
-        }
-
-        let sellerList: string[] = <string[]>[];
-        let orders:OrderItemModel[] = <OrderItemModel[]>[];
-        // map cart items to order items and seller list
-        for(const cartItem of cart){
-            const sellerDocRef = db.userCollection.doc(cartItem.sellerId);
-            const seller = userFromDoc(await sellerDocRef.get());
-            const orderItem = orderItemFromCartItem(cartItem, seller);
-            orders.push(orderItem);
-            sellerList.push(cartItem.sellerId);
-        }
-        if(orders.length == 0 || sellerList.length == 0){
+        const address = addressFromMap(req.body.address);
+        const currency = req.body.currency ?? 'USD';
+        const userCartRef = db.userCartCollection(userId);
+        const userCartQuerySnapshot = await userCartRef.get();
+        if(userCartQuerySnapshot.empty){
             return res.status(500).send({status: "Failed", msg: "No items in cart"});
         }
-        // find cart total
-        let total: number = 0;
-        for(const orderItem of orders){
-            total += orderItem.grossTotalInCents;
+        const cartItems = <CartItemModel[]>[];
+        for(const cartItem of userCartQuerySnapshot.docs){
+            cartItems.push(cartItemFromMap(cartItem.data() as Map<string,any>));
         }
-        const newOrder = new OrderModel({
-            orderId: "",
-            buyerId: userId,
-            total: total/100,
-            orderItems: orders,
+        const currentUser = userFromDoc(await db.userCollection.doc(userId).get());
+        const orderId = db.ordersCollection.doc().id;
+        const orderItemList = <OrderItemModel[]>[];
+        for(const cartItem of cartItems){
+            const sellerId = cartItem.sellerId;
+            const seller = userFromDoc(await db.userCollection.doc(sellerId).get());
+            ////////////////////////////
+            //UNCHANGED BUSINESS LOGIC//
+            ////////////////////////////
+            const costBeforeTaxInCents = cartItem.priceInCents * cartItem.quantity;
+            const taxApplicable = seller.state && seller.taxPercentage;
+            const sellerFeeInCents = costBeforeTaxInCents * app_fee_percent;
+            const appFeeInCents = serviceFeeInCents + sellerFeeInCents;
+            const taxFactor = taxApplicable ? seller.taxPercentage / 100 : 0;
+            const taxAmountInCents = parseInt(`${costBeforeTaxInCents * taxFactor}`);
+            const deliveryCostInCents = getDeliveryCostInCents(
+            cartItem.deliveryOptions,
+            seller,
+            costBeforeTaxInCents/100
+            );
+
+            const grossTotalInCents =
+            costBeforeTaxInCents +
+            deliveryCostInCents +
+            taxAmountInCents +
+            serviceFeeInCents;
+            ////////////////////////////
+            //UNCHANGED BUSINESS LOGIC//
+            ////////////////////////////
+            const newOrderItem = new OrderItemModel({
+                deliveryOption: cartItem.deliveryOptions,
+                orderItemID: orderId,
+                productId: cartItem.postId,
+                productOption: cartItem.selectedVariant,
+                quantity: cartItem.quantity,
+                serviceFeeInCents: serviceFeeInCents,
+                sellerId: cartItem.sellerId,
+                state: seller.state,
+                status: 0,
+                currency: "USD",
+                price: cartItem.priceInCents/100,
+                tax: taxAmountInCents / 100,
+                appFeeInCents: appFeeInCents,
+                costBeforeTaxInCents: costBeforeTaxInCents,
+                deliveryCostInCents: deliveryCostInCents,
+                grossTotalInCents: grossTotalInCents,
+                
+            });
+            orderItemList.push(newOrderItem);
+        }
+        let totalAmountInCents = 0;
+        for (const orderItem of orderItemList) {
+            totalAmountInCents += orderItem.grossTotalInCents;
+        }
+
+        const order = new OrderModel({
+            orderId: orderId,
+            buyerId: currentUser.id,
+            involvedSellersList: cartItems.map((cartItem) => cartItem.sellerId),
+            orderItems: orderItemList,
             timestamp: Date.now(),
-            involvedSellersList: sellerList,
-            totalInCents: total,
-            orderStatus: OrderItemStatus.pending
+            total: totalAmountInCents / 100,
+            totalInCents: totalAmountInCents,
+            orderStatus: OrderItemStatus.pending,
+            currency: currency,
+            isPaid: false,
+            address: address,
+            shippingAddress: address,
         });
-        const orderDocReference: DocumentReference = db.ordersCollection.doc();
-        newOrder.orderId = orderDocReference.id;
-        log(`new order ${newOrder.toString()}`);
-        await orderDocReference.set(newOrder.toMap());
-        // delete cartRef collection
+        await db.ordersCollection.doc(orderId).set(order.toMap());
+        let cartItemDocSnapshots = <DocumentReference[]>[];
+       
+        // get cart items
+        for(const cartItem of userCartQuerySnapshot.docs){
+
+            cartItemDocSnapshots.push(cartItem.ref);
+        }        
+         // delete cartRef collection
         const batch = firestore.batch();
         for(const cartItemSnapshot of cartItemDocSnapshots){
             await cartItemSnapshot.delete();
         }
         await batch.commit();
-        return res.status(200).send({status: "Success", msg: `Order ${newOrder.orderId} added successfully`});
+        return res.status(200).send({status: "Success", msg: `Order ${order.orderId} added successfully`});
     } catch (error) {
         log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
@@ -130,5 +184,31 @@ router.delete("/api/order/deleteOrder/:orderId", async (req, res) => {
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
+
+
+export function getDeliveryCostInCents(deliveryOptions, user, subtotal) {
+    console.log(deliveryOptions);
+    console.log("Delivery " + user.deliveryCost);
+    console.log("Shippin " + user.shippingCost);
+  
+    switch (deliveryOptions) {
+      case DeliveryOptions.pickup.valueOf():
+        return 0;
+      case DeliveryOptions.shipping.valueOf():
+        if (user.freeShipping < subtotal) {
+          return 0;
+        }
+        return user.shippingCost*100;
+      case DeliveryOptions.delivery.valueOf():
+        if (user.freeDelivery < subtotal) {
+          return 0;
+        }
+        return user.deliveryCost*100;
+      default:
+        return 0;
+    }
+  }
+  
+
 
 module.exports = router;
