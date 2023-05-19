@@ -74,7 +74,7 @@ class CreateProductImagePick extends StatelessWidget {
                 onTap: () async {
                   pickedFile = await ImagePickerServices().getImageFromCamera();
                   if (pickedFile != null) {
-                    Get.to<Widget>(AddPost(images: [pickedFile!]));
+                    Get.to<Widget>(() => AddPost(images: [pickedFile!]));
                   }
                 },
                 child: Row(
@@ -95,7 +95,7 @@ class CreateProductImagePick extends StatelessWidget {
                   pickedFile =
                       await ImagePickerServices().getImageFromGallery();
                   if (pickedFile != null) {
-                    Get.to<Widget>(AddPost(images: [pickedFile!]));
+                    Get.to<Widget>(() => AddPost(images: [pickedFile!]));
                   }
                 },
                 child: Row(
@@ -117,7 +117,7 @@ class CreateProductImagePick extends StatelessWidget {
                   pickedFiles =
                       await ImagePickerServices().pickMultipleImages() ?? [];
                   if (pickedFiles.isNotEmpty) {
-                    Get.to<Widget>(AddPost(images: pickedFiles));
+                    Get.to<Widget>(() => AddPost(images: pickedFiles));
                   }
                 },
                 child: Row(

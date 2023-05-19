@@ -1,13 +1,15 @@
 import { NotificationType } from "./enums";
 
 export class NotificationModel {
+    notificationId: string;
     ownerId: string;
     userId: string;
     type: NotificationType;
     timestamp: number;
     username: string;
     userProfileImg: string;
-    constructor({ownerId,userId,timestamp,username,type}:{
+    constructor({notificationId,ownerId,userId,timestamp,username,type,userProfileImg}:{
+      notificationId: string,
       ownerId: string,
       userId: string,
       timestamp: number,
@@ -16,15 +18,18 @@ export class NotificationModel {
       userProfileImg: string;
     }
     ) {
+      this.notificationId = notificationId;
       this.ownerId = ownerId;
       this.userId = userId;
       this.timestamp = timestamp;
       this.username = username;
       this.type = type;
+      this.userProfileImg = userProfileImg;
     }
 
     toMap(){
         return {
+            notificationId: this.notificationId,
             ownerId: this.ownerId,
             userId: this.userId,
             timestamp: this.timestamp,

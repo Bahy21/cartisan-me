@@ -68,10 +68,10 @@ export function postFromDoc(doc:firestore.DocumentSnapshot): PostModel{
 
 export function userFromDoc(doc:firestore.DocumentSnapshot): UserModel{
   const user = new UserModel(
-   { id: doc.data().id,
-    username: doc.data().username,
-    url : doc.data().url,
-    email: doc.data().email}
+   { id: doc.data().id ?? "",
+    username: doc.data().username ?? "",
+    url : doc.data().url ?? "",
+    email: doc.data().email ?? ""}
   );
   user.profileName = doc.data().profileName ?? "";
   user.unreadMessageCount = doc.data().unreadMessageCount ?? 0;
@@ -272,89 +272,89 @@ export function commentFromDoc(doc: DocumentSnapshot){
   })
 }
 
-export function orderFromDoc(doc: DocumentSnapshot) : OrderModel{
-  return new OrderModel({
-    orderId: doc.data().orderId,
-    buyerId: doc.data().buyerId,
-    orderItems: orderItemsFromList(doc.data().orderItems),
-    total: doc.data().total,
-    timestamp: doc.data().timestamp,
-    involvedSellersList: doc.data().involvedSellersList,
-    totalInCents: doc.data().totalInCents,
-    orderStatus: doc.data().orderStatus,
-  })
-}
+// export function orderFromDoc(doc: DocumentSnapshot) : OrderModel{
+//   return new OrderModel({
+//     orderId: doc.data().orderId,
+//     buyerId: doc.data().buyerId,
+//     orderItems: orderItemsFromList(doc.data().orderItems),
+//     total: doc.data().total,
+//     timestamp: doc.data().timestamp,
+//     involvedSellersList: doc.data().involvedSellersList,
+//     totalInCents: doc.data().totalInCents,
+//     orderStatus: doc.data().orderStatus,
+//   })
+// }
 
-export function orderItemsFromList(list:Map<any,any>){
-  let orderItems = <OrderItemModel[]>[];
-  if (list == null || list.keys.length == 0){
-    return null;
-  }
-  list.forEach((value, key) => {
-    orderItems.push(orderItemFromMap(value));
-  });
-  return orderItems;
-}
+// export function orderItemsFromList(list:Map<any,any>){
+//   let orderItems = <OrderItemModel[]>[];
+//   if (list == null || list.keys.length == 0){
+//     return null;
+//   }
+//   list.forEach((value, key) => {
+//     orderItems.push(orderItemFromMap(value));
+//   });
+//   return orderItems;
+// }
 
-export function orderItemFromMap(map:Map<any,any>): OrderItemModel{
-  const orderItem = new OrderItemModel({
-    orderItemID: map['orderItemID'],
-    productId: map['productId'],
-    productOption: map['productOption'],
-    appFeeInCents: map['appFeeInCents'],
-    quantity: map['quantity'],
-    price : map['price'],
-    grossTotalInCents: map['grossTotalInCents'],
-    sellerId: map['sellerId'],
-    deliveryOption : map['deliveryOption'],
-    deliveryCostInCents : map['deliveryCostInCents'],
-    costBeforeTaxInCents : map['costBeforeTaxInCents'],
-    serviceFeeInCents : map['serviceFeeInCents'],
-    tax : map['tax'] ?? 0,
-    status : map['status'] ?? OrderItemStatus.pending,
-  });
-  return orderItem;
-}
+// export function orderItemFromMap(map:Map<any,any>): OrderItemModel{
+//   const orderItem = new OrderItemModel({
+//     orderItemID: map['orderItemID'],
+//     productId: map['productId'],
+//     productOption: map['productOption'],
+//     appFeeInCents: map['appFeeInCents'],
+//     quantity: map['quantity'],
+//     price : map['price'],
+//     grossTotalInCents: map['grossTotalInCents'],
+//     sellerId: map['sellerId'],
+//     deliveryOption : map['deliveryOption'],
+//     deliveryCostInCents : map['deliveryCostInCents'],
+//     costBeforeTaxInCents : map['costBeforeTaxInCents'],
+//     serviceFeeInCents : map['serviceFeeInCents'],
+//     tax : map['tax'] ?? 0,
+//     status : map['status'] ?? OrderItemStatus.pending,
+//   });
+//   return orderItem;
+// }
 
 
-export function orderItemFromCartItem(cartItem: CartItemModel, seller: UserModel): OrderItemModel{
-  const app_fee_percent = 0.02;
-  const serviceFeeInCents = 100;
-  const costBeforeTaxInCents = cartItem.priceInCents * cartItem.quantity;
-    const taxApplicable = seller.state && seller.taxPercentage;
-    const sellerFeeInCents = costBeforeTaxInCents * app_fee_percent;
-    const appFeeInCents = serviceFeeInCents + sellerFeeInCents;
-    const taxFactor = taxApplicable ? seller.taxPercentage / 100 : 0;
-    const taxAmountInCents = parseInt(`${costBeforeTaxInCents * taxFactor}`);
-    const deliveryCostInCents = getDeliveryCostInCents(
-      cartItem.deliveryOptions,
-      seller,
-      costBeforeTaxInCents/100
-    );
+// export function orderItemFromCartItem(cartItem: CartItemModel, seller: UserModel): OrderItemModel{
+//   const app_fee_percent = 0.02;
+//   const serviceFeeInCents = 100;
+//   const costBeforeTaxInCents = cartItem.priceInCents * cartItem.quantity;
+//     const taxApplicable = seller.state && seller.taxPercentage;
+//     const sellerFeeInCents = costBeforeTaxInCents * app_fee_percent;
+//     const appFeeInCents = serviceFeeInCents + sellerFeeInCents;
+//     const taxFactor = taxApplicable ? seller.taxPercentage / 100 : 0;
+//     const taxAmountInCents = parseInt(`${costBeforeTaxInCents * taxFactor}`);
+//     const deliveryCostInCents = getDeliveryCostInCents(
+//       cartItem.deliveryOptions,
+//       seller,
+//       costBeforeTaxInCents/100
+//     );
 
-    const grossTotalInCents =
-      costBeforeTaxInCents +
-      deliveryCostInCents +
-      taxAmountInCents +
-      serviceFeeInCents;
-  const orderItem = new OrderItemModel({
-    orderItemID: "",
-    productId: cartItem.postId,
-    selectedVariant: cartItem.selectedVariant,
-    appFeeInCents: appFeeInCents,
-    quantity: cartItem.quantity,
-    price : cartItem.price,
-    grossTotalInCents: grossTotalInCents,
-    sellerId: cartItem.sellerId,
-    deliveryOption : cartItem.deliveryOptions,
-    deliveryCostInCents : seller.deliveryCostInCents,
-    costBeforeTaxInCents : costBeforeTaxInCents,
-    serviceFeeInCents : serviceFeeInCents,
-    tax : seller.taxPercentage,
-    status : OrderItemStatus.pending,
-  });
-  return orderItem;
-}
+//     const grossTotalInCents =
+//       costBeforeTaxInCents +
+//       deliveryCostInCents +
+//       taxAmountInCents +
+//       serviceFeeInCents;
+//   const orderItem = new OrderItemModel({
+//     orderItemID: "",
+//     productId: cartItem.postId,
+//     selectedVariant: cartItem.selectedVariant,
+//     appFeeInCents: appFeeInCents,
+//     quantity: cartItem.quantity,
+//     price : cartItem.price,
+//     grossTotalInCents: grossTotalInCents,
+//     sellerId: cartItem.sellerId,
+//     deliveryOption : cartItem.deliveryOptions,
+//     deliveryCostInCents : seller.deliveryCostInCents,
+//     costBeforeTaxInCents : costBeforeTaxInCents,
+//     serviceFeeInCents : serviceFeeInCents,
+//     tax : seller.taxPercentage,
+//     status : OrderItemStatus.pending,
+//   });
+//   return orderItem;
+// }
 
 
 export function getDeliveryCostInCents(deliveryOptions, user, subtotal) {

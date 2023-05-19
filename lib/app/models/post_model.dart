@@ -70,7 +70,8 @@ class PostModel {
       commentCount: map['commentCount'] as int,
       reviewCount: map['reviewCount'] as int,
       likesCount: map['likesCount'] as int,
-      deliveryOptions: DeliveryOptions.values[map['deliveryOptions'] as int],
+      deliveryOptions:
+          DeliveryOptions.values[map['deliveryOptions'] as int? ?? 0],
     );
   }
 

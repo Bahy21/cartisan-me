@@ -6,11 +6,15 @@ class MiniTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final int? maxLines;
+  final TextInputType? keyboardType;
+  final FocusNode? focusNode;
   const MiniTextField({
     required this.hintText,
     required this.controller,
     this.maxLines = 1,
     this.validator,
+    this.keyboardType,
+    this.focusNode,
     super.key,
   });
 
@@ -20,6 +24,8 @@ class MiniTextField extends StatelessWidget {
       controller: controller,
       validator: validator,
       maxLines: maxLines,
+      keyboardType: keyboardType,
+      focusNode: focusNode,
       decoration: InputDecoration(
         constraints: BoxConstraints(maxWidth: 153.w),
         filled: false,

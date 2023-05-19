@@ -1,6 +1,6 @@
 import { log } from "firebase-functions/logger";
 import * as db from "../../../../services/database";
-import {  addressFromMap, cartItemFromMap, getOrderItemStatusFromString, orderFromDoc, orderItemFromCartItem, userFromDoc } from "../../../../services/functions";
+import {  addressFromMap, cartItemFromMap, getOrderItemStatusFromString, userFromDoc } from "../../../../services/functions";
 import { CollectionReference, DocumentReference } from "firebase-admin/firestore";
 import { OrderItemModel } from "../../../../models/order_item_model";
 import { OrderModel } from "../../../../models/order_model";

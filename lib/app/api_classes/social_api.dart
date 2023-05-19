@@ -60,9 +60,8 @@ class SocialAPI {
     required String blockedId,
   }) async {
     try {
-      final result = await apiService.post<Map>(
+      final result = await apiService.delete<Map>(
         '$UNBLOCK_USER/$blockerId/$blockedId',
-        {'blockerId': blockerId, 'blockedId': blockedId},
       );
       if (result.statusCode != 200) {
         throw Exception('Error unblocking user');
@@ -79,7 +78,6 @@ class SocialAPI {
     required String followId,
   }) async {
     try {
-      log('LINK: $IS_FOLLOWING/$userId/$followId');
       final result = await apiService.get<Map>(
         '$IS_FOLLOWING/$userId/$followId',
       );
@@ -145,7 +143,7 @@ class SocialAPI {
   }) async {
     try {
       final result = await apiService.get<Map>(
-        'IS_BLOCKED/$blockerId/$blockedId',
+        '$IS_BLOCKED/$blockerId/$blockedId',
       );
       if (result.statusCode != 200) {
         throw Exception('Error fetching block or not blocked');

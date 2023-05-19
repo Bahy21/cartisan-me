@@ -1,6 +1,6 @@
-enum NotificationType{
+enum NotificationType {
   like,
   comment,
   follow,
-  order
-} 
+  order,
+}

@@ -8,7 +8,7 @@ import 'package:cartisan/app/models/post_model.dart';
 const String GET_POSTS_FROM_CART = '$BASE_URL/user/getPostsFromCart';
 const String ADD_TO_CART = '$BASE_URL/user/addToCart';
 const String GET_CART = '$BASE_URL/user/getCart';
-const String SET_CART_ITEM_COUNT = '$BASE_URL/user/setCartItemCount/';
+const String SET_CART_ITEM_COUNT = '$BASE_URL/user/setCartItemCount';
 const String DELETE_CART_ITEM = '$BASE_URL/user/deleteFromCart';
 const String CLEAR_CART = '$BASE_URL/cart/clearCart';
 
@@ -83,8 +83,9 @@ class CartAPI {
     try {
       final result = await apiService.put<Map>(
         '$SET_CART_ITEM_COUNT/$userId/$cartItemId',
-        jsonEncode({'amount', amount}),
+        jsonEncode({'amount': amount}),
       );
+      log(result.toString());
       if (result.statusCode != 200) {
         throw Exception('Error updating cart count');
       }

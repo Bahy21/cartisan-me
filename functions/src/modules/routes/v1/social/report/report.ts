@@ -6,40 +6,43 @@ import * as express from "express";
 const router = express.Router();
 
 // report user
-router.put("/api/social/reportUser/:userId", async (req, res)=>{
+router.post("/api/social/reportUser/:userId", async (req, res)=>{
     try {
       const userId = req.params.userId;
-      const docId = req.body.docId;
-      const result = req.body.result;
-      const reportId = req.body.reportId;
+      const reportedFor = req.body.reportedFor;
+      const reportedId = req.body.reportedId;
       const report = new ReportModel({postId: '',
       isGroup: false,
       messageId: '',
       flaggedBy: userId,
-      reportId: docId,
-      reportedFor: result,
-      reportedUsersId: reportId});
-      await db.userReportsCollection.doc().set(report.toMap());
+      reportId: '',
+      reportedFor: reportedFor,
+      reportedUsersId: reportedId});
+      const reportId = db.userReportsCollection.doc().id;
+      report.reportId = reportId;
+      await db.userReportsCollection.doc(reportId).set(report.toMap());
       return res.status(200).send({status: "Success", data: "Report Sent"});
     } catch (error) {
       log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
-  router.put("/api/post/reportPost/:postId", async (req, res)=>{
+  router.post("/api/post/reportPost/:postId", async (req, res)=>{
     try {
       const userId = req.params.postId;
-      const docId = req.body.docId;
-      const result = req.body.result;
-      const reportId = req.body.reportId;
-      const report = new ReportModel({postId: '',
+      const reportedFor = req.body.reportedFor;
+      const postId = req.body.postId;
+      const reportUserId = req.body.reportUserId;
+      const report = new ReportModel({postId: postId,
       isGroup: false,
       messageId: '',
       flaggedBy: userId,
-      reportId: docId,
-      reportedFor: result,
-      reportedUsersId: reportId});
-      await db.userReportsCollection.doc().set(report.toMap());
+      reportId: '',
+      reportedFor: reportedFor,
+      reportedUsersId: reportUserId});
+      const reportId = db.userReportsCollection.doc().id;
+      report.reportId = reportId;
+      await db.userReportsCollection.doc(reportId).set(report.toMap());
       return res.status(200).send({status: "Success", data: "Report Sent"});
     } catch (error) {
       log(error);

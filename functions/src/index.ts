@@ -15,6 +15,7 @@ const searchFunctions = require('./modules/routes/v1/search/search');
 const adminOnly = require('./modules/routes/v1/admin_only/admin_only');
 const versionCheck = require('./modules/routes/v2/version_check');
 const notificationFunctions = require('./modules/routes/v1/notifications/notifications');
+const reportFunctions = require('./modules/routes/v1/social/report/report');
 import * as express from 'express';
 import { FakeDataPopulator } from './services/fakeDataPopulator';
 
@@ -67,6 +68,7 @@ app.use('/v1', orderFunctions);
 app.use('/v1', adminOnly);
 app.use('/v1', searchFunctions);
 app.use('/v1', notificationFunctions);
+app.use('/v1', reportFunctions);
 app.use('/v2', versionCheck);
 
 

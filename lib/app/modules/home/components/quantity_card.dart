@@ -43,7 +43,7 @@ class _QuantityCardState extends State<QuantityCard> {
           Text('Quantity :', style: AppTypography.kBold14)
         else
           const SizedBox(),
-        if (!widget.isCartView) SizedBox(height: 13.h) else const SizedBox(),
+        if (!widget.isCartView) SizedBox(height: 10.h) else const SizedBox(),
         Row(
           children: [
             QuantityValueCard(
@@ -52,14 +52,14 @@ class _QuantityCardState extends State<QuantityCard> {
               icon: Icons.remove,
               isCartView: widget.isCartView,
             ),
-            SizedBox(width: AppSpacing.thirteenHorizontal),
+            SizedBox(width: AppSpacing.tenHorizontal),
             Text(
               widget.quantity.toString(),
               style: widget.isCartView
                   ? AppTypography.kMedium14
                   : AppTypography.kMedium16,
             ),
-            SizedBox(width: AppSpacing.thirteenHorizontal),
+            SizedBox(width: AppSpacing.tenHorizontal),
             QuantityValueCard(
               isDisabled: false,
               onTap: incrementQuantity,

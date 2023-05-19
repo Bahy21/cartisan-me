@@ -10,8 +10,9 @@ class SearchAPI {
   Future<List<SearchModel>> getSearches(String userId,
       {String? lastPostId, int count = 20}) async {
     try {
+      final link = '$GET_SEARCH_POSTS/$userId/$count';
       final result = await apiService.get<Map>(
-        '$GET_SEARCH_POSTS/$userId/$count',
+        link,
         queryParameters: <String, dynamic>{
           'lastPostId': lastPostId,
         },

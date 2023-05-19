@@ -48,34 +48,36 @@ class ProfileCard extends StatelessWidget {
                 ),
         ),
         SizedBox(width: 16.w),
-        Expanded(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ProfileInfoColumn(
-                    numbers: uc.currentUser?.isSeller ?? false ? 'NaN' : '0',
-                    headings: TranslationsService.storePageTranslation.posts,
-                  ),
-                  ProfileInfoColumn(
-                    numbers: uc.currentUser?.followerCount.toString() ?? '0',
-                    headings:
-                        TranslationsService.storePageTranslation.followers,
-                  ),
-                  ProfileInfoColumn(
-                    numbers: uc.currentUser?.followingCount.toString() ?? '0',
-                    headings:
-                        TranslationsService.storePageTranslation.following,
-                  ),
-                ],
-              ),
-              SizedBox(height: 18.h),
-              CustomOutlinedButton(
-                onTap: editCallback,
-                text: TranslationsService.storePageTranslation.editProfile,
-              ),
-            ],
+        Obx(
+          () => Expanded(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ProfileInfoColumn(
+                      numbers: uc.userPostCount.toString(),
+                      headings: TranslationsService.storePageTranslation.posts,
+                    ),
+                    ProfileInfoColumn(
+                      numbers: uc.currentUser?.followerCount.toString() ?? '0',
+                      headings:
+                          TranslationsService.storePageTranslation.followers,
+                    ),
+                    ProfileInfoColumn(
+                      numbers: uc.currentUser?.followingCount.toString() ?? '0',
+                      headings:
+                          TranslationsService.storePageTranslation.following,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 18.h),
+                CustomOutlinedButton(
+                  onTap: editCallback,
+                  text: TranslationsService.storePageTranslation.editProfile,
+                ),
+              ],
+            ),
           ),
         ),
       ],

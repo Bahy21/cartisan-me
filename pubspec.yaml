@@ -35,6 +35,8 @@ dependencies:
   photo_manager: ^2.6.0
   flutter_carousel_slider: ^1.1.0
   flutter_stripe: ^9.2.0
+  flutter_keyboard_visibility: ^5.4.1
+  flutter_local_notifications:
   
 
 

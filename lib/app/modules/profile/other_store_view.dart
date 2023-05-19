@@ -1,26 +1,112 @@
+import 'package:cartisan/app/api_classes/report_api.dart';
+import 'package:cartisan/app/api_classes/social_api.dart';
+import 'package:cartisan/app/api_classes/user_api.dart';
+import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/controllers/store_page_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/modules/profile/components/other_store_profile_card.dart';
 import 'package:cartisan/app/modules/profile/components/report_pop_up.dart';
 import 'package:cartisan/app/modules/profile/components/store_facility_column.dart';
 import 'package:cartisan/app/modules/profile/grid_all_user_profile_post.dart';
 import 'package:cartisan/app/modules/profile/list_all_user_profile_post.dart';
+import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class OtherStoreView extends StatelessWidget {
+class OtherStoreView extends StatefulWidget {
   final String userId;
   const OtherStoreView({
     required this.userId,
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<OtherStoreView> createState() => _OtherStoreViewState();
+}
+
+class _OtherStoreViewState extends State<OtherStoreView> {
+  final socialApi = SocialAPI();
+  final reportApi = ReportAPI();
+  String get currentUid => Get.find<AuthService>().currentUser!.uid;
+  void reportUser() async {
+    Get.dialog<Widget>(LoadingDialog());
+    final result = await reportApi.reportUser(
+      reportedId: widget.userId,
+      reportedFor: '',
+    );
+    if (result) {
+      Get.back<void>();
+      showToast('User Reported');
+    } else {
+      await showErrorDialog('Error reporting user');
+    }
+  }
+
+  void blockUser() async {
+    Get.dialog<Widget>(LoadingDialog());
+    final result = await socialApi.blockUser(
+      blockerId: currentUid,
+      blockedId: widget.userId,
+    );
+    if (result) {
+      Get.back<void>();
+    } else {
+      await showErrorDialog('Error blocking user');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetX<StorePageController>(
-      init: StorePageController(userId: userId),
+      init: StorePageController(userId: widget.userId),
       builder: (controller) {
+        if (controller.isLoading) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          );
+        }
+        if (controller.isBlocked) {
+          return Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                onPressed: () => Get.back<void>(),
+                icon: Icon(
+                  Icons.arrow_back_rounded,
+                  color: AppColors.kWhite,
+                ),
+              ),
+              centerTitle: true,
+              title: Text(
+                controller.storeOwner?.username ?? 'New User',
+                style: AppTypography.kMedium18,
+              ),
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(AppAssets.kCartisanLogo),
+                Text(
+                  '${controller.storeOwner!.username} is blocked',
+                  style: AppTypography.kBold32.copyWith(
+                    color: AppColors.kWhite,
+                  ),
+                ),
+                SizedBox(
+                  height: AppSpacing.eighteenVertical,
+                ),
+                PrimaryButton(
+                    onTap: () => controller.unblockUser(), text: 'Unblock'),
+              ],
+            ),
+          );
+        }
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,
@@ -34,10 +120,10 @@ class OtherStoreView extends StatelessWidget {
                 onItemSelected: (dynamic value) {
                   switch (value) {
                     case 1:
-                      // Do something for value 1.
+                      reportUser();
                       break;
                     case 2:
-                      // Do something for value 2.
+                      blockUser();
                       break;
                   }
                 },
@@ -150,10 +236,10 @@ class OtherStoreView extends StatelessWidget {
                   child: TabBarView(
                     children: [
                       GridAllUserPosts(
-                        userId: userId,
+                        userId: widget.userId,
                       ),
                       ListAllUserPosts(
-                        userId: userId,
+                        userId: widget.userId,
                       ),
                     ],
                   ),

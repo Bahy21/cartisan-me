@@ -7,6 +7,7 @@ import 'package:cartisan/app/modules/cart/cart_view.dart';
 import 'package:cartisan/app/modules/cart/components/custom_cart_appbar.dart';
 import 'package:cartisan/app/modules/cart/components/custom_stepper.dart';
 import 'package:cartisan/app/modules/cart/components/payment_view.dart';
+import 'package:cartisan/app/modules/cart/new_address_view.dart';
 import 'package:cartisan/app/modules/cart/order_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -72,7 +73,9 @@ class CartViewPages extends GetView<CartPageController> {
                             )
                             ..animateInitialPageToPrevious();
                         },
-                        changeAddressCallback: () {},
+                        changeAddressCallback: () {
+                          Get.to<Widget>(NewAddressView.new);
+                        },
                       )
                     : (statusController.initialPageIndex == 2)
                         ? PaymentAppBar(

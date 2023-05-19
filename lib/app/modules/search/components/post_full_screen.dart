@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
@@ -22,6 +24,7 @@ class PostFullScreen extends StatelessWidget {
             ),
           );
         }
+        log(snapshot.data.toString());
         if (!snapshot.hasData || snapshot.data == null) {
           return Scaffold(
             appBar: AppBar(

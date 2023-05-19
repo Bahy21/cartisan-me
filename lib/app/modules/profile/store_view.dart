@@ -55,114 +55,120 @@ class StoreView extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 25.w),
-        child: SizedBox(
-          height: Get.height,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 30.h,
-              ),
-              ProfileCard(
-                editCallback: () {
-                  Get.to<Widget>(
-                    EditStoreView.new,
-                  );
-                },
-                chatCallback: () {},
-                followCallback: () {},
-              ),
-              SizedBox(
-                height: 25.h,
-              ),
-              Text(uc.currentUser?.username ?? 'New user',
-                  style: AppTypography.kMedium16),
-              SizedBox(
-                height: 5.h,
-              ),
-              Text(
-                uc.currentUser?.bio ?? '',
-                style: AppTypography.kMedium14
-                    .copyWith(color: AppColors.kHintColor),
-              ),
-              SizedBox(height: 30.0.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  StoreFacilityColumn(
-                    iconPath: AppAssets.kDeliveryMan,
-                    text: 'Free Pickup',
-                    isAvailable: uc.currentUser?.pickup ?? false,
-                  ),
-                  Container(
-                    height: 50.h,
-                    width: 1.w,
-                    color: AppColors.kHintColor,
-                  ),
-                  StoreFacilityColumn(
-                    iconPath: AppAssets.kFreeDelivery,
-                    text: 'Free Shipping',
-                    isAvailable: uc.currentUser?.activeShipping ?? false,
-                  ),
-                  Container(
-                    height: 50.0.h,
-                    width: 1.0.w,
-                    color: AppColors.kHintColor,
-                  ),
-                  StoreFacilityColumn(
-                    iconPath: AppAssets.kDeliveryTruck,
-                    text: 'Local Delivery',
-                    isAvailable: uc.currentUser?.isDeliveryAvailable ?? false,
-                  ),
-                ],
-              ),
-              SizedBox(height: 36.h),
-              DefaultTabController(
-                length: 2,
-                child: SizedBox(
-                  height: Get.height * 0.45,
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    DecoratedBox(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey,
+      body: RefreshIndicator(
+        onRefresh: () {
+          // TODO: ADD REFRESH CALL
+          return Future<void>.value();
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25.w),
+          child: SizedBox(
+            height: Get.height,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 30.h,
+                ),
+                ProfileCard(
+                  editCallback: () {
+                    Get.to<Widget>(
+                      EditStoreView.new,
+                    );
+                  },
+                  chatCallback: () {},
+                  followCallback: () {},
+                ),
+                SizedBox(
+                  height: 25.h,
+                ),
+                Text(uc.currentUser?.username ?? 'New user',
+                    style: AppTypography.kMedium16),
+                SizedBox(
+                  height: 5.h,
+                ),
+                Text(
+                  uc.currentUser?.bio ?? '',
+                  style: AppTypography.kMedium14
+                      .copyWith(color: AppColors.kHintColor),
+                ),
+                SizedBox(height: 30.0.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    StoreFacilityColumn(
+                      iconPath: AppAssets.kDeliveryMan,
+                      text: 'Free Pickup',
+                      isAvailable: uc.currentUser?.pickup ?? false,
+                    ),
+                    Container(
+                      height: 50.h,
+                      width: 1.w,
+                      color: AppColors.kHintColor,
+                    ),
+                    StoreFacilityColumn(
+                      iconPath: AppAssets.kFreeDelivery,
+                      text: 'Free Shipping',
+                      isAvailable: uc.currentUser?.activeShipping ?? false,
+                    ),
+                    Container(
+                      height: 50.0.h,
+                      width: 1.0.w,
+                      color: AppColors.kHintColor,
+                    ),
+                    StoreFacilityColumn(
+                      iconPath: AppAssets.kDeliveryTruck,
+                      text: 'Local Delivery',
+                      isAvailable: uc.currentUser?.isDeliveryAvailable ?? false,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 36.h),
+                DefaultTabController(
+                  length: 2,
+                  child: SizedBox(
+                    height: Get.height * 0.45,
+                    child: Column(mainAxisSize: MainAxisSize.min, children: [
+                      DecoratedBox(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
+                        child: TabBar(
+                          labelColor: AppColors.kPrimary,
+                          unselectedLabelColor: AppColors.kHintColor,
+                          indicatorColor: AppColors.kPrimary,
+                          tabs: [
+                            Tab(
+                              icon: SvgPicture.asset(AppAssets.kGrid),
+                            ),
+                            Tab(
+                              icon: SvgPicture.asset(AppAssets.kList),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: TabBar(
-                        labelColor: AppColors.kPrimary,
-                        unselectedLabelColor: AppColors.kHintColor,
-                        indicatorColor: AppColors.kPrimary,
-                        tabs: [
-                          Tab(
-                            icon: SvgPicture.asset(AppAssets.kGrid),
-                          ),
-                          Tab(
-                            icon: SvgPicture.asset(AppAssets.kList),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    const Expanded(
-                      child: TabBarView(
-                        children: [
-                          // GridView.builder.
-                          GridAllUserPosts(),
+                      SizedBox(height: 10.h),
+                      const Expanded(
+                        child: TabBarView(
+                          children: [
+                            // GridView.builder.
+                            GridAllUserPosts(),
 
-                          // ListView.
-                          ListAllUserPosts(),
-                        ],
+                            // ListView.
+                            ListAllUserPosts(),
+                          ],
+                        ),
                       ),
-                    ),
-                  ]),
+                    ]),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

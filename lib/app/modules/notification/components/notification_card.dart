@@ -1,9 +1,15 @@
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/models/notification_model.dart';
+import 'package:cartisan/app/models/notification_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class NotificationCard extends StatelessWidget {
-  const NotificationCard({Key? key}) : super(key: key);
+  final NotificationModel notification;
+  const NotificationCard({required this.notification, Key? key})
+      : super(key: key);
+  int get avatarSize => 50;
 
   @override
   Widget build(BuildContext context) {
@@ -15,18 +21,39 @@ class NotificationCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 25.r,
-            backgroundColor: AppColors.kBackground,
-            child: Image.asset(
-              AppAssets.kCartisanLogo,
-              height: 33.h,
+          if (notification.userProfileImg.isURL)
+            CircleAvatar(
+              radius: (avatarSize / 2).r,
+              backgroundColor: AppColors.kBackground,
+              child: Image.network(
+                notification.userProfileImg,
+                height: 33.h,
+              ),
+            )
+          else
+            SizedBox(
+              height: avatarSize.h,
+              width: avatarSize.w,
+              child: ClipOval(
+                child: Material(
+                  child: Transform.translate(
+                    offset: Offset(-5.w, 0),
+                    child: Icon(
+                      Icons.person,
+                      size: (avatarSize * 1.2).w,
+                      color: AppColors.kPrimary,
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
           SizedBox(width: 10.w),
           Expanded(
             child: Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+              notificationText(
+                type: notification.type,
+                username: notification.username,
+              ),
               style: AppTypography.kLight14,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -35,5 +62,23 @@ class NotificationCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+String notificationText({
+  required NotificationType type,
+  required String username,
+}) {
+  switch (type) {
+    case NotificationType.comment:
+      return '$username commented on your post';
+    case NotificationType.follow:
+      return '$username started following you';
+    case NotificationType.like:
+      return '$username liked your post';
+    case NotificationType.order:
+      return '$username ordered your product';
+    default:
+      return '';
   }
 }

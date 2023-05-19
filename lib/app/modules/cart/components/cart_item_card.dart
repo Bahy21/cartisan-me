@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cartisan/app/api_classes/cart_api.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
@@ -19,6 +21,7 @@ class CartItemCard extends StatelessWidget {
     super.key,
   });
   Future<void> setNewAmount(int amount) async {
+    log('new quantity $amount');
     final result = await CartAPI().setCartItemCount(
       userId: FirebaseAuth.instance.currentUser!.uid,
       cartItemId: cartItem.cartItemId,
@@ -85,7 +88,6 @@ class CartItemCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

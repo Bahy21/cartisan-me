@@ -31,7 +31,7 @@ class AddPost extends StatefulWidget {
 
 class _AddPostState extends State<AddPost> {
   final postApi = PostAPI();
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final _productTitleText = TextEditingController();
   final _productDescriptionText = TextEditingController();
   final _productBrandText = TextEditingController();
@@ -52,14 +52,18 @@ class _AddPostState extends State<AddPost> {
     });
   }
 
+  int extraPadding = 0;
+
   bool get isProductReady =>
       _formKey.currentState!.validate() &&
       widget.images.isNotEmpty &&
       _variants.isNotEmpty;
+
+  var sc = ScrollController();
   @override
   Widget build(BuildContext context) {
+    final length2 = widget.images.length;
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -78,245 +82,258 @@ class _AddPostState extends State<AddPost> {
           ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(23.w),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 210.h,
-                  width: double.maxFinite,
-                  color: AppColors.kFilledColor,
-                  child: Center(
-                    child: widget.images.isEmpty
-                        ? InkWell(
-                            onTap: handleImageTaken,
-                            child: Text(
-                              'At least one image needed',
-                              style: AppTypography.kBold18
-                                  .copyWith(color: Colors.white),
-                            ),
-                          )
-                        : ProductHeaderImage(
-                            deleteImage: () {
-                              setState(() {
-                                widget.images.removeAt(0);
-                              });
-                            },
-                            image: widget.images.first),
-                  ),
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: EdgeInsets.all(23.w),
+          child: ListView(
+            children: [
+              Container(
+                height: 210.h,
+                width: double.maxFinite,
+                color: AppColors.kFilledColor,
+                child: Center(
+                  child: widget.images.isEmpty
+                      ? InkWell(
+                          onTap: handleImageTaken,
+                          child: Text(
+                            'At least one image needed',
+                            style: AppTypography.kBold18
+                                .copyWith(color: Colors.white),
+                          ),
+                        )
+                      : ProductHeaderImage(
+                          deleteImage: () {
+                            setState(() {
+                              widget.images.removeAt(0);
+                            });
+                          },
+                          image: widget.images.first),
                 ),
-                Row(
-                  children: [
-                    ...List.generate(
-                        widget.images.length - 1,
-                        (index) => ExtraPostImagesThumbnail(
+              ),
+              Row(
+                children: [
+                  ...List.generate(
+                    length2 - 1,
+                    (index) => ExtraPostImagesThumbnail(
+                        onTap: () {
+                          Get.dialog<Widget>(ThumbnailViewAndDeleteDialog(
+                            image: widget.images[index + 1],
                             deleteImage: () {
+                              Get.back<void>();
                               setState(() {
                                 widget.images.removeAt(index + 1);
                               });
                             },
-                            image: widget.images[index + 1])),
-                    if (widget.images.length <= 5)
-                      Padding(
-                        padding: (widget.images.length <= 1)
-                            ? EdgeInsets.symmetric(vertical: 10.h)
-                            : EdgeInsets.zero,
-                        child: InkWell(
-                          onTap: handleImageTaken,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.add,
+                          ));
+                        },
+                        image: widget.images[index + 1]),
+                  ),
+                  if (length2 <= 5)
+                    Padding(
+                      padding: (length2 <= 1)
+                          ? EdgeInsets.symmetric(vertical: 10.h)
+                          : EdgeInsets.zero,
+                      child: InkWell(
+                        onTap: handleImageTaken,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.add,
+                              color: AppColors.kPrimary,
+                              size: 20.w,
+                            ),
+                            Text(
+                              'Add More',
+                              style: AppTypography.kBold14.copyWith(
                                 color: AppColors.kPrimary,
-                                size: 20.w,
                               ),
-                              Text(
-                                'Add More',
-                                style: AppTypography.kBold14.copyWith(
-                                  color: AppColors.kPrimary,
-                                ),
-                              )
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                  ],
+                    ),
+                ],
+              ),
+              Padding(
+                padding: subHeadingPadding,
+                child: Text(
+                  'Product Title',
+                  style:
+                      AppTypography.kBold14.copyWith(color: AppColors.kWhite),
                 ),
-                Padding(
-                  padding: subHeadingPadding,
-                  child: Text(
-                    'Product Title',
-                    style:
-                        AppTypography.kBold14.copyWith(color: AppColors.kWhite),
-                  ),
+              ),
+              CustomTextFormField(
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'Product title cannot be empty';
+                  }
+                  return null;
+                },
+                hintText: 'Enter your product title',
+                controller: _productTitleText,
+              ),
+              Padding(
+                padding: subHeadingPadding,
+                child: Text(
+                  'Product Description',
+                  style: subHeadingStyle,
                 ),
-                CustomTextFormField(
-                  validator: (text) {
-                    if (text == null || text.isEmpty) {
-                      return 'Product title cannot be empty';
-                    }
-                    return null;
-                  },
-                  hintText: 'Enter your product title',
-                  controller: _productTitleText,
+              ),
+              CustomTextFormField(
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'Product description cannot be empty';
+                  }
+                  return null;
+                },
+                hintText: "Enter your product's description",
+                controller: _productDescriptionText,
+              ),
+              Padding(
+                padding: subHeadingPadding,
+                child: Text(
+                  'Brand',
+                  style: subHeadingStyle,
                 ),
-                Padding(
-                  padding: subHeadingPadding,
-                  child: Text(
-                    'Product Description',
-                    style: subHeadingStyle,
-                  ),
-                ),
-                CustomTextFormField(
-                  validator: (text) {
-                    if (text == null || text.isEmpty) {
-                      return 'Product description cannot be empty';
-                    }
-                    return null;
-                  },
-                  hintText: "Enter your product's description",
-                  controller: _productDescriptionText,
-                ),
-                Padding(
-                  padding: subHeadingPadding,
-                  child: Text(
-                    'Brand',
-                    style: subHeadingStyle,
-                  ),
-                ),
-                CustomTextFormField(
-                  validator: (text) {
-                    if (text == null || text.isEmpty) {
-                      return 'Brand cannot be empty';
-                    }
-                    return null;
-                  },
-                  hintText: 'Enter your product brand',
-                  controller: _productBrandText,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: subHeadingPadding,
-                          child: Text(
-                            'Quantity :',
-                            style: subHeadingStyle,
-                          ),
+              ),
+              CustomTextFormField(
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'Brand cannot be empty';
+                  }
+                  return null;
+                },
+                hintText: 'Enter your product brand',
+                controller: _productBrandText,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: subHeadingPadding,
+                        child: Text(
+                          'Quantity :',
+                          style: subHeadingStyle,
                         ),
-                        MiniTextField(
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'Product quantity cannot be empty';
-                            }
-                            return null;
+                      ),
+                      MiniTextField(
+                        validator: (text) {
+                          if (text == null || text.isEmpty) {
+                            return 'Product quantity cannot be empty';
+                          }
+                          if (int.tryParse(text) == null) {
+                            return 'Product quantit must be a whole number';
+                          }
+                          return null;
+                        },
+                        hintText: '1',
+                        controller: _productQuantityText,
+                        keyboardType: TextInputType.number,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: 30.w,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: subHeadingPadding,
+                        child: Text(
+                          'Product Price',
+                          style: subHeadingStyle,
+                        ),
+                      ),
+                      MiniTextField(
+                        validator: (text) {
+                          if (text == null || text.isEmpty) {
+                            return 'Product price cannot be empty';
+                          }
+                          if (double.tryParse(text) == null) {
+                            return 'Product quantit must be a whole number';
+                          }
+                          return null;
+                        },
+                        hintText: r'$ 0 - 1000',
+                        controller: _productPriceText,
+                        keyboardType: TextInputType.number,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Padding(
+                padding: subHeadingPadding,
+                child: Text(
+                  'Choice',
+                  style: subHeadingStyle,
+                ),
+              ),
+              ProductVariantField(
+                hintText: 'Add Variants',
+                controller: _productVariantsText,
+                addIcon: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _variants.add(_productVariantsText.text);
+                      _productVariantsText.clear();
+                    });
+                  },
+                  child: Icon(
+                    Icons.add_circle_outline,
+                    color: AppColors.kWhite,
+                    size: 23.w,
+                  ),
+                ),
+              ),
+              Wrap(
+                children: _variants
+                    .map(
+                      (variant) => Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Chip(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          label: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w, vertical: 5.h),
+                              child: Text(variant)),
+                          onDeleted: () {
+                            setState(() {
+                              _variants.remove(variant);
+                            });
                           },
-                          hintText: '1',
-                          controller: _productPriceText,
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 30.w,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: subHeadingPadding,
-                          child: Text(
-                            'Product Price',
-                            style: subHeadingStyle,
-                          ),
-                        ),
-                        MiniTextField(
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'Product price cannot be empty';
-                            }
-                            return null;
-                          },
-                          hintText: r'$ 0 - 1000',
-                          controller: _productPriceText,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: subHeadingPadding,
-                  child: Text(
-                    'Choice',
-                    style: subHeadingStyle,
-                  ),
-                ),
-                ProductVariantField(
-                  hintText: 'Add Variants',
-                  controller: _productVariantsText,
-                  addIcon: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _variants.add(_productVariantsText.text);
-                        _productVariantsText.clear();
-                      });
-                    },
-                    child: Icon(
-                      Icons.add_circle_outline,
-                      color: AppColors.kWhite,
-                      size: 23.w,
-                    ),
-                  ),
-                ),
-                Wrap(
-                  children: _variants
-                      .map(
-                        (variant) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Chip(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6.r),
-                            ),
-                            label: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10.w, vertical: 5.h),
-                                child: Text(variant)),
-                            onDeleted: () {
-                              setState(() {
-                                _variants.remove(variant);
-                              });
-                            },
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                PrimaryButton(
-                    width: double.maxFinite,
-                    onTap: () {
-                      log(isProductReady.toString());
-                      if (isProductReady) {
-                        createPost();
-                      } else {
-                        showErrorDialog('Kindly fill all fields');
-                      }
-                    },
-                    text: 'Add Product'),
-              ],
-            ),
+                      ),
+                    )
+                    .toList(),
+              ),
+              SizedBox(
+                height: 30.h,
+              ),
+              PrimaryButton(
+                width: double.maxFinite,
+                onTap: () {
+                  log(isProductReady.toString());
+                  if (isProductReady) {
+                    createPost();
+                  } else {
+                    showErrorDialog('Kindly fill all fields');
+                  }
+                },
+                text: 'Add Product',
+              ),
+            ],
           ),
         ),
       ),
@@ -324,9 +341,7 @@ class _AddPostState extends State<AddPost> {
   }
 
   void createPost() async {
-    setState(() {
-      loading = true;
-    });
+    Get.dialog<Widget>(UploadDialog(), barrierDismissible: false);
     final uploadedImagesLinks = await handleImageUpload();
     final userId = Get.find<AuthService>().currentUser!.uid;
     final post = PostModel(
@@ -357,9 +372,7 @@ class _AddPostState extends State<AddPost> {
     } else {
       showErrorDialog('Error uploading post');
     }
-    setState(() {
-      loading = false;
-    });
+    Get.back<void>();
   }
 
   Future<List<String>> handleImageUpload() async {
@@ -375,6 +388,25 @@ class _AddPostState extends State<AddPost> {
   }
 }
 
+class UploadDialog extends StatelessWidget {
+  const UploadDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 150.w),
+      backgroundColor: AppColors.kFilledColor,
+      title: Text(
+        'Uploading product please wait',
+        style: AppTypography.kBold16.copyWith(color: AppColors.kWhite),
+      ),
+      content: const Center(
+        child: CircularProgressIndicator.adaptive(),
+      ),
+    );
+  }
+}
+
 class ProductHeaderImage extends StatelessWidget {
   final void Function() deleteImage;
   final File image;
@@ -383,35 +415,42 @@ class ProductHeaderImage extends StatelessWidget {
     required this.image,
     super.key,
   });
-
+  int get _containerHeight => 350;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 150.w,
-      height: 350.h,
+      width: double.maxFinite,
+      height: _containerHeight.h,
       child: Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10.r),
-            child: Image.file(
-              image,
-              fit: BoxFit.fill,
+          SizedBox(
+            width: double.maxFinite,
+            height: _containerHeight.h,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.r),
+              child: Image.file(
+                image,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Align(
             alignment: Alignment.topRight,
-            child: InkWell(
-              onTap: deleteImage,
-              child: Container(
-                padding: EdgeInsets.all(5.w),
-                decoration: BoxDecoration(
-                  color: AppColors.kPrimary,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.delete_rounded,
-                  color: AppColors.kWhite,
-                  size: 20.w,
+            child: Padding(
+              padding: EdgeInsets.all(10.w),
+              child: InkWell(
+                onTap: deleteImage,
+                child: Container(
+                  padding: EdgeInsets.all(7.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.kPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.delete_rounded,
+                    color: AppColors.kWhite,
+                    size: 20.w,
+                  ),
                 ),
               ),
             ),
@@ -424,9 +463,9 @@ class ProductHeaderImage extends StatelessWidget {
 
 class ExtraPostImagesThumbnail extends StatelessWidget {
   final File image;
-  final void Function() deleteImage;
+  final void Function() onTap;
   const ExtraPostImagesThumbnail({
-    required this.deleteImage,
+    required this.onTap,
     required this.image,
     super.key,
   });
@@ -434,7 +473,7 @@ class ExtraPostImagesThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: deleteImage,
+      onTap: onTap,
       child: Padding(
         padding: EdgeInsets.all(9.w),
         child: SizedBox(
@@ -449,6 +488,73 @@ class ExtraPostImagesThumbnail extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ThumbnailViewAndDeleteDialog extends StatelessWidget {
+  final File image;
+  final void Function() deleteImage;
+  const ThumbnailViewAndDeleteDialog(
+      {required this.image, required this.deleteImage, super.key});
+  final _imageSize = 300;
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppColors.kFilledColor,
+      content: SizedBox(
+        height: _imageSize.h,
+        width: double.maxFinite,
+        child: Stack(
+          children: [
+            SizedBox(
+              height: _imageSize.h,
+              width: double.maxFinite,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.r),
+                child: Image.file(
+                  image,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: InkWell(
+                onTap: () {
+                  Get.back<void>();
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.kPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.close_fullscreen_rounded,
+                    color: AppColors.kWhite,
+                    size: 20.w,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      actions: [
+        Center(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 10.0.h),
+            child: PrimaryButton(
+              onTap: deleteImage,
+              text: 'Delete Image',
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

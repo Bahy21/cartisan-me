@@ -45,4 +45,18 @@ class AddressController extends GetxController {
     _addresses.value = await userApi.getAllUserAddresses(_currentUid);
     _loading.value = false;
   }
+
+  void newAddress(AddressModel newAddress) async {
+    _loading.value = true;
+    final result =
+        await userApi.addAddress(userId: _currentUid, newAddress: newAddress);
+    if (result) {
+      _addresses.value.add(newAddress);
+      _addresses.refresh();
+      Get.back<void>();
+    } else {
+      showErrorDialog('Error adding address');
+    }
+    _loading.value = false;
+  }
 }

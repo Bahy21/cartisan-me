@@ -40,6 +40,7 @@ export async function sendNotification(request: {
     },
   };
   const newNotif = new NotificationModel({
+    notificationId: "",
     ownerId: request.uid,
     userId: request.userId,
     timestamp: Date.now(),
@@ -48,7 +49,9 @@ export async function sendNotification(request: {
     userProfileImg: request.userProfileImg,
   });
   try {
-    db.userNotificationCollection(request.uid).doc().set(newNotif.toMap());
+    const notifId = db.userNotificationCollection(request.uid).doc().id;
+    newNotif.notificationId = notifId;
+    db.userNotificationCollection(request.uid).doc(notifId).set(newNotif.toMap());
   } catch (error) {
     log(error);
     return false;
@@ -85,6 +88,7 @@ exports.sendNotificationToList = functions.https.onCall(
     };
     try {
       const newNotif = new NotificationModel({
+        notificationId: "",
         ownerId: request.uid,
         userId: request.userId,
         timestamp: Date.now(),
@@ -92,7 +96,9 @@ exports.sendNotificationToList = functions.https.onCall(
         type: request.notificationType,
         userProfileImg: request.userProfileImg,
       });
-      db.userNotificationCollection(request.uid).doc().set(newNotif.toMap());
+      const notifId = db.userNotificationCollection(request.uid).doc().id;
+      newNotif.notificationId = notifId;
+      db.userNotificationCollection(request.uid).doc(notifId).set(newNotif.toMap());
     } catch (error) {
       log(error);
       return false;

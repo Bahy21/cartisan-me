@@ -1,17 +1,11 @@
-import 'dart:developer';
-
 import 'package:cartisan/app/bindings/initial_bindings.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/global_functions.dart';
 import 'package:cartisan/app/modules/auth/auth_wrapper.dart';
 import 'package:cartisan/app/services/translation_service.dart';
 import 'package:cartisan/default_firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -25,9 +19,10 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(defaultOverlay);
   await GetStorage.init();
   await Firebase.initializeApp(
-    name: "Cartisan",
+    name: 'Cartisan',
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await GlobalFunctions.initServicesAndControllers();
   FlutterNativeSplash.remove();
   runApp(const Main());
@@ -56,4 +51,11 @@ class Main extends StatelessWidget {
       },
     );
   }
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final globalFunctions = GlobalFunctions();
+
+  await globalFunctions.showNotification(message);
 }

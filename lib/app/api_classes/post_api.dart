@@ -6,6 +6,7 @@ import 'package:cartisan/app/models/comment_model.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/models/review_model.dart';
+import 'package:cartisan/app/models/user_model.dart';
 
 const String GET_POST = '$BASE_URL/post/getPost';
 const String GET_COMMENTS = '$BASE_URL/post/comments/getComments';
@@ -130,8 +131,13 @@ class PostAPI {
       if (result.statusCode != 200) {
         throw Exception('Error fetching post');
       }
-      final data = result.data!['result'] as Map<String, dynamic>;
-      return PostResponse.fromMap(data);
+      final data = result.data!['data'] as Map<String, dynamic>;
+      log(data.toString());
+      final post = PostModel.fromMap(data['post'] as Map<String, dynamic>);
+      final user = UserModel.fromMap(data['owner'] as Map<String, dynamic>);
+      log('post $post');
+      log('user $user');
+      return PostResponse(owner: user, post: post);
     } on Exception catch (e) {
       log(e.toString());
       return null;

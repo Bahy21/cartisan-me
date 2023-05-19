@@ -32,7 +32,7 @@ class _LandingPageState extends State<LandingPage> {
       ),
       SearchView(),
       CreateProductImagePick(),
-      const NotificationPageView(),
+      NotificationPageView(),
       const UserSellerWrapper(),
     ];
     return Scaffold(

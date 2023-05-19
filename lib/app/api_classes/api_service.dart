@@ -41,7 +41,10 @@ class APIService {
     return dio.post<T>(url, data: data, queryParameters: queryParameters);
   }
 
-  Future<dioClient.Response<T>> put<T>(String url, dynamic data) {
+  Future<dioClient.Response<T>> put<T>(
+    String url,
+    dynamic data,
+  ) {
     return dio.put<T>(url, data: data);
   }
 

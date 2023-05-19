@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/controllers/notification_service.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/repositories/user_repo.dart';
 import 'package:cartisan/app/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,14 +28,19 @@ class UserController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onReady() {
+    log('controller ready');
+    log(currentUser.toString());
+
+    if (currentUser != null) {
+      log('initi');
+      NotificationService().init();
+    }
+  }
+
   void getUserPostCount() async {
     _userPostCount.value =
         await UserAPI().getUserPostCount(ac.currentUser!.uid);
-  }
-
-  @override
-  void onReady() {
-    getUserPostCount();
-    super.onReady();
   }
 }

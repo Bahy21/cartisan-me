@@ -44,7 +44,6 @@ class _GridAllUserPostsState extends State<GridAllUserPosts> {
             ? allItems![pageKey - 1].postId
             : null,
       );
-      log('new Items  = $newItems');
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         if (allItems == null || allItems.isEmpty) {

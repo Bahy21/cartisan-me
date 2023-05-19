@@ -36,6 +36,9 @@ class ImagePickerServices {
     for (final image in res) {
       images.addAll([File(image.path)]);
     }
+    if (images.length > 5) {
+      images = images.sublist(0, 5);
+    }
     return images;
   }
 }

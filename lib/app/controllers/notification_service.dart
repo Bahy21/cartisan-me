@@ -1,0 +1,75 @@
+import 'dart:developer';
+import 'package:cartisan/app/controllers/user_controller.dart';
+import 'package:cartisan/app/data/global_functions/global_functions.dart';
+import 'package:cartisan/app/models/user_model.dart';
+import 'package:cartisan/app/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get/get.dart';
+
+class NotificationService {
+  final firestore = FirebaseFirestore.instance;
+  final messaging = FirebaseMessaging.instance;
+  final db = Database();
+  final userController = Get.find<UserController>();
+  UserModel get currentUser => userController.currentUser!;
+  final _globalFunctions = GlobalFunctions();
+  Future<bool> initializeNotificationsPermissions() async {
+    NotificationSettings settings = await messaging.requestPermission();
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      log('User granted permission');
+      return true;
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      log('User granted provisional permission');
+      return true;
+    } else {
+      log('User declined or has not accepted permission');
+      return false;
+    }
+  }
+
+  Future<void> init() async {
+    try {
+      // * initialization
+      await initializeNotificationsPermissions();
+      await _globalFunctions.initializeNotification();
+      String? messagingToken = await getMessagingToken();
+
+      log(messagingToken.toString());
+
+      if (messagingToken != null) {
+        final currentUserRef = db.userCollection.doc(currentUser.id);
+        log("Handling notification Activity");
+        await currentUserRef
+            .update({'androidNotificationToken': messagingToken});
+        messaging.onTokenRefresh.listen((token) async {
+          await currentUserRef
+              .update({'androidNotificationToken': messagingToken});
+        });
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+          log('hellow howww');
+          _globalFunctions.showNotification(message);
+        });
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+          log('hellow howww');
+          _globalFunctions.showNotification(
+            message,
+          );
+        });
+
+        log("Notifications initialized");
+      }
+    } catch (e) {
+      log("Error initializing notifications");
+      log(e.toString());
+    }
+  }
+
+  Future<String?> getMessagingToken() async {
+    log("generating messaging token");
+    String? messagingToken = await messaging.getToken();
+    log('messagingToken: $messagingToken');
+    return messagingToken;
+  }
+}

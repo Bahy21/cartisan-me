@@ -1,6 +1,6 @@
 import { log } from "firebase-functions/logger";
 import * as db from "../../../../services/database";
-import {  addressFromMap, cartItemFromMap, getOrderItemStatusFromString, orderFromDoc, orderItemFromCartItem, userFromDoc } from "../../../../services/functions";
+import {  addressFromMap, cartItemFromMap, getOrderItemStatusFromString, userFromDoc } from "../../../../services/functions";
 import { CollectionReference, DocumentReference } from "firebase-admin/firestore";
 import { OrderItemModel } from "../../../../models/order_item_model";
 import { OrderModel } from "../../../../models/order_model";
@@ -139,39 +139,39 @@ router.put("/api/order/updateOrderStatus/:orderId", async (req, res) => {
     }
 });
 
-router.put("/api/order/updateOrderItemStatus/:orderId", async (req, res) => {
-    try {
-        const orderId: string = req.params.orderId;
-        const newStatus:string = req.body.status;
-        const orderItemIdToBeChanged :string= req.body.orderItemId;
-        const newStatusEnum = getOrderItemStatusFromString(newStatus);
-        const orderDocRef = db.ordersCollection.doc(orderId);
-        const order = orderFromDoc(await orderDocRef.get());
-        const index = order.orderItems.findIndex((orderItem)=>orderItem.orderItemID==orderItemIdToBeChanged);
-        if(index == -1){
-            throw Error(`No order of ID ${orderItemIdToBeChanged} found`);
-        } else {
-            order.orderItems[index].status = newStatusEnum;
-            orderDocRef.update({"orderItems":order.orderItems});
-        }
-        return res.status(200).send({status: "Success", msg: `Item ${orderItemIdToBeChanged} in Order ${orderId} has been updated to ${newStatusEnum}`})
-    } catch (error) {
-        log(error);
-        return res.status(500).send({status: "Failed", msg: error.message});
-    }
-});
+// router.put("/api/order/updateOrderItemStatus/:orderId", async (req, res) => {
+//     try {
+//         const orderId: string = req.params.orderId;
+//         const newStatus:string = req.body.status;
+//         const orderItemIdToBeChanged :string= req.body.orderItemId;
+//         const newStatusEnum = getOrderItemStatusFromString(newStatus);
+//         const orderDocRef = db.ordersCollection.doc(orderId);
+//         const order = orderFromDoc(await orderDocRef.get());
+//         const index = order.orderItems.findIndex((orderItem)=>orderItem.orderItemID==orderItemIdToBeChanged);
+//         if(index == -1){
+//             throw Error(`No order of ID ${orderItemIdToBeChanged} found`);
+//         } else {
+//             order.orderItems[index].status = newStatusEnum;
+//             orderDocRef.update({"orderItems":order.orderItems});
+//         }
+//         return res.status(200).send({status: "Success", msg: `Item ${orderItemIdToBeChanged} in Order ${orderId} has been updated to ${newStatusEnum}`})
+//     } catch (error) {
+//         log(error);
+//         return res.status(500).send({status: "Failed", msg: error.message});
+//     }
+// });
 
-router.get("/api/order/getOrder/:orderId", async (req, res) => {
-    try {
-        const orderId: string = req.params.orderId;
-        const orderDocRef = db.ordersCollection.doc(orderId);
-        const order = orderFromDoc(await orderDocRef.get());
-        return res.status(200).send({status: "Success", data: order.toMap()})
-    } catch (error) {
-        log(error);
-        return res.status(500).send({status: "Failed", msg: error.message});
-    }
-});
+// router.get("/api/order/getOrder/:orderId", async (req, res) => {
+//     try {
+//         const orderId: string = req.params.orderId;
+//         const orderDocRef = db.ordersCollection.doc(orderId);
+//         const order = orderFromDoc(await orderDocRef.get());
+//         return res.status(200).send({status: "Success", data: order.toMap()})
+//     } catch (error) {
+//         log(error);
+//         return res.status(500).send({status: "Failed", msg: error.message});
+//     }
+// });
 
 router.delete("/api/order/deleteOrder/:orderId", async (req, res) => {
     try {

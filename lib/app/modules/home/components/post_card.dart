@@ -1,11 +1,18 @@
 import 'dart:developer';
+import 'package:cartisan/app/api_classes/report_api.dart';
+import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/modules/home/components/custom_drop_down.dart';
 import 'package:cartisan/app/modules/home/components/expandable_text.dart';
 import 'package:cartisan/app/modules/home/components/product_option_dialog.dart';
 import 'package:cartisan/app/modules/home/components/quantity_card.dart';
 import 'package:cartisan/app/modules/profile/other_store_view.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/success_dialog.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,7 +62,10 @@ class PostCard extends StatelessWidget {
             children: [
               InkWell(
                   onTap: () {
-                    toToOtherProfile(post.ownerId);
+                    if (post.ownerId !=
+                        Get.find<AuthService>().currentUser!.uid) {
+                      toToOtherProfile(post.ownerId);
+                    }
                   },
                   child: SizedBox(
                     height: _avatarSize.w,
@@ -73,7 +83,7 @@ class PostCard extends StatelessWidget {
                                 offset: Offset(-8.w, 0),
                                 child: Icon(
                                   Icons.person,
-                                  size: 110.w,
+                                  size: 80.w,
                                   color: AppColors.kPrimary,
                                 ),
                               ),
@@ -120,8 +130,8 @@ class PostCard extends StatelessWidget {
               SizedBox(width: 16.w),
               IconButton(
                 onPressed: () {
-                  Get.dialog<void>(ProductOptionDialog(
-                    reportCallback: reportCallback!,
+                  Get.dialog<Widget>(ProductOptionDialog(
+                    reportCallback: reportPost,
                   ));
                 },
                 padding: EdgeInsets.zero,
@@ -186,6 +196,21 @@ class PostCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void reportPost() async {
+    Get.dialog<Widget>(LoadingDialog());
+    final result = await ReportAPI().reportPost(
+      post: postResponse.post,
+      reportedFor: '',
+    );
+    if (result) {
+      Get.back<void>();
+      showToast('Post Reported');
+    } else {
+      await showErrorDialog('Error reporting post');
+    }
+    Get.back<void>();
   }
 
   Widget imageWithCatch(String url) {

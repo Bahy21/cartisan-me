@@ -12,13 +12,13 @@ router.get("/api/search/fetchPosts/:userId/:count", async(req,res)=>{
     
     const userId: string = req.params.userId;
     const count: number = parseInt(req.params.count);
-    const lastPostId: string = req.query.lastPostId.toString();
+    const lastPostId = req.query.lastPostId;
     const postRef: CollectionReference = db.postsCollection;
     let queryDocs: QuerySnapshot;
-    if (lastPostId == null){
+    if (lastPostId == null || lastPostId == undefined || lastPostId == ""){
       queryDocs  = await postRef.orderBy("timestamp","desc").limit(count).get();
     } else {
-      const startAt = await postRef.doc(lastPostId).get();
+      const startAt = await postRef.doc(lastPostId.toString()).get();
       const startPost = postFromDoc(startAt);
         queryDocs  = await postRef.orderBy("timestamp","desc").startAfter(startPost.timestamp).limit(count).get();
     }
