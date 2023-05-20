@@ -59,6 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -227,6 +228,30 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ],
                   ),
+                ),
+                CustomLoginField(
+                  controller: _confirmPasswordController,
+                  focusNode: _confirmPasswordFocus,
+                  isPasswordField: true,
+                  hintText:
+                      TranslationsService.sigUpPageTranslation.confirmPassword,
+                  iconPath: AppAssets.kLock,
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.next,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return TranslationsService
+                          .sigInPageTranslation.passwordRequired;
+                    } else if (value.length <= 6) {
+                      return TranslationsService
+                          .sigInPageTranslation.validPassword;
+                    } else if (_passwordController.text !=
+                        _confirmPasswordController.text) {
+                      return TranslationsService
+                          .sigUpPageTranslation.passwordNotMatch;
+                    }
+                    return null;
+                  },
                 ),
               ],
             ),

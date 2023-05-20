@@ -35,6 +35,15 @@ class UserController extends GetxController {
     if (currentUser != null) {
       NotificationService().init();
       getUserPostCount();
+    } else {
+      once(
+        _userModel,
+        (callback) {
+          NotificationService().init();
+          getUserPostCount();
+        },
+        condition: _userModel.value != null,
+      );
     }
     super.onReady();
   }

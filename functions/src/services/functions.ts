@@ -272,49 +272,55 @@ export function commentFromDoc(doc: DocumentSnapshot){
   })
 }
 
-// export function orderFromDoc(doc: DocumentSnapshot) : OrderModel{
-//   return new OrderModel({
-//     orderId: doc.data().orderId,
-//     buyerId: doc.data().buyerId,
-//     orderItems: orderItemsFromList(doc.data().orderItems),
-//     total: doc.data().total,
-//     timestamp: doc.data().timestamp,
-//     involvedSellersList: doc.data().involvedSellersList,
-//     totalInCents: doc.data().totalInCents,
-//     orderStatus: doc.data().orderStatus,
-//   })
-// }
+export function orderFromDoc(doc: DocumentSnapshot) : OrderModel{
+  return new OrderModel({
+    orderId: doc.data().orderId,
+    buyerId: doc.data().buyerId,
+    orderItems: orderItemsFromList(doc.data().orderItems),
+    total: doc.data().total,
+    timestamp: doc.data().timestamp,
+    involvedSellersList: doc.data().involvedSellersList,
+    totalInCents: doc.data().totalInCents,
+    orderStatus: doc.data().orderStatus,
+    address: addressFromMap(doc.data().address),
+    shippingAddress: addressFromMap(doc.data().shippingAddress),
+    isPaid: doc.data().isPaid,
+    currency: doc.data().currency,
+  })
+}
 
-// export function orderItemsFromList(list:Map<any,any>){
-//   let orderItems = <OrderItemModel[]>[];
-//   if (list == null || list.keys.length == 0){
-//     return null;
-//   }
-//   list.forEach((value, key) => {
-//     orderItems.push(orderItemFromMap(value));
-//   });
-//   return orderItems;
-// }
+export function orderItemsFromList(list:Map<any,any>){
+  let orderItems = <OrderItemModel[]>[];
+  if (list == null || list.keys.length == 0){
+    return null;
+  }
+  list.forEach((value, key) => {
+    orderItems.push(orderItemFromMap(value));
+  });
+  return orderItems;
+}
 
-// export function orderItemFromMap(map:Map<any,any>): OrderItemModel{
-//   const orderItem = new OrderItemModel({
-//     orderItemID: map['orderItemID'],
-//     productId: map['productId'],
-//     productOption: map['productOption'],
-//     appFeeInCents: map['appFeeInCents'],
-//     quantity: map['quantity'],
-//     price : map['price'],
-//     grossTotalInCents: map['grossTotalInCents'],
-//     sellerId: map['sellerId'],
-//     deliveryOption : map['deliveryOption'],
-//     deliveryCostInCents : map['deliveryCostInCents'],
-//     costBeforeTaxInCents : map['costBeforeTaxInCents'],
-//     serviceFeeInCents : map['serviceFeeInCents'],
-//     tax : map['tax'] ?? 0,
-//     status : map['status'] ?? OrderItemStatus.pending,
-//   });
-//   return orderItem;
-// }
+export function orderItemFromMap(map:Map<any,any>): OrderItemModel{
+  const orderItem = new OrderItemModel({
+    orderItemID: map['orderItemID'],
+    productId: map['productId'],
+    productOption: map['productOption'],
+    appFeeInCents: map['appFeeInCents'],
+    quantity: map['quantity'],
+    price : map['price'],
+    grossTotalInCents: map['grossTotalInCents'],
+    sellerId: map['sellerId'],
+    deliveryOption : map['deliveryOption'],
+    deliveryCostInCents : map['deliveryCostInCents'],
+    costBeforeTaxInCents : map['costBeforeTaxInCents'],
+    serviceFeeInCents : map['serviceFeeInCents'],
+    tax : map['tax'] ?? 0,
+    status : map['status'] ?? OrderItemStatus.pending,
+    currency: map['currency'] ?? "USD",
+    state: map['state'],
+  });
+  return orderItem;
+}
 
 
 // export function orderItemFromCartItem(cartItem: CartItemModel, seller: UserModel): OrderItemModel{

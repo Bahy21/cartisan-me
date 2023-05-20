@@ -43,7 +43,7 @@ class _TimelineViewState extends State<TimelineView> {
         uid: uid,
         lastPostId: allItems == null ? null : allItems[pageKey - 1].post.postId,
       );
-      final isLastPage = newItems.length < _pageSize;
+      final isLastPage = newItems.isEmpty;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
       } else {
@@ -61,8 +61,8 @@ class _TimelineViewState extends State<TimelineView> {
 
   @override
   void dispose() {
-    _pagingController.dispose();
     super.dispose();
+    _pagingController.dispose();
   }
 
   void addToCart(PostModel post) async {

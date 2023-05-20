@@ -17,6 +17,7 @@ import 'package:cartisan/app/modules/profile/components/custom_textformfield.dar
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:cartisan/app/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -86,254 +87,259 @@ class _AddPostState extends State<AddPost> {
         key: _formKey,
         child: Padding(
           padding: EdgeInsets.all(23.w),
-          child: ListView(
-            children: [
-              Container(
-                height: 210.h,
-                width: double.maxFinite,
-                color: AppColors.kFilledColor,
-                child: Center(
-                  child: widget.images.isEmpty
-                      ? InkWell(
-                          onTap: handleImageTaken,
-                          child: Text(
-                            'At least one image needed',
-                            style: AppTypography.kBold18
-                                .copyWith(color: Colors.white),
-                          ),
-                        )
-                      : ProductHeaderImage(
-                          deleteImage: () {
-                            setState(() {
-                              widget.images.removeAt(0);
-                            });
-                          },
-                          image: widget.images.first),
-                ),
-              ),
-              Row(
-                children: [
-                  ...List.generate(
-                    length2 - 1,
-                    (index) => ExtraPostImagesThumbnail(
-                        onTap: () {
-                          Get.dialog<Widget>(ThumbnailViewAndDeleteDialog(
-                            image: widget.images[index + 1],
+          child: SingleChildScrollView(
+            reverse: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 210.h,
+                  width: double.maxFinite,
+                  color: AppColors.kFilledColor,
+                  child: Center(
+                    child: widget.images.isEmpty
+                        ? InkWell(
+                            onTap: handleImageTaken,
+                            child: Text(
+                              'At least one image needed',
+                              style: AppTypography.kBold18
+                                  .copyWith(color: Colors.white),
+                            ),
+                          )
+                        : ProductHeaderImage(
                             deleteImage: () {
-                              Get.back<void>();
                               setState(() {
-                                widget.images.removeAt(index + 1);
+                                widget.images.removeAt(0);
                               });
                             },
-                          ));
-                        },
-                        image: widget.images[index + 1]),
+                            image: widget.images.first),
                   ),
-                  if (length2 <= 5)
-                    Padding(
-                      padding: (length2 <= 1)
-                          ? EdgeInsets.symmetric(vertical: 10.h)
-                          : EdgeInsets.zero,
-                      child: InkWell(
-                        onTap: handleImageTaken,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.add,
-                              color: AppColors.kPrimary,
-                              size: 20.w,
-                            ),
-                            Text(
-                              'Add More',
-                              style: AppTypography.kBold14.copyWith(
-                                color: AppColors.kPrimary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              Padding(
-                padding: subHeadingPadding,
-                child: Text(
-                  'Product Title',
-                  style:
-                      AppTypography.kBold14.copyWith(color: AppColors.kWhite),
                 ),
-              ),
-              CustomTextFormField(
-                validator: (text) {
-                  if (text == null || text.isEmpty) {
-                    return 'Product title cannot be empty';
-                  }
-                  return null;
-                },
-                hintText: 'Enter your product title',
-                controller: _productTitleText,
-              ),
-              Padding(
-                padding: subHeadingPadding,
-                child: Text(
-                  'Product Description',
-                  style: subHeadingStyle,
-                ),
-              ),
-              CustomTextFormField(
-                validator: (text) {
-                  if (text == null || text.isEmpty) {
-                    return 'Product description cannot be empty';
-                  }
-                  return null;
-                },
-                hintText: "Enter your product's description",
-                controller: _productDescriptionText,
-              ),
-              Padding(
-                padding: subHeadingPadding,
-                child: Text(
-                  'Brand',
-                  style: subHeadingStyle,
-                ),
-              ),
-              CustomTextFormField(
-                validator: (text) {
-                  if (text == null || text.isEmpty) {
-                    return 'Brand cannot be empty';
-                  }
-                  return null;
-                },
-                hintText: 'Enter your product brand',
-                controller: _productBrandText,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+                if (length2 != 0)
+                  Row(
                     children: [
-                      Padding(
-                        padding: subHeadingPadding,
-                        child: Text(
-                          'Quantity :',
-                          style: subHeadingStyle,
-                        ),
+                      ...List.generate(
+                        length2 - 1,
+                        (index) => ExtraPostImagesThumbnail(
+                            onTap: () {
+                              Get.dialog<Widget>(ThumbnailViewAndDeleteDialog(
+                                image: widget.images[index + 1],
+                                deleteImage: () {
+                                  Get.back<void>();
+                                  setState(() {
+                                    widget.images.removeAt(index + 1);
+                                  });
+                                },
+                              ));
+                            },
+                            image: widget.images[index + 1]),
                       ),
-                      MiniTextField(
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return 'Product quantity cannot be empty';
-                          }
-                          if (int.tryParse(text) == null) {
-                            return 'Product quantit must be a whole number';
-                          }
-                          return null;
-                        },
-                        hintText: '1',
-                        controller: _productQuantityText,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 30.w,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: subHeadingPadding,
-                        child: Text(
-                          'Product Price',
-                          style: subHeadingStyle,
-                        ),
-                      ),
-                      MiniTextField(
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return 'Product price cannot be empty';
-                          }
-                          if (double.tryParse(text) == null) {
-                            return 'Product quantit must be a whole number';
-                          }
-                          return null;
-                        },
-                        hintText: r'$ 0 - 1000',
-                        controller: _productPriceText,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Padding(
-                padding: subHeadingPadding,
-                child: Text(
-                  'Choice',
-                  style: subHeadingStyle,
-                ),
-              ),
-              ProductVariantField(
-                hintText: 'Add Variants',
-                controller: _productVariantsText,
-                addIcon: InkWell(
-                  onTap: () {
-                    setState(() {
-                      _variants.add(_productVariantsText.text);
-                      _productVariantsText.clear();
-                    });
-                  },
-                  child: Icon(
-                    Icons.add_circle_outline,
-                    color: AppColors.kWhite,
-                    size: 23.w,
-                  ),
-                ),
-              ),
-              Wrap(
-                children: _variants
-                    .map(
-                      (variant) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Chip(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6.r),
+                      if (length2 <= 5)
+                        Padding(
+                          padding: (length2 <= 1)
+                              ? EdgeInsets.symmetric(vertical: 10.h)
+                              : EdgeInsets.zero,
+                          child: InkWell(
+                            onTap: handleImageTaken,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.add,
+                                  color: AppColors.kPrimary,
+                                  size: 20.w,
+                                ),
+                                Text(
+                                  'Add More',
+                                  style: AppTypography.kBold14.copyWith(
+                                    color: AppColors.kPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          label: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10.w, vertical: 5.h),
-                              child: Text(variant)),
-                          onDeleted: () {
-                            setState(() {
-                              _variants.remove(variant);
-                            });
-                          },
                         ),
-                      ),
-                    )
-                    .toList(),
-              ),
-              SizedBox(
-                height: 30.h,
-              ),
-              PrimaryButton(
-                width: double.maxFinite,
-                onTap: () {
-                  log(isProductReady.toString());
-                  if (isProductReady) {
-                    createPost();
-                  } else {
-                    showErrorDialog('Kindly fill all fields');
-                  }
-                },
-                text: 'Add Product',
-              ),
-            ],
+                    ],
+                  ),
+                Padding(
+                  padding: subHeadingPadding,
+                  child: Text(
+                    'Product Title',
+                    style:
+                        AppTypography.kBold14.copyWith(color: AppColors.kWhite),
+                  ),
+                ),
+                CustomTextFormField(
+                  validator: (text) {
+                    if (text == null || text.isEmpty) {
+                      return 'Product title cannot be empty';
+                    }
+                    return null;
+                  },
+                  hintText: 'Enter your product title',
+                  controller: _productTitleText,
+                ),
+                Padding(
+                  padding: subHeadingPadding,
+                  child: Text(
+                    'Product Description',
+                    style: subHeadingStyle,
+                  ),
+                ),
+                CustomTextFormField(
+                  validator: (text) {
+                    if (text == null || text.isEmpty) {
+                      return 'Product description cannot be empty';
+                    }
+                    return null;
+                  },
+                  hintText: "Enter your product's description",
+                  controller: _productDescriptionText,
+                ),
+                Padding(
+                  padding: subHeadingPadding,
+                  child: Text(
+                    'Brand',
+                    style: subHeadingStyle,
+                  ),
+                ),
+                CustomTextFormField(
+                  validator: (text) {
+                    if (text == null || text.isEmpty) {
+                      return 'Brand cannot be empty';
+                    }
+                    return null;
+                  },
+                  hintText: 'Enter your product brand',
+                  controller: _productBrandText,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: subHeadingPadding,
+                          child: Text(
+                            'Quantity :',
+                            style: subHeadingStyle,
+                          ),
+                        ),
+                        MiniTextField(
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'Product quantity cannot be empty';
+                            }
+                            if (int.tryParse(text) == null) {
+                              return 'Product quantity must be a whole number';
+                            }
+                            return null;
+                          },
+                          hintText: '1',
+                          controller: _productQuantityText,
+                          keyboardType: TextInputType.number,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 30.w,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: subHeadingPadding,
+                          child: Text(
+                            'Product Price',
+                            style: subHeadingStyle,
+                          ),
+                        ),
+                        MiniTextField(
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'Product price cannot be empty';
+                            }
+                            if (double.tryParse(text) == null) {
+                              return 'Product quantit must be a whole number';
+                            }
+                            return null;
+                          },
+                          hintText: r'$ 0 - 1000',
+                          controller: _productPriceText,
+                          keyboardType: TextInputType.number,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: subHeadingPadding,
+                  child: Text(
+                    'Choice',
+                    style: subHeadingStyle,
+                  ),
+                ),
+                ProductVariantField(
+                  hintText: 'Add Variants',
+                  controller: _productVariantsText,
+                  addIcon: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _variants.add(_productVariantsText.text);
+                        _productVariantsText.clear();
+                      });
+                    },
+                    child: Icon(
+                      Icons.add_circle_outline,
+                      color: AppColors.kWhite,
+                      size: 23.w,
+                    ),
+                  ),
+                ),
+                Wrap(
+                  children: _variants
+                      .map(
+                        (variant) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Chip(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            label: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w, vertical: 5.h),
+                                child: Text(variant)),
+                            onDeleted: () {
+                              setState(() {
+                                _variants.remove(variant);
+                              });
+                            },
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+                SizedBox(
+                  height: 30.h,
+                ),
+                PrimaryButton(
+                  width: double.maxFinite,
+                  onTap: () {
+                    log(isProductReady.toString());
+                    if (isProductReady) {
+                      createPost();
+                    } else {
+                      showErrorDialog('Kindly fill all fields');
+                    }
+                  },
+                  text: 'Add Product',
+                ),
+              ],
+            ),
           ),
         ),
       ),

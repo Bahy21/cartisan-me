@@ -19,6 +19,7 @@ exports.onNewChatRoomCreated = functions
             const userIds: string[] = chatRoom.participants;
             const createdBy = chatRoom.createdBy;
             const receiverId = userIds.filter(id => id != createdBy)[0];
+            log('receiverId for notification', receiverId);
             const senderId = createdBy;
             const senderReference = db.userCollection.doc(senderId);
             const receiverReference = db.userCollection.doc(receiverId);
