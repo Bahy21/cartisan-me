@@ -61,39 +61,56 @@ class StoreView extends StatelessWidget {
           // TODO: ADD REFRESH CALL
           return Future<void>.value();
         },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.w),
-          child: SizedBox(
-            height: Get.height,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 30.h,
+        child: SizedBox(
+          height: Get.height,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 30.h,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.seventeenHorizontal,
                 ),
-                ProfileCard(
+                child: ProfileCard(
                   editCallback: () {
                     Get.to<Widget>(
                       EditStoreView.new,
                     );
                   },
                 ),
-                SizedBox(
-                  height: 25.h,
+              ),
+              SizedBox(
+                height: 25.h,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.seventeenHorizontal,
                 ),
-                Text(uc.currentUser?.username ?? 'New user',
+                child: Text(uc.currentUser?.username ?? 'New user',
                     style: AppTypography.kMedium16),
-                SizedBox(
-                  height: 5.h,
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.seventeenHorizontal,
                 ),
-                Text(
+                child: Text(
                   uc.currentUser?.bio ?? '',
                   style: AppTypography.kMedium14
                       .copyWith(color: AppColors.kHintColor),
                 ),
-                SizedBox(height: 30.0.h),
-                Row(
+              ),
+              SizedBox(height: 30.0.h),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.seventeenHorizontal,
+                ),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     StoreFacilityColumn(
@@ -123,51 +140,50 @@ class StoreView extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 36.h),
-                DefaultTabController(
-                  length: 2,
-                  child: SizedBox(
-                    height: Get.height * 0.45,
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      DecoratedBox(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.grey,
-                            ),
+              ),
+              SizedBox(height: 36.h),
+              DefaultTabController(
+                length: 2,
+                child: SizedBox(
+                  height: Get.height * 0.45,
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    DecoratedBox(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey,
                           ),
                         ),
-                        child: TabBar(
-                          labelColor: AppColors.kPrimary,
-                          unselectedLabelColor: AppColors.kHintColor,
-                          indicatorColor: AppColors.kPrimary,
-                          tabs: [
-                            Tab(
-                              icon: SvgPicture.asset(AppAssets.kGrid),
-                            ),
-                            Tab(
-                              icon: SvgPicture.asset(AppAssets.kList),
-                            ),
-                          ],
-                        ),
                       ),
-                      SizedBox(height: 10.h),
-                      const Expanded(
-                        child: TabBarView(
-                          children: [
-                            // GridView.builder.
-                            GridAllUserPosts(),
+                      child: TabBar(
+                        labelColor: AppColors.kPrimary,
+                        unselectedLabelColor: AppColors.kHintColor,
+                        indicatorColor: AppColors.kPrimary,
+                        tabs: [
+                          Tab(
+                            icon: SvgPicture.asset(AppAssets.kGrid),
+                          ),
+                          Tab(
+                            icon: SvgPicture.asset(AppAssets.kList),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Expanded(
+                      child: TabBarView(
+                        children: [
+                          // GridView.builder.
+                          GridAllUserPosts(),
 
-                            // ListView.
-                            ListAllUserPosts(),
-                          ],
-                        ),
+                          // ListView.
+                          ListAllUserPosts(),
+                        ],
                       ),
-                    ]),
-                  ),
+                    ),
+                  ]),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

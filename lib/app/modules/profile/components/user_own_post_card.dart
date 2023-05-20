@@ -3,6 +3,7 @@ import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/home/components/custom_drop_down.dart';
 import 'package:cartisan/app/modules/home/components/expandable_text.dart';
+import 'package:cartisan/app/modules/home/components/post_card.dart';
 import 'package:cartisan/app/modules/home/components/quantity_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,17 +35,7 @@ class UserOwnPostCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(height: 13.h),
-          Container(
-            height: 168.h,
-            width: double.maxFinite,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6.0.r),
-              image: DecorationImage(
-                image: NetworkImage(post.images.first),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          PostImageCarousel(images: post.images),
           SizedBox(height: AppSpacing.seventeenVertical),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

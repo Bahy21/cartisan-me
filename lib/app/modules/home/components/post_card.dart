@@ -43,7 +43,9 @@ class PostCard extends StatelessWidget {
     final user = postResponse.owner;
     final post = postResponse.post;
     return Container(
-      margin: EdgeInsets.only(bottom: 20.h),
+      margin: EdgeInsets.only(
+        bottom: 10.h,
+      ),
       padding: EdgeInsets.only(
         left: 9.w,
         right: AppSpacing.eightHorizontal,
@@ -52,7 +54,6 @@ class PostCard extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: AppColors.kGrey,
-        borderRadius: BorderRadius.circular(AppSpacing.sixRadius),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,7 +95,10 @@ class PostCard extends StatelessWidget {
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    toToOtherProfile(post.ownerId);
+                    if (post.ownerId !=
+                        Get.find<AuthService>().currentUser!.uid) {
+                      toToOtherProfile(post.ownerId);
+                    }
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

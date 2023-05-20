@@ -6,6 +6,7 @@ import 'package:cartisan/app/models/search_model.dart';
 import 'package:cartisan/app/modules/search/components/explore_card.dart';
 import 'package:cartisan/app/modules/search/components/post_full_screen.dart';
 import 'package:cartisan/app/modules/search/components/searchfield.dart';
+import 'package:cartisan/app/modules/search/search_full_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -24,8 +25,6 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final searchApi = SearchAPI();
-
-  final TextEditingController _searchController = TextEditingController();
 
   final PagingController<int, SearchModel> _pagingController =
       PagingController(firstPageKey: 0);
@@ -81,9 +80,13 @@ class _SearchViewState extends State<SearchView> {
           appBar: AppBar(
             toolbarHeight: 80.h,
             automaticallyImplyLeading: false,
-            title: SearchField(
-              controller: _searchController,
-              onSubmitted: (value) {},
+            title: InkWell(
+              onTap: () {
+                Get.to<Widget>(SearchFullScreen.new);
+              },
+              child: SearchField(
+                onSubmitted: (value) {},
+              ),
             ),
             centerTitle: true,
           ),

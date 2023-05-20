@@ -15,6 +15,7 @@ import 'package:cartisan/app/modules/add_post/components/mini_text_field.dart';
 import 'package:cartisan/app/modules/add_post/components/product_image_picker_dialog.dart';
 import 'package:cartisan/app/modules/profile/components/custom_textformfield.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -187,6 +188,7 @@ class _AddPostState extends State<AddPost> {
                   ),
                 ),
                 CustomTextFormField(
+                  maxLines: 3,
                   validator: (text) {
                     if (text == null || text.isEmpty) {
                       return 'Product description cannot be empty';
@@ -347,7 +349,7 @@ class _AddPostState extends State<AddPost> {
   }
 
   void createPost() async {
-    Get.dialog<Widget>(UploadDialog(), barrierDismissible: false);
+    Get.dialog<Widget>(LoadingDialog(), barrierDismissible: false);
     final uploadedImagesLinks = await handleImageUpload();
     final userId = Get.find<AuthService>().currentUser!.uid;
     final post = PostModel(

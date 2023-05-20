@@ -4,16 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SearchField extends StatelessWidget {
-  final TextEditingController controller;
   final void Function(String)? onSubmitted;
-  const SearchField({ required this.controller, this.onSubmitted,super.key,});
+  const SearchField({
+    this.onSubmitted,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 54.h,
       child: TextField(
-        controller: controller,
         onSubmitted: onSubmitted,
         style: AppTypography.kExtraLight15,
         textAlignVertical: TextAlignVertical.center,
