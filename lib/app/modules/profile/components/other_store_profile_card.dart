@@ -77,9 +77,7 @@ class OtherStoreProfileCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: CustomOutlinedButton(
-                          onTap: () {
-                            spc.followUser();
-                          },
+                          onTap: spc.followUser,
                           text: spc.isFollowing
                               ? TranslationsService
                                   .storePageTranslation.following
@@ -92,7 +90,8 @@ class OtherStoreProfileCard extends StatelessWidget {
                       SizedBox(width: 13.w),
                       Expanded(
                         child: CustomOutlinedButton(
-                          onTap: () {},
+                          onTap: chatCallback ??
+                              () => log('no chat function assigned or found'),
                           text: TranslationsService.storePageTranslation.chat,
                           color: AppColors.kPrimary,
                           fontColor: AppColors.kPrimary,

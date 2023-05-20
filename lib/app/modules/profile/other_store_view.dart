@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:cartisan/app/api_classes/report_api.dart';
 import 'package:cartisan/app/api_classes/social_api.dart';
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/controllers/chat_controller.dart';
 import 'package:cartisan/app/controllers/store_page_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
+import 'package:cartisan/app/modules/chat/basic_chat.dart';
 import 'package:cartisan/app/modules/profile/components/other_store_profile_card.dart';
 import 'package:cartisan/app/modules/profile/components/report_pop_up.dart';
 import 'package:cartisan/app/modules/profile/components/store_facility_column.dart';
@@ -32,7 +36,9 @@ class OtherStoreView extends StatefulWidget {
 class _OtherStoreViewState extends State<OtherStoreView> {
   final socialApi = SocialAPI();
   final reportApi = ReportAPI();
+  final chatController = Get.find<ChatController>();
   String get currentUid => Get.find<AuthService>().currentUser!.uid;
+
   void reportUser() async {
     Get.dialog<Widget>(LoadingDialog());
     final result = await reportApi.reportUser(
@@ -57,6 +63,39 @@ class _OtherStoreViewState extends State<OtherStoreView> {
       Get.back<void>();
     } else {
       await showErrorDialog('Error blocking user');
+    }
+  }
+
+  void startChat() async {
+    Get.dialog<Widget>(LoadingDialog());
+    final storeOwner = Get.find<StorePageController>().storeOwner!;
+    final checkChatroomExists = await chatController.chatExists(storeOwner.id);
+    if (checkChatroomExists == null) {
+      final newChatRoom = await chatController.createChatroom(
+        otherParticipant: storeOwner.id,
+        otherParticipantName: storeOwner.username,
+        otherParticipantPictureUrl: storeOwner.url,
+      );
+      if (newChatRoom == null) {
+        Get.back<void>();
+        await showErrorDialog('Error creating chatroom');
+        return;
+      }
+      Get
+        ..back<void>()
+        ..to<Widget>(() => BasicChat(
+              chatRoomModel: newChatRoom,
+              otherParticipantName: storeOwner.username,
+              otherParticipantAvatarURL: storeOwner.url,
+            ));
+    } else {
+      Get
+        ..back<void>()
+        ..to<Widget>(() => BasicChat(
+              chatRoomModel: checkChatroomExists,
+              otherParticipantName: storeOwner.profileName,
+              otherParticipantAvatarURL: storeOwner.url,
+            ));
     }
   }
 
@@ -146,7 +185,7 @@ class _OtherStoreViewState extends State<OtherStoreView> {
                           height: 30.h,
                         ),
                         OtherStoreProfileCard(
-                          chatCallback: () {},
+                          chatCallback: startChat,
                         ),
                         SizedBox(
                           height: 25.h,

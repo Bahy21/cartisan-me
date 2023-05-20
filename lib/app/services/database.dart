@@ -20,6 +20,13 @@ class Database {
   CollectionReference get errorReportReference =>
       firestore.collection('errorReports');
 
+  CollectionReference get chatRoomsCollection =>
+      firestore.collection('chatRooms');
+  CollectionReference<Map<String, dynamic>> chatRoomMessages(
+    String chatRoomId,
+  ) =>
+      chatRoomsCollection.doc(chatRoomId).collection('messages');
+
   void get addCardtoUser => log('Not implemented yet');
 
   // User subcollections.

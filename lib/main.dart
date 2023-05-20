@@ -22,7 +22,7 @@ void main() async {
     name: 'Cartisan',
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await GlobalFunctions.initServicesAndControllers();
   FlutterNativeSplash.remove();
   runApp(const Main());
@@ -53,7 +53,7 @@ class Main extends StatelessWidget {
   }
 }
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final globalFunctions = GlobalFunctions();
 

@@ -14,6 +14,7 @@ class NotificationService {
   final userController = Get.find<UserController>();
   UserModel get currentUser => userController.currentUser!;
   final _globalFunctions = GlobalFunctions();
+  bool initialized = false;
   Future<bool> initializeNotificationsPermissions() async {
     NotificationSettings settings = await messaging.requestPermission();
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
@@ -59,6 +60,7 @@ class NotificationService {
         });
 
         log("Notifications initialized");
+        initialized = true;
       }
     } catch (e) {
       log("Error initializing notifications");

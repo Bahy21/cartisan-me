@@ -78,6 +78,8 @@ String notificationText({
       return '$username liked your post';
     case NotificationType.order:
       return '$username ordered your product';
+    case NotificationType.messsage:
+      return '$username sent you a message';
     default:
       return '';
   }

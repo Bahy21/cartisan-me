@@ -25,13 +25,12 @@ exports.onNewFollower = functions
     });
 
 
- async function sendToNotifications( 
+async function sendToNotifications( 
     followerDoc :FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>, 
-    followedId:string,   ){
+    followedId:string,){
    try {
     var userSnapshot=await followerDoc.get();
     const follower = userFromDoc(userSnapshot);
-    log('follower', follower);
     const newNotification = new NotificationModel({
         notificationId: '',
         ownerId: userSnapshot.id,
@@ -41,7 +40,6 @@ exports.onNewFollower = functions
         type: NotificationType.follow,
         userProfileImg: follower.url,
     });
-    log('newNotification', newNotification.toMap());
     const notificationId = db.userNotificationCollection(followedId).doc().id;
     newNotification.notificationId = notificationId;
     await db.userNotificationCollection(followedId).doc(notificationId).set(newNotification.toMap());
@@ -52,7 +50,7 @@ exports.onNewFollower = functions
     
  } 
  
- async function sendPushPushNotification(
+ export async function sendPushPushNotification(
     {receiverDoc, alertHeading, alertMessage}:
     {
         receiverDoc :FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>;

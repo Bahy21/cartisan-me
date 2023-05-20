@@ -37,6 +37,7 @@ dependencies:
   flutter_stripe: ^9.2.0
   flutter_keyboard_visibility: ^5.4.1
   flutter_local_notifications:
+  dash_chat_2: ^0.0.17
   
 
 

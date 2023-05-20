@@ -32,11 +32,11 @@ class UserController extends GetxController {
   void onReady() {
     log('controller ready');
     log(currentUser.toString());
-
     if (currentUser != null) {
-      log('initi');
       NotificationService().init();
+      getUserPostCount();
     }
+    super.onReady();
   }
 
   void getUserPostCount() async {

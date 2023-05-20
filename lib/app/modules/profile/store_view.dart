@@ -3,6 +3,7 @@ import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/cart/cart_view_pages.dart';
 import 'package:cartisan/app/modules/chat/all_chats.dart';
+import 'package:cartisan/app/modules/chat/chat_room_view.dart';
 import 'package:cartisan/app/modules/profile/components/other_store_facility_card.dart';
 import 'package:cartisan/app/modules/profile/components/profile_card.dart';
 import 'package:cartisan/app/modules/profile/components/report_pop_up.dart';
@@ -46,7 +47,7 @@ class StoreView extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              Get.to<Widget>(() => const AllChats());
+              Get.to<Widget>(ChatRoomView.new);
             },
             icon: SvgPicture.asset(AppAssets.kChat),
           ),
@@ -77,8 +78,6 @@ class StoreView extends StatelessWidget {
                       EditStoreView.new,
                     );
                   },
-                  chatCallback: () {},
-                  followCallback: () {},
                 ),
                 SizedBox(
                   height: 25.h,

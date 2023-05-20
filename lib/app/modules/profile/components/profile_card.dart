@@ -9,12 +9,8 @@ import 'package:get/get.dart';
 
 class ProfileCard extends StatelessWidget {
   final VoidCallback editCallback;
-  final VoidCallback? followCallback;
-  final VoidCallback? chatCallback;
   ProfileCard({
     required this.editCallback,
-    this.followCallback,
-    this.chatCallback,
     super.key,
   });
   final uc = Get.find<UserController>();

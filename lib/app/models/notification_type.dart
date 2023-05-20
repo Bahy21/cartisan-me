@@ -3,4 +3,5 @@ enum NotificationType {
   comment,
   follow,
   order,
+  messsage,
 }
