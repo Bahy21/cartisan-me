@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/data/constants/app_colors.dart';
 import 'package:cartisan/app/models/chat_room_model.dart';
@@ -24,16 +23,36 @@ class ChatroomTile extends StatelessWidget {
         otherParticipantDetails['profilePicture'] as String?;
     return ListTile(
       onTap: () {
-        Get.to<Widget>(BasicChat(
-          chatRoomModel: chatRoomModel,
-          otherParticipantName: otherParticipantName,
-          otherParticipantAvatarURL: otherParticipantAvatar,
-        ));
+        Get.to<Widget>(
+          BasicChat(
+            chatRoomModel: chatRoomModel,
+            otherParticipantName: otherParticipantName,
+            otherParticipantAvatarURL: otherParticipantAvatar,
+          ),
+        );
       },
       leading: otherParticipantAvatar?.isURL ?? false
           ? CircleAvatar(
               radius: (_avatarSize / 2).w,
-              backgroundImage: NetworkImage(otherParticipantAvatar!),
+              child: CachedNetworkImage(
+                imageUrl: otherParticipantAvatar!,
+                errorWidget: (context, url, dynamic error) => SizedBox(
+                  width: _avatarSize.w,
+                  height: _avatarSize.w,
+                  child: ClipOval(
+                    child: Material(
+                      child: Transform.translate(
+                        offset: Offset(-5.w, 0),
+                        child: Icon(
+                          Icons.person,
+                          size: (_avatarSize * 1.2).w,
+                          color: AppColors.kPrimary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             )
           : SizedBox(
               width: _avatarSize.w,

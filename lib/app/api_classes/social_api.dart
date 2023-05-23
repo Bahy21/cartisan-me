@@ -6,18 +6,18 @@ import 'package:cartisan/app/models/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-const String IS_FOLLOWING = '$BASE_URL/social/isFollowing';
-const String GET_FOLLOWING = '$BASE_URL/social/getFollowing';
-const String GET_FOLLOWERS = '$BASE_URL/social/getFollowers';
-const String IS_BLOCKED = '$BASE_URL/social/isBlocked';
-const String GET_BLOCK_LIST = '$BASE_URL/social/getBlockList';
-const String IS_LIKED = '$BASE_URL/social/isLiked';
-const String GET_LIKES = '$BASE_URL/social/getLikes';
-const String UNFOLLOW_USER = '$BASE_URL/social/unfollowUser';
-const String FOLLOW_USER = '$BASE_URL/social/followUser';
-const String UNBLOCK_USER = '$BASE_URL/social/unblockUser';
-const String BLOCK_USER = '$BASE_URL/social/blockUser';
-const String LIKE_POST = '$BASE_URL/post/likePost';
+String IS_FOLLOWING = '$BASE_URL/social/isFollowing';
+String GET_FOLLOWING = '$BASE_URL/social/getFollowing';
+String GET_FOLLOWERS = '$BASE_URL/social/getFollowers';
+String IS_BLOCKED = '$BASE_URL/social/isBlocked';
+String GET_BLOCK_LIST = '$BASE_URL/social/getBlockList';
+String IS_LIKED = '$BASE_URL/social/isLiked';
+String GET_LIKES = '$BASE_URL/social/getLikes';
+String UNFOLLOW_USER = '$BASE_URL/social/unfollowUser';
+String FOLLOW_USER = '$BASE_URL/social/followUser';
+String UNBLOCK_USER = '$BASE_URL/social/unblockUser';
+String BLOCK_USER = '$BASE_URL/social/blockUser';
+String LIKE_POST = '$BASE_URL/post/likePost';
 
 class SocialAPI {
   final apiService = APIService();

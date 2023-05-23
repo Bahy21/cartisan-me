@@ -4,17 +4,17 @@ import 'package:cartisan/app/models/address__model.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
 
-const String GET_USER = '$BASE_URL/user/getUser';
-const String GET_ALL_USER_POSTS = '$BASE_URL/user/getAllPosts';
-const String CREATE_USER = '$BASE_URL/user/createUser';
-const String UPDATE_DELIVERY_INFO = '$BASE_URL/user/updateDeliveryInfo';
-const String UPDATE_USER_DETAILS = '$BASE_URL/user/updateUser';
-const String ADD_ADDRESS = '$BASE_URL/user/addAddress';
-const String UPDATE_AREA = '$BASE_URL/user/updateArea';
-const String GET_USER_POST_COUNT = '$BASE_URL/user/getPostCount';
-const String GET_ALL_USER_ADDRESSES = '$BASE_URL/user/getAllAddresses';
-const String UPDATE_ADDRESS = '$BASE_URL/user/updateAddress';
-const String DELETE_ADDRESS = '$BASE_URL/user/deleteAddress';
+String GET_USER = '$BASE_URL/user/getUser';
+String GET_ALL_USER_POSTS = '$BASE_URL/user/getAllPosts';
+String CREATE_USER = '$BASE_URL/user/createUser';
+String UPDATE_DELIVERY_INFO = '$BASE_URL/user/updateDeliveryInfo';
+String UPDATE_USER_DETAILS = '$BASE_URL/user/updateUser';
+String ADD_ADDRESS = '$BASE_URL/user/addAddress';
+String UPDATE_AREA = '$BASE_URL/user/updateArea';
+String GET_USER_POST_COUNT = '$BASE_URL/user/getPostCount';
+String GET_ALL_USER_ADDRESSES = '$BASE_URL/user/getAllAddresses';
+String UPDATE_ADDRESS = '$BASE_URL/user/updateAddress';
+String DELETE_ADDRESS = '$BASE_URL/user/deleteAddress';
 
 class UserAPI {
   APIService apiService = APIService();

@@ -21,9 +21,9 @@ class _CartViewState extends State<CartView> {
       builder: (controller) {
         return Scaffold(
           body: controller.isLoading
-              ? Center(child: CircularProgressIndicator.adaptive())
+              ? const Center(child: CircularProgressIndicator.adaptive())
               : controller.isCartEmpty
-                  ? Center(child: Text('Cart is empty'))
+                  ? const Center(child: Text('Cart is empty'))
                   : ListView.separated(
                       itemCount: controller.cart.length,
                       separatorBuilder: (context, index) =>

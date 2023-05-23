@@ -16,7 +16,13 @@ class LoadingDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.sixRadius),
         ),
-        content: Lottie.asset('assets/lottie/loading.json',height: 100.h,width: 100.w,fit: BoxFit.cover),
+        content: Lottie.asset(
+          'assets/lottie/loading.json',
+          height: 100.h,
+          width: 100.w,
+          fit: BoxFit.cover,
+        ),
+        alignment: Alignment.center,
       ),
     );
   }
@@ -25,7 +31,6 @@ class LoadingDialog extends StatelessWidget {
 void showLoadingDialog(BuildContext context) {
   showDialog<void>(
     context: context,
-    barrierDismissible: true,
     builder: (_) => const LoadingDialog(),
   );
 }

@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/post_response.dart';
 
-const String FETCH_TIMELINE = '$BASE_URL/timeline/fetchPosts';
+String FETCH_TIMELINE = '$BASE_URL/timeline/fetchPosts';
 
 class TimelineAPI {
   APIService apiService = APIService();

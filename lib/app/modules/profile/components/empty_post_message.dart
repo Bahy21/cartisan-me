@@ -1,5 +1,3 @@
-import 'package:cartisan/app/data/constants/app_assets.dart';
-import 'package:cartisan/app/data/constants/app_typography.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

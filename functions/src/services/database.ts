@@ -22,5 +22,6 @@ export const activeCartCollectionGroup = db.collectionGroup("cart");
 export const userReportsCollection = db.collection("userReport");
 export const chatRoomCollection = db.collection("chatRooms");
 export const errorReportReference = db.collection("errorReports");
+export const stripeWebhookReportsReference = db.collection("StripeWebhookReports");
 
 export const addCardtoUser = () => console.error("Not  implemeted yet");

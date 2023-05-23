@@ -51,8 +51,10 @@ export class OrderModel {
     // TODO: ADD ADDRESSES
     toMap(){
         let orderItems = [];
+        let sellers = <string[]>[]
         for(const orderItem of this.orderItems){
             orderItems.push(orderItem.toMap());
+            sellers.push(orderItem.sellerId);
         }; 
         return {
             orderId: this.orderId,
@@ -66,8 +68,8 @@ export class OrderModel {
             address: this.address.toMap(),
             shippingAddress: this.shippingAddress.toMap(),
             currency: this.currency,
-            isPaid: this.isPaid
-            
+            isPaid: this.isPaid,
+            sellers:sellers,
         }
     }
     toString(){

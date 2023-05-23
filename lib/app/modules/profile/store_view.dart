@@ -2,11 +2,8 @@
 import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/cart/cart_view_pages.dart';
-import 'package:cartisan/app/modules/chat/all_chats.dart';
 import 'package:cartisan/app/modules/chat/chat_room_view.dart';
-import 'package:cartisan/app/modules/profile/components/other_store_facility_card.dart';
 import 'package:cartisan/app/modules/profile/components/profile_card.dart';
-import 'package:cartisan/app/modules/profile/components/report_pop_up.dart';
 import 'package:cartisan/app/modules/profile/components/store_facility_column.dart';
 import 'package:cartisan/app/modules/profile/edit_store_view.dart';
 import 'package:cartisan/app/modules/profile/grid_all_user_profile_post.dart';

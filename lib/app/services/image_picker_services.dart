@@ -31,7 +31,7 @@ class ImagePickerServices {
 
   Future<List<File>?> pickMultipleImages() async {
     final res = await _picker.pickMultiImage();
-    List<File> images = [];
+    var images = <File>[];
 
     for (final image in res) {
       images.addAll([File(image.path)]);

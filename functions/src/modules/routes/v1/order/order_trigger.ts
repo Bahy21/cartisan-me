@@ -2,11 +2,12 @@ import { OrderModel } from "../../../../models/order_model";
 import * as db from "../../../../services/database";
 import * as functions from "firebase-functions";
 import { orderFromDoc, userFromDoc } from "../../../../services/functions";
-import { log } from "firebase-functions/logger";
+// 
 import * as admin from 'firebase-admin';
 import { sendPushPushNotification } from "../social/follow/following_triggers";
 import { NotificationModel } from "../../../../models/notification_model";
 import { NotificationType } from "../../../../models/enums";
+import logger from "../../../../services/logger";
 
 exports.onNewOrderCreated = functions
     .firestore
@@ -48,7 +49,7 @@ exports.onNewOrderCreated = functions
                 });
             } 
         } catch (error) {
-            log('error in messaging trigger', error);  
+            logger.info('error in messaging trigger', error);  
         }
 
     });

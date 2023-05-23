@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/controllers/store_page_controller.dart';
 import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
@@ -9,11 +8,8 @@ import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/home/components/post_card.dart';
 import 'package:cartisan/app/modules/profile/components/empty_post_message.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
-import 'package:cartisan/app/controllers/store_page_controller.dart';
 
 class ListAllUserPosts extends StatefulWidget {
   final String? userId;
@@ -39,9 +35,7 @@ class _ListAllUserPosts extends State<ListAllUserPosts> {
     currentlyViewedUser = widget.userId == null
         ? Get.find<UserController>().currentUser
         : Get.find<StorePageController>().storeOwner;
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 

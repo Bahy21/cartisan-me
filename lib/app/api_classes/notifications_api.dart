@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/notification_model.dart';
 
-const String GET_NOTIFICATIONS = '$BASE_URL/notifications/getNotifications';
-const String CLEAR_NOTIFICATIONS = '$BASE_URL/notifications/clearNotifications';
+String GET_NOTIFICATIONS = '$BASE_URL/notifications/getNotifications';
+String CLEAR_NOTIFICATIONS = '$BASE_URL/notifications/clearNotifications';
 
 class NotificationsAPI {
   final apiService = APIService();
@@ -14,7 +13,7 @@ class NotificationsAPI {
     String? lastSentNotificationId,
     int? limit,
   }) async {
-    final int count = limit ?? 10;
+    final count = limit ?? 10;
     final results = await apiService.getPaginate<Map>(
         '$GET_NOTIFICATIONS/$userId/$count', <String, dynamic>{
       'lastNotificationId': lastSentNotificationId,

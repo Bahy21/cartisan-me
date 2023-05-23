@@ -1,23 +1,19 @@
-import 'package:cartisan/app/controllers/store_page_controller.dart';
 import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/app_assets.dart';
 import 'package:cartisan/app/data/constants/app_colors.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
 import 'package:cartisan/app/modules/cart/cart_view_pages.dart';
-import 'package:cartisan/app/modules/chat/all_chats.dart';
-import 'package:cartisan/app/modules/chat/basic_chat.dart';
 import 'package:cartisan/app/modules/chat/chat_room_view.dart';
 import 'package:cartisan/app/modules/profile/components/no_pictures.dart';
 import 'package:cartisan/app/modules/profile/components/profile_card.dart';
 import 'package:cartisan/app/modules/profile/edit_store_view.dart';
-import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class BuyerOwnProfilePage extends StatefulWidget {
-  BuyerOwnProfilePage({super.key});
+  const BuyerOwnProfilePage({super.key});
 
   @override
   State<BuyerOwnProfilePage> createState() => _BuyerOwnProfilePageState();

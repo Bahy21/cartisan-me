@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cartisan/app/controllers/landing_page_controller.dart';
 import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/add_post/add_post.dart';
@@ -8,11 +9,8 @@ import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:cartisan/app/services/image_picker_dialog.dart';
 import 'package:cartisan/app/services/image_picker_services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ProductImagePickerDialog {
   static Future<File?> pickSingleImage(Function(File) callBack) async {
@@ -74,7 +72,7 @@ class CreateProductImagePick extends StatelessWidget {
                 onTap: () async {
                   pickedFile = await ImagePickerServices().getImageFromCamera();
                   if (pickedFile != null) {
-                    Get.to<Widget>(() => AddPost(images: [pickedFile!]));
+                    await Get.to<Widget>(() => AddPost(images: [pickedFile!]));
                   }
                 },
                 child: Row(
@@ -83,7 +81,7 @@ class CreateProductImagePick extends StatelessWidget {
                       'Select from Camera',
                       style: optionStyle,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Icon(Icons.camera_alt_rounded,
                         color: AppColors.kWhite, size: 20.w),
                   ],
@@ -95,7 +93,7 @@ class CreateProductImagePick extends StatelessWidget {
                   pickedFile =
                       await ImagePickerServices().getImageFromGallery();
                   if (pickedFile != null) {
-                    Get.to<Widget>(() => AddPost(images: [pickedFile!]));
+                    await Get.to<Widget>(() => AddPost(images: [pickedFile!]));
                   }
                 },
                 child: Row(
@@ -117,7 +115,7 @@ class CreateProductImagePick extends StatelessWidget {
                   pickedFiles =
                       await ImagePickerServices().pickMultipleImages() ?? [];
                   if (pickedFiles.isNotEmpty) {
-                    Get.to<Widget>(() => AddPost(images: pickedFiles));
+                    await Get.to<Widget>(() => AddPost(images: pickedFiles));
                   }
                 },
                 child: Row(
@@ -145,11 +143,10 @@ class CreateProductRoot extends StatelessWidget {
   final uc = Get.find<UserController>();
   @override
   Widget build(BuildContext context) {
-    // return (uc.currentUser?.isSeller ?? false) &&
-    //         (uc.currentUser?.sellerID != '')
-    //     ? AddProduct(images: const [])
-    //     : ProfileSetup();
-    return AddPost(images: const []);
+    return (uc.currentUser?.isSeller ?? false) &&
+            (uc.currentUser?.sellerID != '')
+        ? CreateProductImagePick()
+        : ProfileSetup();
   }
 }
 
@@ -163,8 +160,8 @@ class ProfileSetup extends StatelessWidget {
       AppTypography.kExtraLight15.copyWith(color: AppColors.kWhite);
   @override
   Widget build(BuildContext context) {
-    bool isSeller = uc.currentUser?.isSeller ?? false;
-    bool stripeSetup = (uc.currentUser?.sellerID.length ?? 0) > 4;
+    final isSeller = uc.currentUser?.isSeller ?? false;
+    final stripeSetup = (uc.currentUser?.sellerID.length ?? 0) > 4;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -213,8 +210,10 @@ class ProfileSetup extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text('Set yourself as Seller',
-                      style: isSeller ? subHeadingStyle : falseStyle),
+                  Text(
+                    'Set yourself as Seller',
+                    style: isSeller ? subHeadingStyle : falseStyle,
+                  ),
                   const Spacer(),
                   if (isSeller)
                     const Icon(
@@ -249,8 +248,7 @@ class ProfileSetup extends StatelessWidget {
               ),
               PrimaryButton(
                 onTap: () {
-                  Get.back<void>();
-                  // TODO: STRIPE HERE
+                  Get.find<LandingPageController>().currentIndex = 4;
                 },
                 text: 'Finish Setup',
               ),

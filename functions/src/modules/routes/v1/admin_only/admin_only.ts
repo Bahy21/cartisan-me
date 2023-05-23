@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as admin from "firebase-admin";
-import { log } from "firebase-functions/logger";
+import logger from "../../../../services/logger";
+
 const router = express.Router();
 
 router.get("/adminOnly",isAuthorized,(req, res) => {
@@ -20,7 +21,7 @@ export async function isAuthorized(req: express.Request, res: express.Response, 
         }
         return next();
     } catch (error) {
-        log(error);
+        logger.info(error);
         return res.status(401).send({status: "Failed", msg: "Unauthorized"});
     }
  }

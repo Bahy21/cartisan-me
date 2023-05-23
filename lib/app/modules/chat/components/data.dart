@@ -127,7 +127,6 @@ List<ChatMessage> media = <ChatMessage>[
             'https://firebasestorage.googleapis.com/v0/b/molteo-40978.appspot.com/o/chat_medias%2F2GFlPkj94hKCqonpEdf1%2F20210526_162318.mp4?alt=media&token=01b814b9-d93a-4bf1-8be1-cf9a49058f97',
         type: MediaType.video,
         fileName: 'video.mp4',
-        isUploading: false,
       ),
       ChatMedia(
         url:

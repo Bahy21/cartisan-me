@@ -1,9 +1,10 @@
-import { log } from "firebase-functions/logger";
+
 import * as db from "../../../../services/database";
 import { commentFromDoc } from "../../../../services/functions";
 import { CommentModel } from "../../../../models/comment_model";
 import { QuerySnapshot } from "firebase-admin/firestore";
 import * as express from "express";
+import logger from "../../../../services/logger";
 const router = express.Router();
 
 router.get("/api/post/comments/getComments/:postId", async (req, res) => {
@@ -24,7 +25,7 @@ router.get("/api/post/comments/getComments/:postId", async (req, res) => {
         });
         return res.status(200).send({status: "Success", data: commentList});
     } catch (error) {
-        log(error);
+        logger.info(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -44,7 +45,7 @@ router.post("/api/post/comments/newComment/:postId", async (req, res) => {
         await commentDocRef.set(newComment);
         return res.status(200).send({status: "Success", data: `Comment ${newComment.commentId} added to ${postId} successfully`});
     } catch (error) {
-        log(error);
+        logger.info(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -61,7 +62,7 @@ router.delete("/api/post/comments/deleteComment/:postId/:commentId", async (req,
         await commentDoc.delete();
         return res.status(200).send({status: "Success", data: `Comment ${commentId} successfully deleted`});
     } catch (error) {
-        log(error);
+        logger.info(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });

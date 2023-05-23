@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from 'firebase-admin';
+import logger from "../../../../../services/logger";
 
 exports.sendNotificationToIndividual = functions.https.onCall((data, _) =>
   sendNotification(data)
@@ -24,9 +25,9 @@ export async function sendNotification(request: {
   const body = request.alertMessage;
   let title = request.alertHeading;
 
-  // console.log(request.alertHeading);
-  // console.log(request.alertMessage);
-  // console.log(request.body.alertHeading);
+  // console.logger.info(request.alertHeading);
+  // console.logger.info(request.alertMessage);
+  // console.logger.info(request.body.alertHeading);
   const payload = {
     notification: {
       body: body,
@@ -51,7 +52,7 @@ export async function sendNotification(request: {
       );
     return true;
   } catch (e) {
-    console.log(e);
+    logger.info(e);
     return false;
   }
 }

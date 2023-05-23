@@ -3,9 +3,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 class ImageItemWidget extends StatelessWidget {
   const ImageItemWidget({
-    Key? key,
-    required this.entity,
-    required this.option,
+    required this.entity, required this.option, Key? key,
     this.onTap,
   }) : super(key: key);
 

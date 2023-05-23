@@ -4,7 +4,6 @@ import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/address__model.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/repositories/user_repo.dart';
-import 'package:cartisan/app/services/database.dart';
 import 'package:cartisan/app/services/user_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -21,11 +20,11 @@ class UserAuthService {
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
       log(e.toString());
-      showErrorDialog('Error signing in\n ${e.message}');
+      await showErrorDialog('Error signing in\n ${e.message}');
     }
   }
 
-  Future<void> signUpWithEmailAndPassword({
+  Future<bool> signUpWithEmailAndPassword({
     required String email,
     required String password,
     required String name,
@@ -44,7 +43,7 @@ class UserAuthService {
         final id = _firebaseAuth.currentUser!.uid;
         await creds.user!.updateDisplayName(name);
         final userCollectionRef = UserDatabase().usersCollection;
-        final userDoc = await userCollectionRef.doc(id);
+        final userDoc = userCollectionRef.doc(id);
         final newUser = await initFirebaseUser(
           email: email,
           name: name,
@@ -57,8 +56,10 @@ class UserAuthService {
         );
         await userDoc.set(newUser);
       }
+      return true;
     } on Exception catch (e) {
       log(e.toString());
+      return false;
     }
   }
 
@@ -84,7 +85,7 @@ class UserAuthService {
     newUser.profileName = name;
     newUser.unreadMessageCount = 0;
     newUser.taxPercentage = taxPercentage;
-    newUser.bio = "";
+    newUser.bio = '';
     newUser.shippingCost = 0;
     newUser.deliveryCost = 0;
     newUser.freeShipping = 0;
@@ -111,8 +112,8 @@ class UserAuthService {
     newUser.state = defAddress.state;
     newUser.city = defAddress.city;
     newUser.isSeller = isSeller;
-    newUser.customerId = "";
-    newUser.uniqueStoreName = "";
+    newUser.customerId = '';
+    newUser.uniqueStoreName = '';
     return newUser;
   }
 }

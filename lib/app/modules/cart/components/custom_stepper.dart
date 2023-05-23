@@ -21,7 +21,6 @@ class _CustomStepperState extends State<CustomStepper> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 33.w),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ...List.generate(4, (index) {
             if (index == (4 - 1)) {

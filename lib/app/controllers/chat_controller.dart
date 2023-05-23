@@ -1,8 +1,6 @@
 import 'dart:developer';
 
-import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
-import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/chat_room_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/services/database.dart';
@@ -105,6 +103,7 @@ class ChatController extends GetxController {
     required ChatMessage newMessage,
   }) async {
     try {
+      newMessage.text = newMessage.text.trim();
       await db.chatRoomsCollection.doc(chatRoomId).update(
         {
           'latestMessage': newMessage.text,
@@ -122,7 +121,7 @@ class ChatController extends GetxController {
     }
   }
 
-  void readMessages(String chatRoomId) async {
+  Future<void> readMessages(String chatRoomId) async {
     try {
       await db.chatRoomsCollection.doc(chatRoomId).update(
         {

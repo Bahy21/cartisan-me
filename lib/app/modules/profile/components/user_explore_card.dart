@@ -1,4 +1,4 @@
-import 'package:cartisan/app/data/constants/app_colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/profile/components/user_post_full_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ class UserExploreCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(post.images.first),
+            image: CachedNetworkImageProvider(post.images.first),
             fit: BoxFit.cover,
           ),
           color: Colors.red,

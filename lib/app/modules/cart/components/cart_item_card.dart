@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/api_classes/cart_api.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
@@ -41,6 +42,7 @@ class CartItemCard extends StatelessWidget {
     return Column(
       children: [
         Container(
+          width: isOrderSummaryView ? 343.w : null,
           padding: EdgeInsets.all(9.h),
           decoration: BoxDecoration(
             color: AppColors.kGrey,
@@ -56,12 +58,12 @@ class CartItemCard extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(6.r),
                 ),
-                child: cartItem.images.isNotEmpty
-                    ? Image.network(
-                        cartItem.images.first,
-                        fit: BoxFit.contain,
-                      )
-                    : SizedBox.shrink(),
+                child: CachedNetworkImage(
+                  imageUrl: cartItem.images.first,
+                  errorWidget: (context, url, dynamic error) =>
+                      const SizedBox.shrink(),
+                  fit: BoxFit.contain,
+                ),
               ),
               SizedBox(width: 10.w),
               Column(
@@ -72,7 +74,7 @@ class CartItemCard extends StatelessWidget {
                     style: AppTypography.kExtraLight12,
                   ),
                   SizedBox(
-                    width: 170.w,
+                    width: 145.w,
                     child: Text(
                       cartItem.description,
                       style: AppTypography.kBold14,
@@ -100,7 +102,7 @@ class CartItemCard extends StatelessWidget {
                       icon: SvgPicture.asset(AppAssets.kDelete),
                     )
                   else
-                    const SizedBox(),
+                    const SizedBox.shrink(),
                   SizedBox(height: 30.h),
                   if (!isOrderSummaryView)
                     QuantityCard(
@@ -110,7 +112,7 @@ class CartItemCard extends StatelessWidget {
                     )
                   else
                     Text(
-                      cartItem.quantity.toString(),
+                      'Quantity x ${cartItem.quantity}',
                       style: AppTypography.kLight14
                           .copyWith(color: AppColors.kHintColor),
                     ),

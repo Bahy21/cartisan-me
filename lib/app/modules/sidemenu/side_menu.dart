@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/sidemenu/components/custom_drawer_header.dart';
@@ -5,7 +6,6 @@ import 'package:cartisan/app/modules/sidemenu/components/side_menu_item.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/all_orders.dart';
 import 'package:cartisan/app/modules/sidemenu/settings/setting_view.dart';
 import 'package:cartisan/app/modules/sidemenu/transactions/transaction_view.dart';
-import 'package:cartisan/app/services/translation_service.dart';
 import 'package:cartisan/app/services/user_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,17 +34,25 @@ class SideMenu extends StatelessWidget {
                       if (uc.currentUser?.url.isURL ?? false)
                         CircleAvatar(
                           radius: 60.r,
-                          backgroundImage: NetworkImage(
+                          backgroundImage: CachedNetworkImageProvider(
                             uc.currentUser!.url,
                           ),
                         )
                       else
-                        ClipOval(
+                        SizedBox(
+                          height: 120.w,
+                          width: 120.w,
                           child: Material(
-                            child: Icon(
-                              Icons.person,
-                              size: 100.w,
-                              color: AppColors.kPrimary,
+                            borderRadius: BorderRadius.circular(200.r),
+                            child: ClipOval(
+                              child: Transform.translate(
+                                offset: Offset(-13.w, 0),
+                                child: Icon(
+                                  Icons.person,
+                                  size: 150.w,
+                                  color: AppColors.kPrimary,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -71,14 +79,14 @@ class SideMenu extends StatelessWidget {
                 ..to<void>(() => const AllOrders());
             },
           ),
-          SideMenuItem(
-            title: 'My Transactions',
-            onTap: () {
-              Get
-                ..back<void>()
-                ..to<void>(() => const TransactionView());
-            },
-          ),
+          // SideMenuItem(
+          //   title: 'My Transactions',
+          //   onTap: () {
+          //     Get
+          //       ..back<void>()
+          //       ..to<void>(() => const TransactionView());
+          //   },
+          // ),
           SideMenuItem(
             title: 'Settings',
             onTap: () {

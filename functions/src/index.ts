@@ -16,8 +16,12 @@ const adminOnly = require('./modules/routes/v1/admin_only/admin_only');
 const versionCheck = require('./modules/routes/v2/version_check');
 const notificationFunctions = require('./modules/routes/v1/notifications/notifications');
 const reportFunctions = require('./modules/routes/v1/social/report/report');
+const stripeWebhook = require('./modules/routes/v1/webhooks/stripe_webhook');
+const paymentFunctions = require('./modules/routes/v1/payment/payment');
 import * as express from 'express';
 import { FakeDataPopulator } from './services/fakeDataPopulator';
+import logger from './services/logger';
+
 
 export const firestore = admin.firestore();
 import * as triggerFunctions from './modules/module';
@@ -34,7 +38,7 @@ export const authMiddleware = async (req, res, next) => {
   }
 };
 
-functions.logger.log('running');
+// functionslog.logger.ger.info('running');
 firestore.settings({ timestampInSnapshots: true });
 
 
@@ -49,6 +53,13 @@ app.post('/populateFirebase'), async (req, res) => {
   populator.generateFakeUsers();
 }
 app.use(cors({origin: true}));
+app.use((req, res, next) => {
+  var methodNameAfterAPI = req.originalUrl.split('api/').pop();
+  logger.info(`${req.method} ${methodNameAfterAPI}`);
+  next();
+});
+
+app.use(stripeWebhook);
 app.use(authMiddleware);
 // app load check
 app.get('/',(req, res) => {
@@ -69,6 +80,7 @@ app.use('/v1', adminOnly);
 app.use('/v1', searchFunctions);
 app.use('/v1', notificationFunctions);
 app.use('/v1', reportFunctions);
+app.use('/v1', paymentFunctions);
 app.use('/v2', versionCheck);
 
 

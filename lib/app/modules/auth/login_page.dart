@@ -3,10 +3,8 @@ import 'package:cartisan/app/modules/auth/components/cartisan_logo.dart';
 import 'package:cartisan/app/modules/auth/components/custom_login_field.dart';
 import 'package:cartisan/app/modules/auth/components/reset_password_dialog.dart';
 import 'package:cartisan/app/modules/auth/signup_page.dart';
-import 'package:cartisan/app/modules/landingPage/landing_page.dart';
 import 'package:cartisan/app/modules/widgets/buttons/custom_text_button.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
-import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/services/translation_service.dart';
 import 'package:cartisan/app/services/user_auth_service.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                   text: TranslationsService.sigInPageTranslation.signIn,
                   width: 211.w,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 InkWell(

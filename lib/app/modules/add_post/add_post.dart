@@ -1,8 +1,8 @@
+import 'dart:async' as async;
 import 'dart:developer';
 import 'dart:io';
-import 'dart:async' as async;
+
 import 'package:cartisan/app/api_classes/post_api.dart';
-import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/data/constants/app_colors.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
@@ -18,7 +18,6 @@ import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/services/database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -46,7 +45,7 @@ class _AddPostState extends State<AddPost> {
       AppTypography.kBold14.copyWith(color: AppColors.kWhite);
   final subHeadingPadding = EdgeInsets.only(top: 30.h, bottom: 10.h);
   bool loading = false;
-  void handleImageTaken() async {
+  async.Future<void> handleImageTaken() async {
     await ProductImagePickerDialog.pickSingleImage((newImage) {
       setState(() {
         widget.images.add(newImage);
@@ -61,7 +60,7 @@ class _AddPostState extends State<AddPost> {
       widget.images.isNotEmpty &&
       _variants.isNotEmpty;
 
-  var sc = ScrollController();
+  ScrollController sc = ScrollController();
   @override
   Widget build(BuildContext context) {
     final length2 = widget.images.length;
@@ -348,8 +347,8 @@ class _AddPostState extends State<AddPost> {
     );
   }
 
-  void createPost() async {
-    Get.dialog<Widget>(LoadingDialog(), barrierDismissible: false);
+  async.Future<void> createPost() async {
+    await Get.dialog<Widget>(const LoadingDialog(), barrierDismissible: false);
     final uploadedImagesLinks = await handleImageUpload();
     final userId = Get.find<AuthService>().currentUser!.uid;
     final post = PostModel(
@@ -375,18 +374,21 @@ class _AddPostState extends State<AddPost> {
     );
     final result = await postApi.createPost(userId: userId, newPost: post);
     if (result) {
+      Get
+        ..back<void>()
+        ..back<void>();
       await Get.dialog<Widget>(
-          SuccessDialog(message: 'Post successfully added'));
+          const SuccessDialog(message: 'Post successfully added'));
     } else {
-      showErrorDialog('Error uploading post');
+      await showErrorDialog('Error uploading post');
     }
     Get.back<void>();
   }
 
   Future<List<String>> handleImageUpload() async {
     final db = Database();
-    List<String> images = [];
-    for (File image in widget.images) {
+    final images = <String>[];
+    for (final image in widget.images) {
       final link = await db.uploadImage(image);
       if (link != null) {
         images.add(link);
@@ -450,7 +452,7 @@ class ProductHeaderImage extends StatelessWidget {
                 onTap: deleteImage,
                 child: Container(
                   padding: EdgeInsets.all(7.w),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.kPrimary,
                     shape: BoxShape.circle,
                   ),
@@ -534,7 +536,7 @@ class ThumbnailViewAndDeleteDialog extends StatelessWidget {
                 },
                 child: Container(
                   padding: EdgeInsets.all(5.w),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.kPrimary,
                     shape: BoxShape.circle,
                   ),

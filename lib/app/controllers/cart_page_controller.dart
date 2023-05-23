@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CartPageController extends GetxController {
-  RxList<bool> _statuses = [true, false, false, false].obs;
+  final RxList<bool> _statuses = [true, false, false, false].obs;
 
   PageController initialScreenController = PageController();
 

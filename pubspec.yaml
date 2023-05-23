@@ -40,6 +40,9 @@ dependencies:
   dash_chat_2: ^0.0.17
   algolia: ^1.1.2
   easy_debounce: ^2.0.3
+  cached_network_image: ^3.2.3
+  url_launcher: ^6.1.11
+  webview_flutter: ^4.2.0
   
 
 

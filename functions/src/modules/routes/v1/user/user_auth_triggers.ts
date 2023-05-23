@@ -3,7 +3,8 @@ import { UserModel } from "../../../../models/user_model";
 import * as db from "../../../../services/database";
 import * as functions from "firebase-functions";
 import { Request, Response } from "express";
-import { log } from "firebase-functions/logger";
+import logger from "../../../../services/logger";
+
 exports.deleteUserFireStore = functions.auth.user().onDelete(async (user) =>  {
   try {
     const userId = user.uid;
@@ -13,7 +14,7 @@ exports.deleteUserFireStore = functions.auth.user().onDelete(async (user) =>  {
       }
     );
   } catch (error) {
-    log(error);
+    logger.info(error);
     await db.errorReportReference.add({error: JSON.stringify(error), date: Date.now()});
   }
 });

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cartisan/app/controllers/address_controller.dart';
 import 'package:cartisan/app/controllers/cart_page_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
@@ -43,47 +41,37 @@ class _AddressViewState extends State<AddressView> {
           );
         }
         return Scaffold(
-          body: ListView.separated(
-            itemCount: controller.addresses.length,
-            separatorBuilder: (context, index) => SizedBox(height: 15.h),
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  controller.updatedSelectedAddress =
-                      controller.addresses[index];
-                  Get.find<CartPageController>().animateInitialPageToNext();
+          body: Column(
+            children: [
+              ListView.separated(
+                shrinkWrap: true,
+                itemCount: controller.addresses.length,
+                separatorBuilder: (context, index) => SizedBox(height: 15.h),
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      controller.updatedSelectedAddress =
+                          controller.addresses[index];
+                      Get.find<CartPageController>().animateInitialPageToNext();
+                    },
+                    child: AddressCard(
+                      addressModel: controller.addresses[index],
+                      changeAddressCallback: () {
+                        Get.to<Widget>(() => EditAddressView(
+                              controllerAddressIndex: index,
+                              address: controller.addresses[index],
+                            ));
+                      },
+                    ),
+                  );
                 },
-                child: AddressCard(
-                  addressModel: controller.addresses[index],
-                  changeAddressCallback: () {
-                    Get.to<Widget>(() => EditAddressView(
-                          controllerAddressIndex: index,
-                          address: controller.addresses[index],
-                        ));
-                  },
-                ),
-              );
-            },
+              ),
+              SizedBox(
+                height: AppSpacing.eighteenVertical,
+              ),
+            ],
           ),
-          // bottomSheet: Semantics(
-          //   button: true,
-          //   child: InkWell(
-          //     onTap: () {
-          //       Get.find<CartPageController>().animateInitialPageToNext();
-          //     },
-          //     child: Container(
-          //       height: 68.h,
-          //       width: double.maxFinite,
-          //       alignment: Alignment.center,
-          //       color: AppColors.kPrimary,
-          //       child: Text(
-          //         'Proceed',
-          //         style: AppTypography.kLight16,
-          //       ),
-          //     ),
-          //   ),
-          // ),
         );
       },
     );

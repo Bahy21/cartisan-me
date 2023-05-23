@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class ErrorDialog extends StatelessWidget {
-  ErrorDialog({
+  const ErrorDialog({
     required this.message,
     this.showOkButton = true,
     Key? key,
@@ -64,7 +64,7 @@ Future<void> showNoNetworkDialog() {
   return Get.dialog(
     WillPopScope(
       onWillPop: () async => false,
-      child: ErrorDialog(
+      child: const ErrorDialog(
         showOkButton: false,
         message: 'No internet connection',
       ),

@@ -1,25 +1,44 @@
-import 'package:cartisan/app/api_classes/search_api.dart';
-import 'package:cartisan/app/controllers/auth_service.dart';
+import 'dart:developer';
 import 'package:cartisan/app/models/search_model.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class SearchPageController extends GetxController {
-  final searchApi = SearchAPI();
+  final box = GetStorage('searchLocalStorage');
+  bool get loadingLocal => _loadingLocal.value;
+  final RxBool _loadingLocal = true.obs;
 
-  String get _currentUid => Get.find<AuthService>().currentUser!.uid;
-
-  List<SearchModel> get searchPosts => _searchPosts.value;
-  bool get isLoading => _isLoading.value;
-  Rx<List<SearchModel>> _searchPosts = Rx<List<SearchModel>>([]);
-  RxBool _isLoading = true.obs;
-  @override
-  void onInit() {
-    populateSearchPosts();
-    super.onInit();
+  List<SearchModel> loadLocal() {
+    final result = box.read<List>('posts');
+    if (result != null) {
+      final posts = <SearchModel>[];
+      for (final post in result) {
+        posts.add(SearchModel.fromMap(post as Map<String, dynamic>));
+      }
+      return posts;
+    } else {
+      _loadingLocal.value = false;
+      return [];
+    }
   }
 
-  Future<void> populateSearchPosts() async {
-    _searchPosts.value = await searchApi.getSearches(_currentUid);
-    _isLoading.value = false;
+  void setLocalFalse() {
+    _loadingLocal.value = false;
+    log('local set to false');
+  }
+
+  void setLocalTrue() {
+    _loadingLocal.value = true;
+    log('search local set to true');
+  }
+
+  Future<bool> storeLocal(List<SearchModel> posts) async {
+    try {
+      await box.write('posts', posts.map((e) => e.toMap()).toList());
+      return true;
+    } on Exception catch (e) {
+      log(e.toString());
+      return false;
+    }
   }
 }

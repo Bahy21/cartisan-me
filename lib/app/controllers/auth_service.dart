@@ -16,7 +16,7 @@ class AuthService extends GetxService {
   RxString userToken = ''.obs;
   Timer? timer;
 
-  void initAuthToken() async {
+  Future<void> initAuthToken() async {
     userToken.value = await FirebaseAuth.instance.currentUser!.getIdToken(true);
   }
 
@@ -28,12 +28,12 @@ class AuthService extends GetxService {
     ever(firebaseUser, (callback) async {
       userToken.value =
           await FirebaseAuth.instance.currentUser!.getIdToken(true);
-      log("Set the token to $userToken");
+      log('Set the token to $userToken');
     });
     timer = Timer.periodic(45.minutes, (callback) async {
       userToken.value =
           await FirebaseAuth.instance.currentUser!.getIdToken(true);
-      log("Set the token to $userToken");
+      log('Set the token to $userToken');
     });
     super.onInit();
   }
@@ -44,8 +44,9 @@ class AuthService extends GetxService {
     super.onClose();
   }
 
-  void handleEmailVerification() {
-    0.milliseconds.delay().then((dynamic _) => _isLoading.value = false);
+  Future<void> handleEmailVerification() async {
+    await 0.milliseconds.delay();
+    _isLoading.value = false;
   }
 
   Future<void> handlePasswordReset(String email) async {

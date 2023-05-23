@@ -1,10 +1,11 @@
-import { log } from "firebase-functions/logger";
+// import { log } from "firebase-functions/logger";
 import * as db from "../../../../services/database";
 import { cartItemFromDoc, cartItemFromPost, findItemWithOption, postFromDoc } from "../../../../services/functions";
 import { DocumentReference } from "firebase-admin/firestore";
 import { PostModel } from "../../../../models/post_model";
 import { CartItemModel } from "../../../../models/cart_item_model";
 import * as express from "express";
+import logger from "../../../../services/logger";
 const router = express.Router();
 
 // add to cart
@@ -14,6 +15,7 @@ router.put("/api/user/addToCart/:userId/:postId", async(req,res)=>{
       const userId: string = req.params.userId;
       const postId: string = req.params.postId;
       let selectedVariant: string = req.body.selectedVariant;
+      let quantity: number = req.body.quantity || req.body.quantity == '' ? 1 : parseInt(req.body.quantity);
       const postRef: DocumentReference = db.postsCollection.doc(postId);
       const cartRef = db.userCartCollection(userId);
       const cartItems = await cartRef.get();
@@ -31,16 +33,16 @@ router.put("/api/user/addToCart/:userId/:postId", async(req,res)=>{
       }
       // check if item already exists in cart
       const itemIndex = findItemWithOption(postModel.postId, selectedVariant, userCart);
-      log(`itemIndex ${itemIndex}`);
       // if found returns index else null
       if(itemIndex == null){   
         const newCartId:string = cartRef.doc().id;
         const cartItem:CartItemModel = cartItemFromPost(postModel);
         cartItem.cartItemId = newCartId;
+        cartItem.quantity = quantity;
         await cartRef.doc(newCartId).set(cartItem.toMap());
       } else {
         userCart[itemIndex].quantity += 1;
-        log(`user cartItem ${userCart[itemIndex].toString()}`);
+        logger.info(`user cartItem ${userCart[itemIndex].toString()}`);
         userCart[itemIndex].toMap()
         cartRef.doc(userCart[itemIndex].cartItemId).update({
           "quantity": userCart[itemIndex].quantity
@@ -48,7 +50,7 @@ router.put("/api/user/addToCart/:userId/:postId", async(req,res)=>{
       }
       return res.status(200).send({status: "Success", msg: `Product ${postId} added to cart`});
     } catch (error) {
-      log(error);
+      logger.info(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
@@ -67,7 +69,7 @@ router.delete("/api/user/deleteFromCart/:userId/:itemId", async(req,res)=>{
     }
     return res.status(200).send({status: "Success", msg: `Product ${itemId} deleted from cart`});
   } catch (error) {
-    log(error);
+    logger.info(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -80,7 +82,7 @@ router.delete("/api/user/clearCart/:userId", async(req,res)=>{
     await new Promise((resolve, reject)=>{deleteQueryBatch(db, cartRef, resolve).catch(reject);});
     return res.status(200).send({status: "Success", msg: `Cart for ${userId} cleared`});
   } catch (error) {
-    log(error);
+    logger.info(error);
     return res.status(500).send({status: "Failed", msg: error.message});
 }});
 
@@ -98,7 +100,7 @@ router.get("/api/user/getPostsFromCart/:userId", async (req, res) => {
     });
     return res.status(200).send({status: "Success", data: postsFromCart});
   } catch (error) {
-    log(error);
+    logger.info(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -114,10 +116,9 @@ router.get("/api/user/getCart/:userId", async(req,res)=>{
       const item: CartItemModel = cartItemFromDoc(cartItem);
       itemsFromCart.push(item);
     }
-    log(`itemsFromCart ${itemsFromCart}`);
     return res.status(200).send({status: "Success", data: itemsFromCart});
   } catch (error) {
-    log(error);
+    logger.info(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -132,7 +133,7 @@ router.put("/api/user/setCartItemCount/:userId/:cartItemId", async(req,res)=>{
     cartRef.update({'quantity': amount});
     return res.status(200).send({status: "Success"});
   } catch (error) {
-    log(error);
+    logger.info(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });

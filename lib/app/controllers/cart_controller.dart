@@ -1,11 +1,15 @@
 import 'package:cartisan/app/api_classes/cart_api.dart';
+import 'package:cartisan/app/api_classes/order_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
+import 'package:cartisan/app/models/address__model.dart';
 import 'package:cartisan/app/models/cart_item_model.dart';
+import 'package:cartisan/app/models/order_model.dart';
 import 'package:get/get.dart';
 
 class CartController extends GetxController {
   final cartAPI = CartAPI();
+  final orderAPI = OrderAPI();
   bool get isCartEmpty => _isCartEmpty.value;
   bool get isLoading => _isLoading.value;
   List<CartItemModel> get cart => _cart.value;
@@ -13,7 +17,7 @@ class CartController extends GetxController {
   Rx<List<CartItemModel>> _cart = Rx<List<CartItemModel>>([]);
   // ignore: prefer_final_fields
   RxBool _isLoading = true.obs;
-  RxBool _isCartEmpty = true.obs;
+  final RxBool _isCartEmpty = true.obs;
   String get _currentUid => Get.find<AuthService>().currentUser!.uid;
   @override
   void onInit() {
@@ -61,5 +65,14 @@ class CartController extends GetxController {
     } else {
       await showErrorDialog('Error clearing cart');
     }
+  }
+
+  bool isDeliveryOptionValid() {
+    return _cart.value.every((element) => element.deliveryOptions != null);
+  }
+
+  Future<OrderModel?> processCartItems(AddressModel address) async {
+    final result = await orderAPI.newOrder(address);
+    return result;
   }
 }

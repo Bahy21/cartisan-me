@@ -16,7 +16,7 @@ class NotificationService {
   final _globalFunctions = GlobalFunctions();
   bool initialized = false;
   Future<bool> initializeNotificationsPermissions() async {
-    NotificationSettings settings = await messaging.requestPermission();
+    final settings = await messaging.requestPermission();
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       log('User granted permission');
       return true;
@@ -35,42 +35,42 @@ class NotificationService {
       // * initialization
       await initializeNotificationsPermissions();
       await _globalFunctions.initializeNotification();
-      String? messagingToken = await getMessagingToken();
+      final messagingToken = await getMessagingToken();
 
       log(messagingToken.toString());
 
       if (messagingToken != null) {
         final currentUserRef = db.userCollection.doc(currentUser.id);
-        log("Handling notification Activity");
+        log('Handling notification Activity');
         await currentUserRef
             .update({'androidNotificationToken': messagingToken});
         messaging.onTokenRefresh.listen((token) async {
           await currentUserRef
               .update({'androidNotificationToken': messagingToken});
         });
-        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        FirebaseMessaging.onMessageOpenedApp.listen((message) {
           log('hellow howww');
           _globalFunctions.showNotification(message);
         });
-        FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+        FirebaseMessaging.onMessage.listen((message) async {
           log('hellow howww');
-          _globalFunctions.showNotification(
+          await _globalFunctions.showNotification(
             message,
           );
         });
 
-        log("Notifications initialized");
+        log('Notifications initialized');
         initialized = true;
       }
     } catch (e) {
-      log("Error initializing notifications");
+      log('Error initializing notifications');
       log(e.toString());
     }
   }
 
   Future<String?> getMessagingToken() async {
-    log("generating messaging token");
-    String? messagingToken = await messaging.getToken();
+    log('generating messaging token');
+    final messagingToken = await messaging.getToken();
     log('messagingToken: $messagingToken');
     return messagingToken;
   }

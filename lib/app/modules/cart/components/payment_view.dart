@@ -2,7 +2,6 @@ import 'package:cartisan/app/controllers/cart_page_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/cart/components/billing_address_drop_down.dart';
 import 'package:cartisan/app/modules/cart/components/custom_payment_field.dart';
-import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';

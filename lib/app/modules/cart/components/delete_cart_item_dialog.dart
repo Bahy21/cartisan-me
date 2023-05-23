@@ -1,6 +1,4 @@
 import 'package:cartisan/app/data/constants/constants.dart';
-import 'package:cartisan/app/modules/widgets/buttons/custom_text_button.dart';
-import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

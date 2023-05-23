@@ -9,11 +9,11 @@ class AddressController extends GetxController {
   List<AddressModel> get addresses => _addresses.value;
   bool get loading => _loading.value;
   AddressModel? get selectedAddress => _selectedAddress.value;
-  Rx<AddressModel?> _selectedAddress = Rx<AddressModel?>(null);
+  final Rx<AddressModel?> _selectedAddress = Rx<AddressModel?>(null);
   set updatedSelectedAddress(AddressModel value) =>
       _selectedAddress.value = value;
-  Rx<List<AddressModel>> _addresses = Rx<List<AddressModel>>([]);
-  RxBool _loading = true.obs;
+  final Rx<List<AddressModel>> _addresses = Rx<List<AddressModel>>([]);
+  final RxBool _loading = true.obs;
   String get _currentUid => Get.find<AuthService>().currentUser!.uid;
   @override
   void onInit() {
@@ -21,7 +21,7 @@ class AddressController extends GetxController {
     super.onInit();
   }
 
-  void updateAddress({
+  Future<void> updateAddress({
     required AddressModel newAddress,
     required int index,
   }) async {
@@ -35,18 +35,18 @@ class AddressController extends GetxController {
       _addresses.value[index] = newAddress;
       _addresses.refresh();
     } else {
-      showErrorDialog('Error updating address');
+      await showErrorDialog('Error updating address');
     }
     _loading.value = false;
   }
 
-  void loadAddresses() async {
+  Future<void> loadAddresses() async {
     _loading.value = true;
     _addresses.value = await userApi.getAllUserAddresses(_currentUid);
     _loading.value = false;
   }
 
-  void newAddress(AddressModel newAddress) async {
+  Future<void> newAddress(AddressModel newAddress) async {
     _loading.value = true;
     final result =
         await userApi.addAddress(userId: _currentUid, newAddress: newAddress);
@@ -55,7 +55,7 @@ class AddressController extends GetxController {
       _addresses.refresh();
       Get.back<void>();
     } else {
-      showErrorDialog('Error adding address');
+      await showErrorDialog('Error adding address');
     }
     _loading.value = false;
   }

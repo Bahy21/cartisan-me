@@ -6,10 +6,7 @@ import 'package:cartisan/app/controllers/notification_service.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/repositories/user_repo.dart';
 import 'package:cartisan/app/services/database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UserController extends GetxController {
@@ -19,9 +16,11 @@ class UserController extends GetxController {
   UserModel? get currentUser => _userModel.value;
   int get userPostCount => _userPostCount.value;
   // ignore: prefer_final_fields
-  RxInt _userPostCount = 0.obs;
-  Rx<UserModel?> _userModel = Rx<UserModel?>(null);
+  int retries = 0;
+  final RxInt _userPostCount = 0.obs;
+  final Rx<UserModel?> _userModel = Rx<UserModel?>(null);
   set updateUserInController(UserModel user) => _userModel.value = user;
+  Worker? worker;
   @override
   void onInit() {
     _userModel.bindStream(UserRepo().currentUserStream());
@@ -36,19 +35,42 @@ class UserController extends GetxController {
       NotificationService().init();
       getUserPostCount();
     } else {
-      once(
-        _userModel,
-        (callback) {
-          NotificationService().init();
-          getUserPostCount();
-        },
-        condition: _userModel.value != null,
-      );
+      log('user is null');
+      worker = registerUserNotifications();
     }
     super.onReady();
   }
 
-  void getUserPostCount() async {
+  /// Returns the latest stripe seller ID from db.
+  Stream<String> stripeAccountStream() {
+    return UserRepo().currentUserStream().map((snapshot) {
+      return snapshot!.sellerID;
+    });
+  }
+
+  Worker registerUserNotifications() {
+    log('registering user notifications');
+    return once(
+      _userModel,
+      (callback) async {
+        log('user is no longer null, calling notifications');
+        await NotificationService().init();
+        await getUserPostCount();
+      },
+      condition: _userModel.value == null,
+      onError: () {
+        retries++;
+        log('Notifications: retrying $retries');
+        if (retries < 5) {
+          registerUserNotifications();
+        }
+      },
+      onDone: () => log('Notifications: initialized'),
+      cancelOnError: true,
+    );
+  }
+
+  Future<void> getUserPostCount() async {
     _userPostCount.value =
         await UserAPI().getUserPostCount(ac.currentUser!.uid);
   }

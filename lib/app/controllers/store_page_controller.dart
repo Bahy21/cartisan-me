@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/social_api.dart';
 import 'package:cartisan/app/api_classes/user_api.dart';
@@ -18,19 +17,19 @@ class StorePageController extends GetxController {
   bool get isBlocked => _isBlocked.value;
   UserModel? get storeOwner => _storeOwner.value;
   String get _currentUid => Get.find<AuthService>().currentUser!.uid;
-  RxInt _postCount = 0.obs;
+  final RxInt _postCount = 0.obs;
   StorePageController({required this.userId});
-  RxBool _isLoading = true.obs;
-  Rx<UserModel?> _storeOwner = Rx<UserModel?>(null);
-  RxBool _isFollowing = false.obs;
-  RxBool _isBlocked = false.obs;
+  final RxBool _isLoading = true.obs;
+  final Rx<UserModel?> _storeOwner = Rx<UserModel?>(null);
+  final RxBool _isFollowing = false.obs;
+  final RxBool _isBlocked = false.obs;
   @override
   onInit() async {
-    initUser();
+    await initUser();
     super.onInit();
   }
 
-  void initUser() async {
+  Future<void> initUser() async {
     _isLoading.value = true;
     _storeOwner.value = await userApi.getUser(userId);
     _isFollowing.value = await socialApi.isFollowing(
@@ -45,8 +44,8 @@ class StorePageController extends GetxController {
     _isLoading.value = false;
   }
 
-  void unblockUser() async {
-    Get.dialog<void>(LoadingDialog());
+  Future<void> unblockUser() async {
+    await Get.dialog<void>(const LoadingDialog());
     final result = await socialApi.unblockUser(
       blockerId: _currentUid,
       blockedId: userId,
@@ -55,12 +54,12 @@ class StorePageController extends GetxController {
     if (result) {
       _isBlocked.value = false;
     } else {
-      showErrorDialog('Error unblocking user');
+      await showErrorDialog('Error unblocking user');
     }
     Get.back<void>();
   }
 
-  void followUser() async {
+  Future<void> followUser() async {
     bool result;
     if (isFollowing) {
       result = await socialApi.unfollowUser(

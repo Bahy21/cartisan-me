@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/home/components/custom_drop_down.dart';
@@ -88,14 +87,5 @@ class UserOwnPostCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget imageWithCatch(String url) {
-    try {
-      return Image.network(url);
-    } on Exception catch (e) {
-      log(e.toString());
-      return Icon(Icons.person_2_rounded, color: Colors.pink.shade800);
-    }
   }
 }

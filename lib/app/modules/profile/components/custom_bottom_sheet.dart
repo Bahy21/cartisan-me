@@ -1,8 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
@@ -10,6 +6,9 @@ import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/modules/profile/components/custom_switch.dart';
 import 'package:cartisan/app/modules/profile/components/custom_textformfield.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class CustomBottomSheet extends StatefulWidget {
   final Future<String?> Function() updateUserImage;
@@ -25,7 +24,7 @@ class CustomBottomSheet extends StatefulWidget {
 class _CustomBottomSheetState extends State<CustomBottomSheet> {
   final uc = Get.find<UserController>();
   final userApi = UserAPI();
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
@@ -101,122 +100,125 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
               color: AppColors.kGrey,
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(16.r),
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16.r),
+                      ),
+                    ),
+                    padding: EdgeInsets.only(
+                      top: 25.h,
+                      left: 29.w,
+                      right: 29.0.w,
+                      bottom: 20.h,
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Profile Name',
+                            style: AppTypography.kBold14,
+                          ),
+                          CustomTextFormField(
+                            controller: _nameController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Field is required';
+                              }
+                              return null;
+                            },
+                            hintText: uc.currentUser?.profileName ??
+                                'Enter username here',
+                          ),
+                          SizedBox(height: 18.h),
+                          Text(
+                            'Description',
+                            style: AppTypography.kBold14,
+                          ),
+                          SizedBox(height: 5.h),
+                          CustomTextFormField(
+                            controller: _descriptionController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Field is required';
+                              }
+                              return null;
+                            },
+                            maxLines: 4,
+                            hintText: uc.currentUser?.bio ?? 'Enter bio here',
+                          ),
+                          SizedBox(
+                            height: AppSpacing.eighteenVertical,
+                          ),
+                          Text(
+                            'More Options',
+                            style: AppTypography.kBold14,
+                          ),
+                          SizedBox(height: 25.h),
+                          CustomSwitch(
+                            isDisabled: false,
+                            text: 'I am a seller',
+                            value: _isSeller,
+                            onChanged: (value) {
+                              setState(() {
+                                _isSeller = value;
+                                _deliveryAvailable = false;
+                                _shippingAvailable = false;
+                                _pickUpAvailable = false;
+                              });
+                            },
+                          ),
+                          CustomSwitch(
+                            isDisabled: !_isSeller,
+                            text: 'Pick Up Available',
+                            value: _pickUpAvailable,
+                            onChanged: (value) {
+                              setState(() {
+                                _pickUpAvailable = value;
+                              });
+                            },
+                          ),
+                          CustomSwitch(
+                            isDisabled: !_isSeller,
+                            text: 'Shipping Available',
+                            value: _shippingAvailable,
+                            onChanged: (value) {
+                              setState(() {
+                                _shippingAvailable = value;
+                              });
+                            },
+                          ),
+                          CustomSwitch(
+                            isDisabled: !_isSeller,
+                            text: 'Delivery Available',
+                            value: _deliveryAvailable,
+                            onChanged: (value) {
+                              setState(() {
+                                _deliveryAvailable = value;
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            height: 50.0.h,
+                          ),
+                          PrimaryButton(
+                            onTap: updateUserDetails,
+                            text: 'Save Changes',
+                            width: double.maxFinite,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  padding: EdgeInsets.only(
-                    top: 25.h,
-                    left: 29.w,
-                    right: 29.0.w,
-                    bottom: 20.h,
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Profile Name',
-                          style: AppTypography.kBold14,
-                        ),
-                        CustomTextFormField(
-                          controller: _nameController,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Field is required';
-                            }
-                            return null;
-                          },
-                          hintText: uc.currentUser?.profileName ??
-                              'Enter username here',
-                        ),
-                        SizedBox(height: 18.h),
-                        Text(
-                          'Description',
-                          style: AppTypography.kBold14,
-                        ),
-                        SizedBox(height: 5.h),
-                        CustomTextFormField(
-                          controller: _descriptionController,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Field is required';
-                            }
-                            return null;
-                          },
-                          maxLines: 4,
-                          hintText: uc.currentUser?.bio ?? 'Enter bio here',
-                        ),
-                        SizedBox(
-                          height: AppSpacing.eighteenVertical,
-                        ),
-                        Text(
-                          'More Options',
-                          style: AppTypography.kBold14,
-                        ),
-                        SizedBox(height: 25.h),
-                        CustomSwitch(
-                          isDisabled: false,
-                          text: 'I am a seller',
-                          value: _isSeller,
-                          onChanged: (value) {
-                            setState(() {
-                              _isSeller = value;
-                              _deliveryAvailable = false;
-                              _shippingAvailable = false;
-                              _pickUpAvailable = false;
-                            });
-                          },
-                        ),
-                        CustomSwitch(
-                          isDisabled: !_isSeller,
-                          text: 'Pick Up Available',
-                          value: _pickUpAvailable,
-                          onChanged: (value) {
-                            setState(() {
-                              _pickUpAvailable = value;
-                            });
-                          },
-                        ),
-                        CustomSwitch(
-                          isDisabled: !_isSeller,
-                          text: 'Shipping Available',
-                          value: _shippingAvailable,
-                          onChanged: (value) {
-                            setState(() {
-                              _shippingAvailable = value;
-                            });
-                          },
-                        ),
-                        CustomSwitch(
-                          isDisabled: !_isSeller,
-                          text: 'Delivery Available',
-                          value: _deliveryAvailable,
-                          onChanged: (value) {
-                            setState(() {
-                              _deliveryAvailable = value;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          height: 50.0.h,
-                        ),
-                        PrimaryButton(
-                          onTap: updateUserDetails,
-                          text: 'Save Changes',
-                          width: double.maxFinite,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           )
         : const Center(

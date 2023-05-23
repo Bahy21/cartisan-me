@@ -3,9 +3,10 @@ import { NotificationModel } from "../../../../models/notification_model";
 import * as db from "../../../../services/database";
 import * as functions from "firebase-functions";
 import { userFromDoc } from "../../../../services/functions";
-import { log } from "firebase-functions/logger";
+
 import * as admin from 'firebase-admin';
 import { sendPushPushNotification } from "../social/follow/following_triggers";
+import logger from "../../../../services/logger";
 
 exports.onNewChatRoomCreated = functions
     .firestore
@@ -19,7 +20,7 @@ exports.onNewChatRoomCreated = functions
             const userIds: string[] = chatRoom.participants;
             const createdBy = chatRoom.createdBy;
             const receiverId = userIds.filter(id => id != createdBy)[0];
-            log('receiverId for notification', receiverId);
+            logger.info('receiverId for notification', receiverId);
             const senderId = createdBy;
             const senderReference = db.userCollection.doc(senderId);
             const receiverReference = db.userCollection.doc(receiverId);
@@ -46,6 +47,6 @@ exports.onNewChatRoomCreated = functions
                 alertMessage: "You have a new chat",
             });
         } catch (error) {
-            log('error in messaging trigger', error);  
+            logger.info('error in messaging trigger', error);  
         }
     });

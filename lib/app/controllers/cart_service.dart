@@ -14,6 +14,7 @@ class CartService {
         postId: post.postId,
         userId: _currentUid,
         selectedVariant: post.selectedVariant,
+        quantity: post.quantity,
       );
     } on Exception catch (e) {
       log(e.toString());

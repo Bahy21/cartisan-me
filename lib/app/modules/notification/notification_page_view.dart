@@ -1,6 +1,5 @@
 import 'package:cartisan/app/api_classes/notifications_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
-import 'package:cartisan/app/controllers/notification_controller.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
@@ -10,7 +9,6 @@ import 'package:cartisan/app/modules/widgets/buttons/custom_text_button.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -29,14 +27,12 @@ class _NotificationPageViewState extends State<NotificationPageView> {
   int retries = 0;
   @override
   void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
-  void _clearNotifications() async {
-    Get.dialog<Widget>(const LoadingDialog(), barrierDismissible: false);
+  Future<void> _clearNotifications() async {
+    await Get.dialog<Widget>(const LoadingDialog(), barrierDismissible: false);
     final result = await notifsApi.clearNotifications(
       Get.find<AuthService>().currentUser!.uid,
     );

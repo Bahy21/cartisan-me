@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/notification_model.dart';
 import 'package:cartisan/app/models/notification_type.dart';
@@ -25,9 +26,25 @@ class NotificationCard extends StatelessWidget {
             CircleAvatar(
               radius: (avatarSize / 2).r,
               backgroundColor: AppColors.kBackground,
-              child: Image.network(
-                notification.userProfileImg,
+              child: CachedNetworkImage(
+                imageUrl: notification.userProfileImg,
                 height: 33.h,
+                errorWidget: (context, url, dynamic error) => SizedBox(
+                  height: avatarSize.h,
+                  width: avatarSize.w,
+                  child: ClipOval(
+                    child: Material(
+                      child: Transform.translate(
+                        offset: Offset(-5.w, 0),
+                        child: Icon(
+                          Icons.person,
+                          size: (avatarSize * 1.2).w,
+                          color: AppColors.kPrimary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             )
           else

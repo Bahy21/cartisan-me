@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
@@ -6,8 +5,6 @@ import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/profile/components/empty_post_message.dart';
 import 'package:cartisan/app/modules/profile/components/user_explore_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -28,9 +25,7 @@ class _GridAllUserPostsState extends State<GridAllUserPosts> {
 
   @override
   void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 

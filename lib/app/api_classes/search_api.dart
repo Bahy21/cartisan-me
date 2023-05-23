@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/search_model.dart';
 
-const String GET_SEARCH_POSTS = '$BASE_URL/search/fetchPosts';
+String GET_SEARCH_POSTS = '$BASE_URL/search/fetchPosts';
 
 class SearchAPI {
   final apiService = APIService();

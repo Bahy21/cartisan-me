@@ -34,11 +34,11 @@ class GlobalFunctions {
 
   Future<void> initializeNotification() async {
     try {
-      AndroidInitializationSettings initializationSettingsAndroid =
-          const AndroidInitializationSettings('@mipmap/ic_launcher');
-      DarwinInitializationSettings initializationSettingsIOS =
-          const DarwinInitializationSettings();
-      InitializationSettings initializationSettings = InitializationSettings(
+      const initializationSettingsAndroid =
+          AndroidInitializationSettings('@mipmap/ic_launcher');
+      const initializationSettingsIOS =
+          DarwinInitializationSettings();
+      final initializationSettings = const InitializationSettings(
         android: initializationSettingsAndroid,
         iOS: initializationSettingsIOS,
       );

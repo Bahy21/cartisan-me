@@ -1,20 +1,14 @@
-import 'dart:developer';
 import 'package:cartisan/app/controllers/cart_service.dart';
-import 'package:cartisan/app/controllers/controllers.dart';
-import 'package:cartisan/app/controllers/timeline_controller.dart';
-import 'package:cartisan/app/controllers/timeline_scroll_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/cart/cart_view_pages.dart';
-import 'package:cartisan/app/modules/home/components/custom_post_scroller.dart';
-import 'package:cartisan/app/modules/home/components/post_card.dart';
 import 'package:cartisan/app/modules/home/components/timeline_view.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomeView extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -28,7 +22,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  void addToCart(PostModel post) async {
+  Future<void> addToCart(PostModel post) async {
     final result = await Get.find<CartService>().addToCart(post);
     if (result) {
       showToast('Item added to cart');
@@ -59,6 +53,11 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         actions: [
+          IconButton(
+              onPressed: () {
+                Get.dialog<Widget>(LoadingDialog());
+              },
+              icon: Icon(Icons.local_activity)),
           IconButton(
             onPressed: () {
               Get.to<Widget>(CartViewPages.new);

@@ -1,15 +1,16 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/api_service.dart';
 
-const String CREATE_PAYMENT_INTENT =
-    '$BASE_URL/payment/stripe/createPaymentIntent';
-const String CANCEL_AND_REFUND = '$BASE_URL/payment/stripe/cancelItemAndRefund';
-const String DELETE_ACCOUNT = '$BASE_URL/payment/stripe/deleteSellerAccount';
-const String CREATE_ACCOUNT = '$BASE_URL/payment/stripe/createAccount';
-const String CHECK_IF_STRIPE_SETUP_COMPLETE =
-    '$BASE_URL/payment/stripe/checkIfStripeSetupIsComplete';
-const String GET_DASHBOARD_URL = '$BASE_URL/payment/stripe/getDashboardLink';
+String CREATE_PAYMENT_INTENT = '$BASE_URL/payment/stripe/createPaymentIntent';
+String CANCEL_AND_REFUND = '$BASE_URL/payment/stripe/cancelItemAndRefund';
+String DELETE_ACCOUNT = '$BASE_URL/payment/stripe/deleteConnectAccount';
+String CREATE_ACCOUNT = '$BASE_URL/payment/stripe/connectStripeExpressAccount';
+String CHECK_IF_STRIPE_SETUP_COMPLETE =
+    '$BASE_URL/payment/stripe/getCapability';
+String GET_DASHBOARD_URL = '$BASE_URL/payment/stripe/getDashboardLink';
 
 class PaymentAPI {
   final apiService = APIService();
@@ -25,7 +26,8 @@ class PaymentAPI {
       if (result.statusCode != 200) {
         throw Exception('Error getting dashboard link');
       }
-      final link = result.data!['data'] as String?;
+      final link =
+          (result.data!['data'] as Map<String, dynamic>)['url'] as String;
       if (link == null) {
         throw Exception('Error getting dashboard link');
       }
@@ -67,7 +69,8 @@ class PaymentAPI {
       if (result.statusCode != 200) {
         throw Exception('Error creating account');
       }
-      final accountId = result.data!['data'] as String?;
+      final accountId =
+          (result.data!['data'] as Map<String, dynamic>)['url'] as String?;
       if (accountId == null) {
         throw Exception('Error creating account');
       }
@@ -84,7 +87,7 @@ class PaymentAPI {
   }) async {
     try {
       final result = await apiService.delete<Map>(
-        '$DELETE_ACCOUNT',
+        DELETE_ACCOUNT,
         queryParameters: <String, dynamic>{
           'sellerId': sellerId,
           'userId': userId,
@@ -140,7 +143,7 @@ class PaymentAPI {
       if (result.statusCode != 200) {
         throw Exception('Error getting payment intent');
       }
-      final paymentIntent = result.data!['data'] as Map<String, dynamic>?;
+      final paymentIntent = result.data as Map<String, dynamic>?;
       if (paymentIntent == null) {
         throw Exception('Error getting payment intent');
       }

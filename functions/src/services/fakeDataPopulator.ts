@@ -8,8 +8,9 @@ import { CommentModel } from "../models/comment_model.js";
 import { DeliveryOptions } from "../models/enums.js";
 import { DocumentSnapshot } from "firebase-admin/firestore";
 import { ReviewModel } from "../models/review_model.js";
-function log(message: string) { functions.logger.log(`FakeDataPopulator   |   ${message}`); };
-// function logObject(obj: any) {functions.logger.log("Object logged: ", obj)};
+import logger from "./logger.js";
+// function logger.info(message: string) { functions.logger.logger.info(`FakeDataPopulator   |   ${message}`); };
+// function logObject(obj: any) {functions.logger.logger.info("Object logged: ", obj)};
 export class FakeDataPopulator {
   maxUsers = 5;
   maxPostsPerUser = 5;
@@ -23,10 +24,10 @@ export class FakeDataPopulator {
     const full: DocumentSnapshot = await this.database.collection("filled").doc("filled").get();
 
     if (full.exists && full.data().filled) {
-      log("database is already filled with fake data");
+      logger.info("database is already filled with fake data");
       return;
     }
-    log("generating fake users");
+    logger.info("generating fake users");
     for (let count = 1; count <= this.maxUsers; count++) {
       const newUser = new UserModel(
         {
@@ -43,7 +44,7 @@ export class FakeDataPopulator {
   }
 
   async generateFakePosts({ userId, username }: { userId: string, username: string }) {
-    log(`generating fake product for user ${userId}`);
+    logger.info(`generating fake product for user ${userId}`);
     for (let i = 1; i <= this.maxPostsPerUser; i++) {
       const options = this.generateOptions(5);
       const newPost = new PostModel(
@@ -100,8 +101,8 @@ export class FakeDataPopulator {
       }
       return likes.size;
     } catch (error) {
-      console.log("error generating likes");
-      console.log(error);
+      logger.info("error generating likes");
+      logger.info(error);
       return 0;
     }
   }
@@ -128,8 +129,8 @@ export class FakeDataPopulator {
       }
       return comments.size;
     } catch (error) {
-      log("error generating comments");
-      log(error);
+      logger.info("error generating comments");
+      logger.info(error);
       return 0;
     }
   }
@@ -160,8 +161,8 @@ export class FakeDataPopulator {
       }
       return reviews.size;
     } catch (error) {
-      log("error in generateReviewers");
-      log(error);
+      logger.info("error in generateReviewers");
+      logger.info(error);
       return 0;
     }
   }
@@ -174,7 +175,7 @@ export class FakeDataPopulator {
     try {
       await this.generatePostDocument(postId).set(post.toMap());
     } catch (error) {
-      functions.logger.log(error);
+     logger.info(error);
     }
   }
 

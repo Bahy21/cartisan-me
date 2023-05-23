@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
@@ -37,7 +36,7 @@ class _ResetPasswordDialogState extends State<ResetPasswordDialog> {
     super.dispose();
   }
 
-  void handlePasswordReset() async {
+  Future<void> handlePasswordReset() async {
     await as.handlePasswordReset(_emailController.text);
     Get.back<void>();
     await Get.dialog<Widget>(SuccessDialog(
@@ -57,7 +56,6 @@ class _ResetPasswordDialogState extends State<ResetPasswordDialog> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(

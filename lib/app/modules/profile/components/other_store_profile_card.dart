@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/controllers/store_page_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/profile/components/custom_outlined_button.dart';
@@ -27,9 +28,21 @@ class OtherStoreProfileCard extends StatelessWidget {
               width: _avatarSize.w,
               child: spc.storeOwner?.url.isURL ?? false
                   ? ClipOval(
-                      child: Image.network(
-                        spc.storeOwner!.url,
+                      child: CachedNetworkImage(
+                        imageUrl: spc.storeOwner!.url,
                         fit: BoxFit.cover,
+                        errorWidget: (context, url, dynamic error) => ClipOval(
+                          child: Material(
+                            child: Transform.translate(
+                              offset: Offset(-8.w, 0),
+                              child: Icon(
+                                Icons.person,
+                                size: 100.w,
+                                color: AppColors.kPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     )
                   : ClipOval(

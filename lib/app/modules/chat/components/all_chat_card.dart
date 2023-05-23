@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/chat_model.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,16 @@ class AllChatCard extends StatelessWidget {
                     )
                   : Hero(
                       tag: chat.name,
-                      child: ClipOval(child: Image.network(chat.imageURL!)),
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: chat.imageURL!,
+                          errorWidget: (context, url, dynamic error) => Text(
+                            chat.name[0],
+                            style: AppTypography.kMedium18
+                                .copyWith(color: AppColors.kWhite),
+                          ),
+                        ),
+                      ),
                     ),
             ),
             SizedBox(width: 13.w),

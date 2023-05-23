@@ -1,6 +1,6 @@
+import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/address_controller.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
-import 'package:cartisan/app/data/constants/app_spacing.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/address__model.dart';
 import 'package:cartisan/app/modules/cart/components/custom_address_textfield.dart';
@@ -28,7 +28,7 @@ class NnewAddressStateView extends State<NewAddressView> {
   final _zipCodeController = TextEditingController();
   final _cityController = TextEditingController();
 
-  void createNewAddress() async {
+  Future<void> createNewAddress() async {
     final newAddress = AddressModel(
       userID: Get.find<AuthService>().currentUser!.uid,
       addressID: '',
@@ -41,7 +41,7 @@ class NnewAddressStateView extends State<NewAddressView> {
       state: _stateController.text,
       fullname: _receiptNameController.text,
     );
-    ac.newAddress(newAddress);
+    await ac.newAddress(newAddress);
   }
 
   final ac = Get.find<AddressController>();
@@ -191,7 +191,7 @@ class NnewAddressStateView extends State<NewAddressView> {
               SizedBox(height: 50.h),
               PrimaryButton(
                 text: 'Save',
-                onTap: () {},
+                onTap: createNewAddress,
               ),
               SizedBox(height: 20.h),
             ],

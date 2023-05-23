@@ -4,26 +4,28 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SearchField extends StatelessWidget {
-  final void Function(String)? onSubmitted;
   const SearchField({
-    this.onSubmitted,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 54.h,
-      child: TextField(
-        onSubmitted: onSubmitted,
-        style: AppTypography.kExtraLight15,
-        textAlignVertical: TextAlignVertical.center,
-        decoration: InputDecoration(
-          hintText: 'Search',
-          contentPadding: EdgeInsets.zero,
-          hintStyle:
-              AppTypography.kExtraLight15.copyWith(color: AppColors.kHintColor),
-          prefixIcon: Padding(
+    return Container(
+      width: 365.w,
+      height: 50.h,
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.w,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.kFilledColor,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          width: 0,
+        ),
+      ),
+      child: Row(
+        children: [
+          Padding(
             padding: EdgeInsets.all(12.h),
             child: SvgPicture.asset(
               AppAssets.kSearch,
@@ -31,7 +33,15 @@ class SearchField extends StatelessWidget {
               width: 16.w,
             ),
           ),
-        ),
+          SizedBox(
+            width: 7.5.w,
+          ),
+          Text(
+            'Search',
+            style: AppTypography.kExtraLight15
+                .copyWith(color: AppColors.kHintColor),
+          ),
+        ],
       ),
     );
   }

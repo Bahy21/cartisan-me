@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:cartisan/app/api_classes/report_api.dart';
 import 'package:cartisan/app/api_classes/social_api.dart';
-import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/controllers/chat_controller.dart';
 import 'package:cartisan/app/controllers/store_page_controller.dart';
@@ -39,8 +36,8 @@ class _OtherStoreViewState extends State<OtherStoreView> {
   final chatController = Get.find<ChatController>();
   String get currentUid => Get.find<AuthService>().currentUser!.uid;
 
-  void reportUser() async {
-    Get.dialog<Widget>(LoadingDialog());
+  Future<void> reportUser() async {
+    await Get.dialog<Widget>(const LoadingDialog());
     final result = await reportApi.reportUser(
       reportedId: widget.userId,
       reportedFor: '',
@@ -53,8 +50,8 @@ class _OtherStoreViewState extends State<OtherStoreView> {
     }
   }
 
-  void blockUser() async {
-    Get.dialog<Widget>(LoadingDialog());
+  Future<void> blockUser() async {
+    await Get.dialog<Widget>(const LoadingDialog());
     final result = await socialApi.blockUser(
       blockerId: currentUid,
       blockedId: widget.userId,
@@ -66,8 +63,8 @@ class _OtherStoreViewState extends State<OtherStoreView> {
     }
   }
 
-  void startChat() async {
-    Get.dialog<Widget>(LoadingDialog());
+  Future<void> startChat() async {
+    await Get.dialog<Widget>(const LoadingDialog());
     final storeOwner = Get.find<StorePageController>().storeOwner!;
     final checkChatroomExists = await chatController.chatExists(storeOwner.id);
     if (checkChatroomExists == null) {
@@ -83,19 +80,23 @@ class _OtherStoreViewState extends State<OtherStoreView> {
       }
       Get
         ..back<void>()
-        ..to<Widget>(() => BasicChat(
-              chatRoomModel: newChatRoom,
-              otherParticipantName: storeOwner.username,
-              otherParticipantAvatarURL: storeOwner.url,
-            ));
+        ..to<Widget>(
+          () => BasicChat(
+            chatRoomModel: newChatRoom,
+            otherParticipantName: storeOwner.username,
+            otherParticipantAvatarURL: storeOwner.url,
+          ),
+        );
     } else {
       Get
         ..back<void>()
-        ..to<Widget>(() => BasicChat(
-              chatRoomModel: checkChatroomExists,
-              otherParticipantName: storeOwner.profileName,
-              otherParticipantAvatarURL: storeOwner.url,
-            ));
+        ..to<Widget>(
+          () => BasicChat(
+            chatRoomModel: checkChatroomExists,
+            otherParticipantName: storeOwner.profileName,
+            otherParticipantAvatarURL: storeOwner.url,
+          ),
+        );
     }
   }
 
@@ -116,7 +117,7 @@ class _OtherStoreViewState extends State<OtherStoreView> {
             appBar: AppBar(
               leading: IconButton(
                 onPressed: () => Get.back<void>(),
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back_rounded,
                   color: AppColors.kWhite,
                 ),
@@ -156,7 +157,7 @@ class _OtherStoreViewState extends State<OtherStoreView> {
             actions: [
               ReportPopup(
                 // ignore: avoid_annotating_with_dynamic
-                onItemSelected: (dynamic value) {
+                onSelected: (dynamic value) {
                   switch (value) {
                     case 1:
                       reportUser();

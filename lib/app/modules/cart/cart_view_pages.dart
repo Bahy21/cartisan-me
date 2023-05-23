@@ -1,6 +1,7 @@
 import 'package:cartisan/app/controllers/address_controller.dart';
 import 'package:cartisan/app/controllers/cart_controller.dart';
 import 'package:cartisan/app/controllers/cart_page_controller.dart';
+import 'package:cartisan/app/controllers/checkout_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/cart/address_view.dart';
 import 'package:cartisan/app/modules/cart/cart_view.dart';
@@ -18,7 +19,6 @@ class CartViewPages extends GetView<CartPageController> {
   List<Widget> pages = [
     const CartView(),
     const AddressView(),
-    const PaymentView(),
     const OrderSummary(),
   ];
   List<String> pagesName = [
@@ -35,8 +35,10 @@ class CartViewPages extends GetView<CartPageController> {
       autoRemove: false,
       init: CartPageController(),
       initState: (state) {
-        Get.put(CartController());
-        Get.put(AddressController());
+        Get
+          ..put(CartController())
+          ..put(AddressController())
+          ..put(CheckoutController());
       },
       builder: (statusController) {
         return WillPopScope(

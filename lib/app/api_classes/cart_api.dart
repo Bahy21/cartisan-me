@@ -5,12 +5,12 @@ import 'package:cartisan/app/api_classes/api_service.dart';
 import 'package:cartisan/app/models/cart_item_model.dart';
 import 'package:cartisan/app/models/post_model.dart';
 
-const String GET_POSTS_FROM_CART = '$BASE_URL/user/getPostsFromCart';
-const String ADD_TO_CART = '$BASE_URL/user/addToCart';
-const String GET_CART = '$BASE_URL/user/getCart';
-const String SET_CART_ITEM_COUNT = '$BASE_URL/user/setCartItemCount';
-const String DELETE_CART_ITEM = '$BASE_URL/user/deleteFromCart';
-const String CLEAR_CART = '$BASE_URL/cart/clearCart';
+String GET_POSTS_FROM_CART = '$BASE_URL/user/getPostsFromCart';
+String ADD_TO_CART = '$BASE_URL/user/addToCart';
+String GET_CART = '$BASE_URL/user/getCart';
+String SET_CART_ITEM_COUNT = '$BASE_URL/user/setCartItemCount';
+String DELETE_CART_ITEM = '$BASE_URL/user/deleteFromCart';
+String CLEAR_CART = '$BASE_URL/cart/clearCart';
 
 class CartAPI {
   APIService apiService = APIService();
@@ -59,11 +59,12 @@ class CartAPI {
     required String postId,
     required String userId,
     required String selectedVariant,
+    required int quantity,
   }) async {
     try {
       final result = await apiService.put<Map>(
         '$ADD_TO_CART/$userId/$postId',
-        jsonEncode({'selectedVariant': selectedVariant}),
+        {'selectedVariant': selectedVariant, 'quantity': quantity},
       );
       if (result.statusCode != 200) {
         throw Exception('Error updating user delivery');

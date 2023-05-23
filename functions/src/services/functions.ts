@@ -8,8 +8,9 @@ import { OrderModel } from "../models/order_model";
 import { CommentModel } from "../models/comment_model";
 import { DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
 import { OrderItemModel } from "../models/order_item_model";
-import { log } from "firebase-functions/logger";
+// 
 import { userCollection } from "./database";
+import logger from "./logger";
 
 
 export function postFromDoc(doc:firestore.DocumentSnapshot): PostModel{
@@ -99,7 +100,7 @@ export function userFromDoc(doc:firestore.DocumentSnapshot): UserModel{
 }
 
 export function userFromMap(map: Map<string,any>): UserModel{
-  log(map);
+ 
   const user = new UserModel(
    { id: map['id'],
     username: map['username'],
@@ -282,21 +283,23 @@ export function orderFromDoc(doc: DocumentSnapshot) : OrderModel{
     involvedSellersList: doc.data().involvedSellersList,
     totalInCents: doc.data().totalInCents,
     orderStatus: doc.data().orderStatus,
-    address: addressFromMap(doc.data().address),
+    address: addressFromMap(doc.data().address ?? doc.data().billingAddress ?? doc.data().shippingAddress),
     shippingAddress: addressFromMap(doc.data().shippingAddress),
     isPaid: doc.data().isPaid,
     currency: doc.data().currency,
   })
 }
 
-export function orderItemsFromList(list:Map<any,any>){
+export function orderItemsFromList(list:Map<any,any>[]) : OrderItemModel[]{
   let orderItems = <OrderItemModel[]>[];
-  if (list == null || list.keys.length == 0){
-    return null;
+  if (list == null){
+    return [];
   }
-  list.forEach((value, key) => {
-    orderItems.push(orderItemFromMap(value));
-  });
+  
+  for(const orderItem of list){
+    orderItems.push(orderItemFromMap(orderItem));
+  }
+  
   return orderItems;
 }
 
@@ -428,7 +431,7 @@ export function deliveryOptionFromIndex(index: number,): DeliveryOptions{
     const user: UserModel = userFromDoc(userDocSnap);
     return user;
   } catch (error) {
-    log(error);
+    logger.info(error);
     return null;
   }
 

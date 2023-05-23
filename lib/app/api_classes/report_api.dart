@@ -5,8 +5,8 @@ import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:get/get.dart';
 
-const String REPORT_USER = '$BASE_URL/social/reportUser';
-const String REPORT_POST = '$BASE_URL/post/reportPost';
+String REPORT_USER = '$BASE_URL/social/reportUser';
+String REPORT_POST = '$BASE_URL/post/reportPost';
 
 class ReportAPI {
   final apiService = APIService();

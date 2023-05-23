@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
-import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/modules/home/components/post_card.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +27,7 @@ class PostFullScreen extends StatelessWidget {
         if (!snapshot.hasData || snapshot.data == null) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Error'),
+              title: const Text('Error'),
               leading: IconButton(
                 onPressed: () => Get.back<void>(),
                 icon: const Icon(

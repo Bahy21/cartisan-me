@@ -14,7 +14,7 @@ class UserSellerWrapper extends StatelessWidget {
       builder: (controller) {
         return controller.currentUser?.isSeller ?? false
             ? StoreView()
-            : BuyerOwnProfilePage();
+            : const BuyerOwnProfilePage();
       },
     );
   }

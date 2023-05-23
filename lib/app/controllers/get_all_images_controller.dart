@@ -1,8 +1,4 @@
-import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
-import 'package:photo_manager/photo_manager.dart';
 
 // class GetAllImagesController extends GetxController {
 //   List<AssetEntity> get paths => _paths.value;

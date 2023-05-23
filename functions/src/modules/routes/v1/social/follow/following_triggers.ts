@@ -3,15 +3,16 @@ import { NotificationModel } from "../../../../../models/notification_model";
 import * as db from "../../../../../services/database";
 import * as functions from "firebase-functions";
 import { userFromDoc } from "../../../../../services/functions";
-import { log } from "firebase-functions/logger";
+
 import * as admin from 'firebase-admin';
+import logger from "../../../../../services/logger";
 exports.onNewFollower = functions
     .firestore
     .document("users/{userId}/userFollowers/{followerId}")
     .onCreate(async (snap, context) => {
         const userId = context.params.userId;
         const followerId = context.params.followerId;
-        log(`${followerId} is now following ${userId}`)
+        logger.info(`${followerId} is now following ${userId}`)
         const userDoc = db.userCollection.doc(userId);
         const followerDoc = db.userCollection.doc(followerId);
         await userDoc.update({"followerCount": admin.firestore.FieldValue.increment(1)});
@@ -45,7 +46,7 @@ async function sendToNotifications(
     await db.userNotificationCollection(followedId).doc(notificationId).set(newNotification.toMap());
    
    } catch (error) {
-    log('error', error);
+    logger.info('error', error);
    }
     
  } 
@@ -72,12 +73,12 @@ async function sendToNotifications(
                 sound: "default",
             },
             };
-            log('message', message);
+            logger.info('message', message);
             await admin.messaging().send(message).then((response) => {
-                log('Successfully sent message:', response);
+                logger.info('Successfully sent message:', response);
             });
             } catch (e) {
-            log(e);
+            logger.info(e);
             }
     }
 exports.onUnfollowing = functions

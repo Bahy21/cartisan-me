@@ -7,6 +7,7 @@ import { OrderItemStatus } from "../../../../models/enums";
 import { OrderItemModel } from "../../../../models/order_item_model";
 import * as db from "../../../../services/database";
 import { Transaction, TransactionStatus } from "../../../../models/transaction_model";
+import logger from "../../../../services/logger";
 const cartisanStripeAccount = "acct_1Hga2kLRbI5gjrlU";
 export async function updateTransactionStatus(
     id: string,
@@ -87,18 +88,18 @@ export async function updateTransactionStatus(
       orderItem.status = orderStatus;
     });
   
-    console.log("updating..");
+    logger.info("updating..");
   
     const data = {
       orderItems: order.orderItems,
       ...update,
     };
-    console.log(JSON.stringify(data));
+    logger.info(JSON.stringify(data));
     try {
       await admin.firestore().collection("orders").doc(order.orderId).set(data,{merge:true});
-      console.log("updated");
+      logger.info("updated");
     } catch (e) {
-      console.log(e);
+     logger.info(e);
     }
   
   }
@@ -141,7 +142,7 @@ export async function updateTransactionStatus(
     const customers = await stripe.customers.list({ email: buyer.email });
     let customer: Stripe.Customer;
     if (customers.data.length) {
-      console.log("found customer");
+      logger.info("found customer");
       customer = customers.data[0];
     } else {
       customer = await stripe.customers.create({
@@ -149,8 +150,8 @@ export async function updateTransactionStatus(
         description: buyer.profileName,
         address: {
           country: buyer.country,
-          line1: buyer.address,
-          line2: buyer.address2,
+          line1: buyer.addressLine1,
+          line2: buyer.addressLine2,
           city: buyer.city,
           state: buyer.state,
         },
@@ -182,10 +183,12 @@ export async function updateTransactionStatus(
     const transfers = [];
     //Iterate for each order item and send the seller a transfer
     for (const orderItem of order.orderItems) {
+     
       const stripeFee = Math.round(orderItem.grossTotalInCents * feePercentage);
       const payable = parseInt(
         `${orderItem.grossTotalInCents - orderItem.appFeeInCents - stripeFee}`
       );
+      logger.info(`Paying out ${payable} to ${orderItem.sellerStripeId}`);
       if (orderItem.sellerStripeId != cartisanStripeAccount) {
         const transfer = await stripe.transfers.create({
           amount: payable,

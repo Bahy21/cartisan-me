@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cartisan/app/controllers/landing_page_controller.dart';
 import 'package:cartisan/app/data/constants/app_assets.dart';
 import 'package:cartisan/app/modules/add_post/components/product_image_picker_dialog.dart';
 import 'package:cartisan/app/modules/home/home_view.dart';
@@ -8,6 +11,7 @@ import 'package:cartisan/app/modules/profile/components/user_seller_wrapper.dart
 import 'package:cartisan/app/modules/search/search_view.dart';
 import 'package:cartisan/app/modules/sidemenu/side_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
@@ -26,43 +30,52 @@ class _LandingPageState extends State<LandingPage> {
       HomeView(
         scaffoldKey: scaffoldKey,
       ),
-      SearchView(),
-      CreateProductImagePick(),
-      NotificationPageView(),
+      const SearchView(),
+      CreateProductRoot(),
+      const NotificationPageView(),
       const UserSellerWrapper(),
     ];
-    return Scaffold(
-      extendBody: true,
-      extendBodyBehindAppBar: true,
-      resizeToAvoidBottomInset: false,
-      key: scaffoldKey,
-      drawer: SideMenu(),
-      body: pages[_currentIndex],
-      bottomNavigationBar: CustomBottomBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          CustomBottomBarItem(
-            iconPath: AppAssets.kHome,
+    return GetX<LandingPageController>(
+      init: LandingPageController(),
+      builder: (controller) {
+        return WillPopScope(
+          onWillPop: () async {
+            controller.currentIndex = 0;
+
+            return false;
+          },
+          child: Scaffold(
+            extendBody: true,
+            extendBodyBehindAppBar: true,
+            key: scaffoldKey,
+            drawer: SideMenu(),
+            body: pages[controller.currentIndex],
+            bottomNavigationBar: CustomBottomBar(
+              currentIndex: controller.currentIndex,
+              onTap: (index) {
+                controller.currentIndex = index;
+              },
+              items: [
+                CustomBottomBarItem(
+                  iconPath: AppAssets.kHome,
+                ),
+                CustomBottomBarItem(
+                  iconPath: AppAssets.kSearch,
+                ),
+                CustomBottomBarItem(
+                  iconPath: AppAssets.kCamera,
+                ),
+                CustomBottomBarItem(
+                  iconPath: AppAssets.kHeart,
+                ),
+                CustomBottomBarItem(
+                  iconPath: AppAssets.kUser,
+                ),
+              ],
+            ),
           ),
-          CustomBottomBarItem(
-            iconPath: AppAssets.kSearch,
-          ),
-          CustomBottomBarItem(
-            iconPath: AppAssets.kCamera,
-          ),
-          CustomBottomBarItem(
-            iconPath: AppAssets.kHeart,
-          ),
-          CustomBottomBarItem(
-            iconPath: AppAssets.kUser,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/controllers/chat_controller.dart';
 import 'package:cartisan/app/controllers/user_controller.dart';
@@ -10,7 +9,6 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
 
 class BasicChat extends StatefulWidget {
   final ChatRoomModel chatRoomModel;
@@ -42,8 +40,28 @@ class _BasicChatState extends State<BasicChat> {
                 padding: EdgeInsets.only(left: 10.0.w),
                 child: CircleAvatar(
                   radius: (_avatarSize / 2).w,
-                  backgroundImage:
-                      NetworkImage(widget.otherParticipantAvatarURL!),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.otherParticipantAvatarURL!,
+                    errorWidget: (context, url, dynamic error) => Padding(
+                      padding: EdgeInsets.only(left: 10.0.w),
+                      child: SizedBox(
+                        width: _avatarSize.w,
+                        height: _avatarSize.w,
+                        child: ClipOval(
+                          child: Material(
+                            child: Transform.translate(
+                              offset: Offset(-6.w, 0),
+                              child: Icon(
+                                Icons.person,
+                                color: AppColors.kPrimary,
+                                size: (_avatarSize * 1.3).w,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               )
             : Padding(
@@ -78,7 +96,7 @@ class _BasicChatState extends State<BasicChat> {
             padding: const EdgeInsets.all(8.0),
             child: DashChat(
               inputOptions: InputOptions(
-                inputDecoration: InputDecoration(
+                inputDecoration: const InputDecoration(
                   fillColor: AppColors.kFilledColor,
                   filled: true,
                   hintText: 'Type a message...',

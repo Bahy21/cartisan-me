@@ -110,9 +110,10 @@ export class OrderItemModel {
             deliveryCostInCents: this.deliveryCostInCents,
             costBeforeTaxInCents: this.costBeforeTaxInCents,
             serviceFeeInCents: this.serviceFeeInCents,
-            sellerStripeId: this.sellerStripeId,
+            sellerStripeId: this.sellerStripeId ?? this.sellerId,
             tax: this.tax,
             status: this.status,
+            
         }
     }
 

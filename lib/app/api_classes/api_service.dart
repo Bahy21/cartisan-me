@@ -1,11 +1,10 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:dio/dio.dart' as dioClient;
 import 'package:get/get.dart';
 
-const BASE_URL =
+import 'package:cartisan/main.dart';
+
+String get BASE_URL =>
     'https://us-central1-cloud-function-practice-f911f.cloudfunctions.net/app/v1/api';
 
 class APIService {
@@ -35,7 +34,7 @@ class APIService {
 
   Future<dioClient.Response<T>> post<T>(
     String url,
-    dynamic data, {
+    Object? data, {
     Map<String, dynamic>? queryParameters,
   }) {
     return dio.post<T>(url, data: data, queryParameters: queryParameters);
@@ -43,7 +42,7 @@ class APIService {
 
   Future<dioClient.Response<T>> put<T>(
     String url,
-    dynamic data,
+    Object? data,
   ) {
     return dio.put<T>(url, data: data);
   }

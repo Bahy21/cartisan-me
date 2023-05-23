@@ -1,9 +1,10 @@
-import { log } from "firebase-functions/logger";
+
 import { postFromDoc } from "../../../../services/functions";
 import * as db from "../../../../services/database";
 import { CollectionReference, QuerySnapshot } from "firebase-admin/firestore";
 import * as express from "express";
 import { SearchResult } from "../../../../models/search_result";
+import logger from "../../../../services/logger";
 const router = express.Router();
 
 // fetch timeline posts
@@ -42,7 +43,7 @@ router.get("/api/search/fetchPosts/:userId/:count", async(req,res)=>{
     return res.status(200).send({status: "Success", result});
 
   } catch (error) {
-    log(error);
+    logger.info(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });

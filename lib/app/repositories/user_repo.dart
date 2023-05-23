@@ -2,7 +2,6 @@ import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/services/user_database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 class UserRepo {

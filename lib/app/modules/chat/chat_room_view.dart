@@ -1,5 +1,4 @@
 import 'package:cartisan/app/controllers/chat_controller.dart';
-import 'package:cartisan/app/data/constants/app_colors.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/chat_room_model.dart';
 import 'package:cartisan/app/modules/chat/components/chatroom_tile.dart';

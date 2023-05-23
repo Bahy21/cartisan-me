@@ -1,8 +1,10 @@
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/data/global_functions/error_dialog.dart';
+import 'package:cartisan/app/data/global_functions/success_dialog.dart';
 import 'package:cartisan/app/modules/auth/components/cartisan_logo.dart';
 import 'package:cartisan/app/modules/auth/components/custom_login_field.dart';
-import 'package:cartisan/app/modules/widgets/buttons/custom_text_button.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/services/translation_service.dart';
 import 'package:cartisan/app/services/user_auth_service.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +32,8 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isSeller = false;
 
   Future<void> _handleRegistration() async {
-    await UserAuthService().signUpWithEmailAndPassword(
+    Get.dialog<Widget>(LoadingDialog(), barrierDismissible: false);
+    final status = await UserAuthService().signUpWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
       name: _nameController.text,
@@ -40,7 +43,13 @@ class _SignUpPageState extends State<SignUpPage> {
       country: 'America',
       state: 'LA',
     );
-    Get.back<void>();
+    if (status) {
+      await Get.dialog<Widget>(
+          SuccessDialog(message: 'Created Account Successfully!'));
+      Get.back<void>();
+    } else {
+      await showErrorDialog('Error creating account');
+    }
   }
 
   @override
@@ -59,7 +68,7 @@ class _SignUpPageState extends State<SignUpPage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -228,30 +237,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ],
                   ),
-                ),
-                CustomLoginField(
-                  controller: _confirmPasswordController,
-                  focusNode: _confirmPasswordFocus,
-                  isPasswordField: true,
-                  hintText:
-                      TranslationsService.sigUpPageTranslation.confirmPassword,
-                  iconPath: AppAssets.kLock,
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.next,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return TranslationsService
-                          .sigInPageTranslation.passwordRequired;
-                    } else if (value.length <= 6) {
-                      return TranslationsService
-                          .sigInPageTranslation.validPassword;
-                    } else if (_passwordController.text !=
-                        _confirmPasswordController.text) {
-                      return TranslationsService
-                          .sigUpPageTranslation.passwordNotMatch;
-                    }
-                    return null;
-                  },
                 ),
               ],
             ),

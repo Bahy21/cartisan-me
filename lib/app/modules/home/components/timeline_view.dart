@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cartisan/app/api_classes/cart_api.dart';
 import 'package:cartisan/app/api_classes/timeline_api.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
@@ -19,17 +21,15 @@ class TimelineView extends StatefulWidget {
 
 class _TimelineViewState extends State<TimelineView> {
   int retries = 0;
-  static const _pageSize = 10;
   final cartAPI = CartAPI();
   final PagingController<int, PostResponse> _pagingController =
       PagingController(firstPageKey: 0);
   final as = Get.find<AuthService>();
+  final tc = Get.find<TimelineController>();
   @override
   void initState() {
     _fetchPage(0);
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
     super.initState();
   }
 
@@ -50,26 +50,32 @@ class _TimelineViewState extends State<TimelineView> {
         final nextPageKey = pageKey + newItems.length;
         _pagingController.appendPage(newItems, nextPageKey);
       }
+      tc.setLocalFalse();
+      if (pageKey == 0) {
+        await tc.storeLocal(newItems);
+      }
     } on Exception catch (error) {
+      retries++;
       if (retries < 3) {
         await _fetchPage(pageKey);
       }
-      retries++;
       _pagingController.error = error;
     }
   }
 
   @override
   void dispose() {
-    super.dispose();
     _pagingController.dispose();
+    tc.setLocalTrue();
+    super.dispose();
   }
 
-  void addToCart(PostModel post) async {
+  Future<void> addToCart(PostModel post) async {
     final result = await cartAPI.addToCart(
       postId: post.postId,
       userId: Get.find<AuthService>().currentUser!.uid,
       selectedVariant: post.selectedVariant,
+      quantity: post.quantity,
     );
     if (result) {
       showToast('Added to cart');
@@ -79,19 +85,49 @@ class _TimelineViewState extends State<TimelineView> {
   }
 
   @override
-  Widget build(BuildContext context) => Obx(() => as.userToken.isEmpty
-      ? Center(
-          child: CircularProgressIndicator.adaptive(),
-        )
-      : PagedListView<int, PostResponse>(
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<PostResponse>(
-            itemBuilder: (context, item, index) => PostCard(
-              addToCartCallback: () {
-                addToCart(item.post);
+  Widget build(BuildContext context) => GetX<TimelineController>(
+        init: TimelineController(),
+        builder: (controller) {
+          if (as.userToken.isEmpty) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          }
+          final posts = controller.loadLocal();
+          if (posts.isEmpty) {
+            controller.setLocalFalse();
+          }
+          if (controller.loadingLocal) {
+            log('loading local');
+            return ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                return PostCard(
+                  addToCartCallback: () {
+                    addToCart(posts[index].post);
+                  },
+                  postResponse: posts[index],
+                );
               },
-              postResponse: item,
+            );
+          }
+          log('now displaying live');
+          return RefreshIndicator.adaptive(
+            onRefresh: () => Future.sync(
+              _pagingController.refresh,
             ),
-          ),
-        ));
+            child: PagedListView<int, PostResponse>(
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<PostResponse>(
+                itemBuilder: (context, item, index) => PostCard(
+                  addToCartCallback: () {
+                    addToCart(item.post);
+                  },
+                  postResponse: item,
+                ),
+              ),
+            ),
+          );
+        },
+      );
 }

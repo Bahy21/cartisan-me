@@ -7,7 +7,7 @@ import 'package:cartisan/app/models/order_item_status.dart';
 class OrderItemModel {
   String orderItemID;
   String productId;
-  String selectedVariant;
+  String? selectedVariant;
   int appFeeInCents;
   int quantity;
   double price;
@@ -105,13 +105,13 @@ class OrderItemModel {
       'price': price,
       'grossTotalInCents': grossTotalInCents,
       'sellerId': sellerId,
-      'deliveryOption': deliveryOption,
+      'deliveryOption': deliveryOption.index,
       'deliveryCostInCents': deliveryCostInCents,
       'costBeforeTaxInCents': costBeforeTaxInCents,
       'serviceFeeInCents': serviceFeeInCents,
       'sellerStripeId': sellerStripeId,
       'tax': tax,
-      'status': status,
+      'status': status.index,
     };
   }
 
@@ -119,10 +119,11 @@ class OrderItemModel {
     return OrderItemModel(
       orderItemID: map['orderItemID'] as String,
       productId: map['productId'] as String,
-      selectedVariant: map['selectedVariant'] as String,
+      selectedVariant:
+          (map['selectedVariant'] ?? map['productOption'] ?? '') as String,
       appFeeInCents: map['appFeeInCents'] as int,
-      quantity: map['quantity'] as int,
-      price: map['price'] as double,
+      quantity: (map['quantity'] ?? 0) as int,
+      price: (map['price'] as num).toDouble(),
       grossTotalInCents: map['grossTotalInCents'] as int,
       sellerId: map['sellerId'] as String,
       deliveryOption: DeliveryOptions.values[map['deliveryOption'] as int],
@@ -130,7 +131,7 @@ class OrderItemModel {
       costBeforeTaxInCents: map['costBeforeTaxInCents'] as int,
       serviceFeeInCents: map['serviceFeeInCents'] as int,
       sellerStripeId: map['sellerStripeId'] as String,
-      tax: map['tax'] as double,
+      tax: (map['tax'] as num).toDouble(),
       status: OrderItemStatus.values[map['status'] as int],
     );
   }

@@ -1,3 +1,4 @@
+import 'package:cartisan/app/controllers/landing_page_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class SetupDialog extends StatelessWidget {
           SizedBox(height: 78.h),
           PrimaryButton(
             onTap: () {
-              Get.back<void>();
+              Get.find<LandingPageController>().currentIndex = 4;
             },
             text: 'Finish Setup',
             width: 130.w,

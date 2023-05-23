@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ReportPopup extends StatefulWidget {
-  final void Function(dynamic) onItemSelected;
+  final void Function(int)? onSelected;
 
-  const ReportPopup({
-    required this.onItemSelected,
-    super.key,
-  });
+  const ReportPopup({super.key, this.onSelected});
 
   @override
   _ReportPopupState createState() => _ReportPopupState();
@@ -16,7 +13,7 @@ class _ReportPopupState extends State<ReportPopup> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      onSelected: (value) => widget.onItemSelected(value),
+      onSelected: widget.onSelected,
       itemBuilder: (context) {
         return [
           const PopupMenuItem(

@@ -8,14 +8,14 @@ import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/models/review_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
 
-const String GET_POST = '$BASE_URL/post/getPost';
-const String GET_COMMENTS = '$BASE_URL/post/comments/getComments';
-const String CREATE_POST = '$BASE_URL/newPost';
-const String CREATE_REVIEW = '$BASE_URL/review/postReview';
-const String CREATE_COMMENT = '$BASE_URL/post/comments/newComment';
-const String DELETE_COMMENT = '$BASE_URL/post/comments/deleteComment';
-const String UNLIKE_POST = '$BASE_URL/post/unlikePost';
-const String DELETE_POST = '$BASE_URL/post/deletePost';
+String GET_POST = '$BASE_URL/post/getPost';
+String GET_COMMENTS = '$BASE_URL/post/comments/getComments';
+String CREATE_POST = '$BASE_URL/newPost';
+String CREATE_REVIEW = '$BASE_URL/review/postReview';
+String CREATE_COMMENT = '$BASE_URL/post/comments/newComment';
+String DELETE_COMMENT = '$BASE_URL/post/comments/deleteComment';
+String UNLIKE_POST = '$BASE_URL/post/unlikePost';
+String DELETE_POST = '$BASE_URL/post/deletePost';
 
 class PostAPI {
   final apiService = APIService();
@@ -132,11 +132,8 @@ class PostAPI {
         throw Exception('Error fetching post');
       }
       final data = result.data!['data'] as Map<String, dynamic>;
-      log(data.toString());
       final post = PostModel.fromMap(data['post'] as Map<String, dynamic>);
       final user = UserModel.fromMap(data['owner'] as Map<String, dynamic>);
-      log('post $post');
-      log('user $user');
       return PostResponse(owner: user, post: post);
     } on Exception catch (e) {
       log(e.toString());

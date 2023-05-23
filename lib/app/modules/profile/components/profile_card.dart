@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/profile/components/custom_outlined_button.dart';
@@ -25,9 +26,21 @@ class ProfileCard extends StatelessWidget {
           width: _avatarSize.w,
           child: uc.currentUser?.url.isURL ?? false
               ? ClipOval(
-                  child: Image.network(
-                    uc.currentUser!.url,
+                  child: CachedNetworkImage(
+                    imageUrl: uc.currentUser!.url,
                     fit: BoxFit.cover,
+                    errorWidget: (context, url, dynamic error) => ClipOval(
+                      child: Material(
+                        child: Transform.translate(
+                          offset: Offset(-8.w, 0),
+                          child: Icon(
+                            Icons.person,
+                            size: 100.w,
+                            color: AppColors.kPrimary,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 )
               : ClipOval(
