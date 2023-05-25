@@ -53,11 +53,15 @@ class UserModel {
   /// Cost in Cents to ship to deliver to the customer.
   int get deliveryCostInCents => (deliveryCost! * 100).floor();
 
-  bool get setupComplete {
+  bool get addressSetupComplete {
     if (city.isNotEmpty && country.isNotEmpty && state.isNotEmpty) {
       return true;
     }
     return false;
+  }
+
+  bool get isActiveSeller {
+    return sellerID.isNotEmpty && taxPercentage != null && state.isNotEmpty;
   }
 
   UserModel({

@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddressCard extends StatelessWidget {
-  final VoidCallback changeAddressCallback;
+  final VoidCallback? changeAddressCallback;
   final AddressModel addressModel;
   const AddressCard({
-    required this.changeAddressCallback,
+    this.changeAddressCallback,
     required this.addressModel,
     super.key,
   });
@@ -57,14 +57,15 @@ class AddressCard extends StatelessWidget {
               ),
             ],
           ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: CustomTextButton(
-              onPressed: changeAddressCallback,
-              text: 'Change Address',
-              fontSize: 12.sp,
+          if (changeAddressCallback != null)
+            Align(
+              alignment: Alignment.centerRight,
+              child: CustomTextButton(
+                onPressed: changeAddressCallback!,
+                text: 'Change Address',
+                fontSize: 12.sp,
+              ),
             ),
-          ),
         ],
       ),
     );

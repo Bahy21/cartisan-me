@@ -3,13 +3,12 @@ import 'dart:developer';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/address__model.dart';
 import 'package:cartisan/app/models/user_model.dart';
-import 'package:cartisan/app/repositories/user_repo.dart';
 import 'package:cartisan/app/services/user_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 
 class UserAuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final UserRepo _userRepo = UserRepo();
 
   Future<void> signInWithEmailAndPassword({
     required String email,
@@ -17,7 +16,9 @@ class UserAuthService {
   }) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
     } on FirebaseAuthException catch (e) {
       log(e.toString());
       await showErrorDialog('Error signing in\n ${e.message}');

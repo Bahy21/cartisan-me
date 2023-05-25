@@ -14,12 +14,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:oktoast/oktoast.dart';
 
 bool useFunctionsEmulator = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(defaultOverlay);
+  await SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
+  );
   await GetStorage.init();
   await Firebase.initializeApp(
     name: 'Cartisan',
@@ -42,16 +46,21 @@ class Main extends StatelessWidget {
       useInheritedMediaQuery: true,
       designSize: const Size(390, 844),
       builder: (context, child) {
-        return GetMaterialApp(
-          title: 'Cartisan',
-          debugShowCheckedModeBanner: false,
-          initialBinding: InitialBindings(),
-          defaultTransition: Transition.fadeIn,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.dark,
-          locale: const Locale('en_US'),
-          translations: TranslationService(),
-          home: AuthWrapper(),
+        return OKToast(
+          duration: 2.5.seconds,
+          animationCurve: Curves.easeIn,
+          animationDuration: 600.milliseconds,
+          child: GetMaterialApp(
+            title: 'Cartisan',
+            debugShowCheckedModeBanner: false,
+            initialBinding: InitialBindings(),
+            defaultTransition: Transition.fadeIn,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: ThemeMode.dark,
+            locale: const Locale('en_US'),
+            translations: TranslationService(),
+            home: AuthWrapper(),
+          ),
         );
       },
     );

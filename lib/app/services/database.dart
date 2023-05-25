@@ -66,6 +66,7 @@ class Database {
         'profile_images/${DateTime.now().millisecondsSinceEpoch}-${image.path}',
       );
       await storagePlace.putFile(image);
+      log('Image uploaded');
       final url = await storagePlace.getDownloadURL();
       return url;
     } on FirebaseException catch (e) {

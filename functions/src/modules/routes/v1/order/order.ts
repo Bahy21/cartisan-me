@@ -152,6 +152,9 @@ router.put("/api/order/updateOrderItemStatus/:orderId", async (req, res) => {
         const orderId: string = req.params.orderId;
         const newStatus:string = req.body.status;
         const orderItemIdToBeChanged :string= req.body.orderItemId;
+        if(!newStatus || !orderItemIdToBeChanged || newStatus == '' || orderItemIdToBeChanged == ''){
+            throw Error(`Invalid paramteres passed newStatus: ${newStatus} orderItemIdToBeChanged: ${orderItemIdToBeChanged}`);
+        }
         const newStatusEnum = getOrderItemStatusFromString(newStatus);
         const orderDocRef = db.ordersCollection.doc(orderId);
         const order = orderFromDoc(await orderDocRef.get());
@@ -196,7 +199,7 @@ router.delete("/api/order/deleteOrder/:orderId", async (req, res) => {
 router.get("/api/order/getPurchasedOrders/:userId", async (req, res) => {
     try {
         const userId: string = req.params.userId;
-        const orderDocRef = db.ordersCollection.where("buyerId","==",userId);
+        const orderDocRef = db.ordersCollection.where("buyerId","==",userId).where('isPaid', '==', true);
         const orderQuerySnapshot = await orderDocRef.get();
         const orderList = <OrderModel[]>[];
         for (const orderDoc of orderQuerySnapshot.docs){
@@ -212,7 +215,7 @@ router.get("/api/order/getPurchasedOrders/:userId", async (req, res) => {
 router.get("/api/order/getSoldOrders/:userId", async (req, res) => {
     try {
         const userId: string = req.params.userId;
-        const orderDocRef = db.ordersCollection.where('sellers','array-contains',userId);
+        const orderDocRef = db.ordersCollection.where('sellers','array-contains',userId).where('isPaid', '==', true);
         const orderQuerySnapshot = await orderDocRef.get();
         const orderList = <OrderModel[]>[];
         for (const orderDoc of orderQuerySnapshot.docs){

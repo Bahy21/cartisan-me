@@ -65,9 +65,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      surfaceTintColor: Colors.transparent,
       color: Colors.transparent,
-      elevation: 0,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[

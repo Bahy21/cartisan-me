@@ -89,7 +89,11 @@ exports.onUnfollowing = functions
         const followerId = context.params.followerId;
         const userDoc = db.userCollection.doc(userId);
         const followerDoc = db.userCollection.doc(followerId);
-        await userDoc.update({"followerCount": admin.firestore.FieldValue.increment(-1)});
-        await followerDoc.update({"followingCount": admin.firestore.FieldValue.increment(-1)});
+        const userDocData = await userDoc.get();
+        const followerDocData = await followerDoc.get();
+        const followerCount = userDocData.data().followerCount;
+        const followingCount = followerDocData.data().followingCount;
+        await userDoc.update({"followerCount": followerCount == 0 ? 0 : admin.firestore.FieldValue.increment(-1)});
+        await followerDoc.update({"followingCount": followingCount == 0 ? 0 : admin.firestore.FieldValue.increment(-1)});
         
     });

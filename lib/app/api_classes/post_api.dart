@@ -115,6 +115,7 @@ class PostAPI {
         '$CREATE_POST/$userId',
         newPost.toMap(),
       );
+      log('post post result ${result.data.toString()}');
       if (result.statusCode != 200) {
         throw Exception('Error creating post');
       }

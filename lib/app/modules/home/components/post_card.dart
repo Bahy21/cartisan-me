@@ -189,7 +189,7 @@ class PostCard extends StatelessWidget {
                 style: AppTypography.kBold18,
               ),
               ElevatedButton(
-                onPressed: buyNow,
+                onPressed: (post.ownerId != currentUid) ? buyNow : () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.kPrimary,
                   padding: EdgeInsets.all(13.h),
@@ -198,7 +198,9 @@ class PostCard extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Buy Now | ${post.price}',
+                  (post.ownerId != currentUid)
+                      ? 'Buy Now | ${post.price}'
+                      : 'Priced at | ${post.price}',
                   style: AppTypography.kBold14,
                 ),
               ),

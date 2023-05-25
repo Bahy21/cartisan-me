@@ -1,4 +1,5 @@
 import 'package:cartisan/app/data/constants/app_spacing.dart';
+import 'package:cartisan/app/modules/chat/components/data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -9,28 +10,27 @@ class LoadingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 95.w),
-      child: AlertDialog(
-        contentPadding: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.sixRadius),
-        ),
-        content: Lottie.asset(
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: 50.h,
+        maxWidth: 50.w,
+      ),
+      child: Center(
+        child: Lottie.asset(
           'assets/lottie/loading.json',
-          height: 100.h,
-          width: 100.w,
-          fit: BoxFit.cover,
+          height: 150.h,
+          width: 150.w,
+          fit: BoxFit.fitHeight,
         ),
-        alignment: Alignment.center,
       ),
     );
   }
 }
 
-void showLoadingDialog(BuildContext context) {
+void showLoadingDialog(BuildContext context, {bool dismissible = true}) {
   showDialog<void>(
     context: context,
+    barrierDismissible: dismissible,
     builder: (_) => const LoadingDialog(),
   );
 }

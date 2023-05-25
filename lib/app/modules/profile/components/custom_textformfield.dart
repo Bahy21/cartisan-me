@@ -5,11 +5,13 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final int? maxLines;
+  final double? textPaddingFromTop;
   const CustomTextFormField({
     required this.hintText,
     required this.controller,
     this.maxLines = 1,
     this.validator,
+    this.textPaddingFromTop,
     super.key,
   });
 
@@ -21,7 +23,9 @@ class CustomTextFormField extends StatelessWidget {
       maxLines: maxLines,
       decoration: InputDecoration(
         filled: false,
-        contentPadding: EdgeInsets.zero,
+        contentPadding: textPaddingFromTop == null
+            ? EdgeInsets.zero
+            : EdgeInsets.only(top: textPaddingFromTop!),
         border: const UnderlineInputBorder(),
         hintText: hintText,
       ),

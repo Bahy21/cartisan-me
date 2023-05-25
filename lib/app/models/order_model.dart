@@ -90,7 +90,7 @@ class OrderModel {
           (map['shippingAddress'] ?? map['address']) as Map<String, dynamic>),
       buyerId: map['buyerId'] as String,
       orderItems: orderItems,
-      total: (map['total'] as int).toDouble(),
+      total: (map['total'] as num).toDouble(),
       timestamp: map['timestamp'] as int,
       involvedSellersList: (map['involvedSellersList'] as List).cast<String>(),
       totalInCents: map['totalInCents'] as int,

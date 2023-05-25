@@ -15,7 +15,11 @@ router.put("/api/user/addToCart/:userId/:postId", async(req,res)=>{
       const userId: string = req.params.userId;
       const postId: string = req.params.postId;
       let selectedVariant: string = req.body.selectedVariant;
-      let quantity: number = req.body.quantity || req.body.quantity == '' ? 1 : parseInt(req.body.quantity);
+      let quantity: number = req.body.quantity;
+      if(selectedVariant == null || isNaN(quantity)){
+        return res.status(500).send({status: "Failure", data: `Invalid parameters selectedvariant: ${selectedVariant} quantity: ${quantity}`});
+      }
+      quantity = parseInt(quantity.toString());
       const postRef: DocumentReference = db.postsCollection.doc(postId);
       const cartRef = db.userCartCollection(userId);
       const cartItems = await cartRef.get();
@@ -28,9 +32,6 @@ router.put("/api/user/addToCart/:userId/:postId", async(req,res)=>{
         userCart.push(cartItemFromDoc(cartItem));
       });
       const postModel: PostModel = postFromDoc(await postRef.get());
-      if(selectedVariant == null){
-        selectedVariant = postModel.selectedVariant;
-      }
       // check if item already exists in cart
       const itemIndex = findItemWithOption(postModel.postId, selectedVariant, userCart);
       // if found returns index else null

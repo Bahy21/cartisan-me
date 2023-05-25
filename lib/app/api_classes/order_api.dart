@@ -27,6 +27,7 @@ class OrderAPI {
       if (result.statusCode != 200) {
         throw Exception('Error getting purchased orders');
       }
+      log('purchases $result');
       final data = result.data!['data'] as List;
       final orders = <OrderModel>[];
       for (var item in data) {
@@ -41,13 +42,14 @@ class OrderAPI {
 
   Future<List<OrderModel>> getSoldOrders(String userId) async {
     try {
+      log('gettng sold orders');
       final result = await apiService.get<Map>(
         '$GET_SOLD_ORDERS/$userId',
       );
       if (result.statusCode != 200) {
         throw Exception('Error getting purchased orders');
       }
-      log('result $result');
+      log('sales $result');
       final data = result.data!['data'] as List;
       final orders = <OrderModel>[];
       for (final item in data) {
@@ -131,12 +133,13 @@ class OrderAPI {
 
   Future<bool> updateOrderItemStatus({
     required String orderId,
-    required OrderItemStatus newSatus,
+    required String orderItemId,
+    required OrderItemStatus newStatus,
   }) async {
     try {
       final result = await apiService.put<Map>(
         '$UPDATE_ORDER_ITEM_STATUS/$orderId',
-        {'status': newSatus.index},
+        {'status': newStatus.index, 'orderItemId': orderItemId},
       );
       if (result.statusCode != 200) {
         throw Exception('Error updating order item status');

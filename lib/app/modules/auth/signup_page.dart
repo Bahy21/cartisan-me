@@ -32,23 +32,27 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isSeller = false;
 
   Future<void> _handleRegistration() async {
-    Get.dialog<Widget>(LoadingDialog(), barrierDismissible: false);
-    final status = await UserAuthService().signUpWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-      name: _nameController.text,
-      isSeller: _isSeller,
-      taxPercentage: 0,
-      city: 'Miami',
-      country: 'America',
-      state: 'LA',
-    );
-    if (status) {
-      await Get.dialog<Widget>(
-          SuccessDialog(message: 'Created Account Successfully!'));
-      Get.back<void>();
-    } else {
-      await showErrorDialog('Error creating account');
+    try {
+      showLoadingDialog(context, dismissible: false);
+      final status = await UserAuthService().signUpWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+        name: _nameController.text,
+        isSeller: _isSeller,
+        taxPercentage: 0,
+        city: 'Miami',
+        country: 'America',
+        state: 'LA',
+      );
+      if (status) {
+        hideLoadingDialog();
+        Get.back<void>();
+      } else {
+        await showErrorDialog('Error creating account');
+      }
+    } on Exception catch (e) {
+      hideLoadingDialog();
+      await showErrorDialog('Error creating account: $e');
     }
   }
 

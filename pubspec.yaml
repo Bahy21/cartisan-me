@@ -43,6 +43,8 @@ dependencies:
   cached_network_image: ^3.2.3
   url_launcher: ^6.1.11
   webview_flutter: ^4.2.0
+  motion_toast: ^2.6.8
+  oktoast: ^3.3.1
   
 
 

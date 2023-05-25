@@ -127,10 +127,10 @@ class _EditStoreViewState extends State<EditStoreView> {
                 style: AppTypography.kMedium14
                     .copyWith(color: AppColors.kHintColor),
               ),
+              _buildStripeButton(),
               SizedBox(
                 height: 10.h,
               ),
-              StripeSection(),
               SizedBox(
                 height: 10.h,
               ),
@@ -142,5 +142,51 @@ class _EditStoreViewState extends State<EditStoreView> {
         ),
       );
     });
+  }
+
+  Widget _buildStripeButton() {
+    return uc.currentUser!.isActiveSeller
+        ? StripeSection()
+        : HighImportanceTaskButton(
+            onTap: () {},
+            text: "Become a Seller",
+          );
+  }
+}
+
+class HighImportanceTaskButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final String text;
+
+  const HighImportanceTaskButton(
+      {super.key, required this.onTap, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              8.0,
+            ),
+          ),
+        ),
+        padding: MaterialStateProperty.all<EdgeInsets>(
+          const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 12.0,
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.all<Color>(
+          const Color(0xff5433FF),
+        ),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.white, fontSize: 16.0),
+      ),
+    );
   }
 }

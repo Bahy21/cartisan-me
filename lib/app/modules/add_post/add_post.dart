@@ -347,8 +347,8 @@ class _AddPostState extends State<AddPost> {
     );
   }
 
-  async.Future<void> createPost() async {
-    await Get.dialog<Widget>(const LoadingDialog(), barrierDismissible: false);
+  Future<void> createPost() async {
+    Get.dialog<Widget>(const LoadingDialog(), barrierDismissible: false);
     final uploadedImagesLinks = await handleImageUpload();
     final userId = Get.find<AuthService>().currentUser!.uid;
     final post = PostModel(
@@ -376,9 +376,11 @@ class _AddPostState extends State<AddPost> {
     if (result) {
       Get
         ..back<void>()
+        ..back<void>()
         ..back<void>();
       await Get.dialog<Widget>(
-          const SuccessDialog(message: 'Post successfully added'));
+        const SuccessDialog(message: 'Post successfully added'),
+      );
     } else {
       await showErrorDialog('Error uploading post');
     }

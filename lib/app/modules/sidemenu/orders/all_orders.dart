@@ -1,10 +1,26 @@
+import 'package:cartisan/app/controllers/purchase_history_controller.dart';
+import 'package:cartisan/app/controllers/sales_history_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/purchased_order.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/sold_orders.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class AllOrders extends StatelessWidget {
+class AllOrders extends StatefulWidget {
   const AllOrders({super.key});
+
+  @override
+  State<AllOrders> createState() => _AllOrdersState();
+}
+
+class _AllOrdersState extends State<AllOrders> {
+  @override
+  void initState() {
+    Get
+      ..put(PurchaseHistoryController())
+      ..put(SalesHistoryController());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +40,12 @@ class AllOrders extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(children: [
-          PurchasedOrder(),
-          SoldOrders(),
-        ]),
+        body: const TabBarView(
+          children: [
+            PurchasedOrder(),
+            SoldOrders(),
+          ],
+        ),
       ),
     );
   }

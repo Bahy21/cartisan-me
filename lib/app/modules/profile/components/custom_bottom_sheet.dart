@@ -3,9 +3,11 @@ import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
+import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/profile/components/custom_switch.dart';
 import 'package:cartisan/app/modules/profile/components/custom_textformfield.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -23,11 +25,14 @@ class CustomBottomSheet extends StatefulWidget {
 
 class _CustomBottomSheetState extends State<CustomBottomSheet> {
   final uc = Get.find<UserController>();
+  UserModel get currentUser => Get.find<UserController>().currentUser!;
   final userApi = UserAPI();
   final ScrollController _scrollController = ScrollController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
+  late TextEditingController _stateController;
+  late TextEditingController _taxController;
 
   late bool _pickUpAvailable;
   late bool _shippingAvailable;
@@ -42,12 +47,17 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
   }
 
   void _initWidgetParams() {
-    _nameController = TextEditingController(text: uc.currentUser!.profileName);
-    _descriptionController = TextEditingController(text: uc.currentUser!.bio);
-    _pickUpAvailable = uc.currentUser!.pickup;
-    _shippingAvailable = uc.currentUser!.activeShipping;
-    _deliveryAvailable = uc.currentUser!.isDeliveryAvailable;
-    _isSeller = uc.currentUser?.isSeller ?? false;
+    _nameController = TextEditingController(text: currentUser.profileName);
+    _descriptionController = TextEditingController(text: currentUser.bio);
+    _pickUpAvailable = currentUser.pickup;
+    _shippingAvailable = currentUser.activeShipping;
+    _deliveryAvailable = currentUser.isDeliveryAvailable;
+    _stateController = TextEditingController(text: currentUser.state);
+    _taxController = TextEditingController(
+        text: (currentUser.taxPercentage ?? 0).toString());
+    _isSeller = currentUser.sellerID.isNotEmpty &&
+        currentUser.taxPercentage != null &&
+        currentUser.state.isNotEmpty;
     if (mounted) {
       setState(() {
         loaded = true;
@@ -66,8 +76,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
       loaded = false;
     });
     final newImageUrl = await widget.updateUserImage();
-    final newUser = uc.currentUser!.copyWith(
-      url: newImageUrl ?? uc.currentUser!.url,
+    final newUser = currentUser.copyWith(
+      url: newImageUrl ?? currentUser.url,
       profileName: _nameController.text,
       username: _nameController.text,
       bio: _descriptionController.text,
@@ -77,7 +87,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
       isSeller: _isSeller,
     );
     final value = await userApi.updateUserDetails(
-      userId: uc.currentUser!.id,
+      userId: currentUser.id,
       newUser: newUser,
     );
 
@@ -151,29 +161,47 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                               }
                               return null;
                             },
+                            textPaddingFromTop: 10.h,
                             maxLines: 4,
-                            hintText: uc.currentUser?.bio ?? 'Enter bio here',
+                            hintText: (currentUser.bio?.isEmpty ?? false)
+                                ? 'Enter bio here'
+                                : currentUser.bio!,
                           ),
                           SizedBox(
                             height: AppSpacing.eighteenVertical,
                           ),
+                          SizedBox(height: AppSpacing.eighteenVertical),
+                          Text(
+                            'State',
+                            style: AppTypography.kBold14,
+                          ),
+                          CustomTextFormField(
+                            controller: _stateController,
+                            validator: (value) {
+                              return null;
+                            },
+                            hintText: currentUser.state.isEmpty
+                                ? 'Enter your state here'
+                                : currentUser.state,
+                          ),
+                          SizedBox(height: AppSpacing.eighteenVertical),
+                          Text(
+                            'Tax Percentage',
+                            style: AppTypography.kBold14,
+                          ),
+                          CustomTextFormField(
+                            controller: _taxController,
+                            validator: (value) {
+                              return null;
+                            },
+                            hintText: currentUser.taxPercentage == null
+                                ? 'Enter tax here'
+                                : currentUser.taxPercentage.toString(),
+                          ),
+                          SizedBox(height: 25.h),
                           Text(
                             'More Options',
                             style: AppTypography.kBold14,
-                          ),
-                          SizedBox(height: 25.h),
-                          CustomSwitch(
-                            isDisabled: false,
-                            text: 'I am a seller',
-                            value: _isSeller,
-                            onChanged: (value) {
-                              setState(() {
-                                _isSeller = value;
-                                _deliveryAvailable = false;
-                                _shippingAvailable = false;
-                                _pickUpAvailable = false;
-                              });
-                            },
                           ),
                           CustomSwitch(
                             isDisabled: !_isSeller,
