@@ -139,7 +139,7 @@ class OrderAPI {
     try {
       final result = await apiService.put<Map>(
         '$UPDATE_ORDER_ITEM_STATUS/$orderId',
-        {'status': newStatus.index, 'orderItemId': orderItemId},
+        {'status': newStatus.name, 'orderItemId': orderItemId},
       );
       if (result.statusCode != 200) {
         throw Exception('Error updating order item status');

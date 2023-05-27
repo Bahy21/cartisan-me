@@ -14,6 +14,7 @@ import { getOrCreateCustomer, getOrderById, getStripePaymentInfo, getTransaction
 import { TransactionStatus } from "../../../../models/transaction_model";
 import * as admin from "firebase-admin";
 import logger from "../../../../services/logger";
+import { log } from "firebase-functions/logger";
 
 /// Stripe Key
 const cartisanStripeAccount = "acct_1Hga2kLRbI5gjrlU";
@@ -34,7 +35,7 @@ router.get("/api/payment/stripe/getCapability", async (req, res) => {
       return res.status(200).send({status: "Success", data: value});
        
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -71,7 +72,7 @@ router.post("/api/payment/stripe/connectStripeExpressAccount", async (req, res) 
           });
         return res.status(200).send({status: "Success", data: accountLink});
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -87,7 +88,7 @@ router.get("/api/payment/stripe/getDashboardLink", async (req, res) => {
       const value = await stripe.accounts.createLoginLink(sellerIdString);
       return res.status(200).send({status: "Success", data: value});
   } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -108,7 +109,7 @@ router.delete("/api/payment/stripe/deleteConnectAccount", async (req, res) => {
         await db.userCollection.doc(userIdString).update({sellerID: ""});
         return res.status(200).send({status: "Success", data: "Not implemented yet"});
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -160,7 +161,7 @@ router.delete("/api/payment/stripe/cancelItemAndRefund", async (req, res) => {
         }
         return res.status(200).send({status: "Success", data: "Successfully cancelled item and refunded"});
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -222,7 +223,7 @@ router.post("/api/payment/stripe/createPaymentIntent", async(req,res) =>{
           }; 
           return res.status(200).send(output);
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });

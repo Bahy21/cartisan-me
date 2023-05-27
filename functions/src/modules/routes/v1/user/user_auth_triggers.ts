@@ -4,6 +4,7 @@ import * as db from "../../../../services/database";
 import * as functions from "firebase-functions";
 import { Request, Response } from "express";
 import logger from "../../../../services/logger";
+import { log } from "firebase-functions/logger";
 
 exports.deleteUserFireStore = functions.auth.user().onDelete(async (user) =>  {
   try {
@@ -14,7 +15,7 @@ exports.deleteUserFireStore = functions.auth.user().onDelete(async (user) =>  {
       }
     );
   } catch (error) {
-    logger.info(error);
+    log(error);
     await db.errorReportReference.add({error: JSON.stringify(error), date: Date.now()});
   }
 });

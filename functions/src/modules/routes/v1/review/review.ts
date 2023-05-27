@@ -6,6 +6,7 @@ import { postFromDoc } from "../../../../services/functions";
 import { ReviewModel } from "../../../../models/review_model";
 import { firestore } from "../../../..";
 import * as express from "express";
+import { log } from "firebase-functions/logger";
 import logger from "../../../../services/logger";
 const router = express.Router();
 
@@ -41,7 +42,7 @@ router.post("/api/review/postReview/:postId", async(req,res)=>{
       await batch.commit();
       return res.status(200).send({status: "Success", data: `Review ${reviewId} succesfully posted to post ${postId}`});
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });

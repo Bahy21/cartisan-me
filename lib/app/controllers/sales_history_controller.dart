@@ -2,9 +2,12 @@ import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/order_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/order_item_model.dart';
 import 'package:cartisan/app/models/order_item_status.dart';
 import 'package:cartisan/app/models/order_model.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -51,6 +54,7 @@ class SalesHistoryController extends GetxController {
     required String orderItemId,
     required OrderItemStatus status,
   }) async {
+    Get.dialog<Widget>(const LoadingDialog());
     final result = await orderApi.updateOrderItemStatus(
       orderId: orderId,
       orderItemId: orderItemId,
@@ -72,6 +76,9 @@ class SalesHistoryController extends GetxController {
           );
         },
       );
+      Get.back<void>();
+    } else {
+      await showErrorDialog('Error\nFailed to update status');
     }
   }
 }

@@ -8,6 +8,7 @@ import { CommentModel } from "../models/comment_model.js";
 import { DeliveryOptions } from "../models/enums.js";
 import { DocumentSnapshot } from "firebase-admin/firestore";
 import { ReviewModel } from "../models/review_model.js";
+import { log } from "firebase-functions/logger";
 import logger from "./logger.js";
 // function logger.info(message: string) { functions.logger.logger.info(`FakeDataPopulator   |   ${message}`); };
 // function logObject(obj: any) {functions.logger.logger.info("Object logged: ", obj)};
@@ -102,7 +103,7 @@ export class FakeDataPopulator {
       return likes.size;
     } catch (error) {
       logger.info("error generating likes");
-      logger.info(error);
+      log(error);
       return 0;
     }
   }
@@ -130,7 +131,7 @@ export class FakeDataPopulator {
       return comments.size;
     } catch (error) {
       logger.info("error generating comments");
-      logger.info(error);
+      log(error);
       return 0;
     }
   }
@@ -162,7 +163,7 @@ export class FakeDataPopulator {
       return reviews.size;
     } catch (error) {
       logger.info("error in generateReviewers");
-      logger.info(error);
+      log(error);
       return 0;
     }
   }
@@ -175,7 +176,7 @@ export class FakeDataPopulator {
     try {
       await this.generatePostDocument(postId).set(post.toMap());
     } catch (error) {
-     logger.info(error);
+     log(error);
     }
   }
 

@@ -4,6 +4,7 @@ import { QuerySnapshot } from "firebase-admin/firestore";
 import * as express from "express";
 import {firestore} from "../../../..";
 import logger from "../../../../services/logger";
+import { log } from "firebase-functions/logger";
 const router = express.Router();
 
 router.get("/api/notifications/getNotifications/:userId/:count", async (req, res) => {
@@ -25,7 +26,7 @@ router.get("/api/notifications/getNotifications/:userId/:count", async (req, res
         }
         return res.status(200).send({status: "Success", data: queryDocsData});
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -43,7 +44,7 @@ router.delete("/api/notifications/clearNotifications/:userId", async (req, res) 
         await batch.commit();
         return res.status(200).send({status: "Success", data: queryDocsData});
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });

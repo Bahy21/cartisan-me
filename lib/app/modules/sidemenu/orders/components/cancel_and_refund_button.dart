@@ -19,7 +19,6 @@ class CancelAndRefundButton extends StatefulWidget {
 }
 
 class _CancelAndRefundButtonState extends State<CancelAndRefundButton> {
-  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,38 +27,24 @@ class _CancelAndRefundButtonState extends State<CancelAndRefundButton> {
         borderRadius: BorderRadius.circular(20),
         child: InkWell(
           onTap: () async {
-            if (_isLoading) return;
-            try {
-              setState(() {
-                _isLoading = true;
-              });
-              await cancelOrderItem(
-                widget.order,
-                widget.orderItem,
-              );
-            } finally {
-              setState(() {
-                _isLoading = false;
-              });
-            }
+            await cancelOrderItem(
+              widget.order,
+              widget.orderItem,
+            );
           },
           child: Container(
             color: Colors.red[700],
             alignment: Alignment.center,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-              child: _isLoading
-                  ? CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    )
-                  : Text(
-                      "Cancel Item And Refund".toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+              child: Text(
+                "Cancel Item And Refund".toUpperCase(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ),

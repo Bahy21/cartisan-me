@@ -4,6 +4,7 @@ import { ReportModel } from "../../../../../models/report_model";
 
 import * as express from "express";
 import logger from "../../../../../services/logger";
+import { log } from "firebase-functions/logger";
 const router = express.Router();
 
 // report user
@@ -24,7 +25,7 @@ router.post("/api/social/reportUser/:userId", async (req, res)=>{
       await db.userReportsCollection.doc(reportId).set(report.toMap());
       return res.status(200).send({status: "Success", data: "Report Sent"});
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
@@ -46,7 +47,7 @@ router.post("/api/social/reportUser/:userId", async (req, res)=>{
       await db.userReportsCollection.doc(reportId).set(report.toMap());
       return res.status(200).send({status: "Success", data: "Report Sent"});
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });

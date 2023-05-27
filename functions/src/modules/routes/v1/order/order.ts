@@ -126,7 +126,7 @@ router.post("/api/order/newOrder/:userId", async (req, res) => {
         await batch.commit();
         return res.status(200).send({status: "Success", data: order.toMap()});
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 
@@ -142,7 +142,7 @@ router.put("/api/order/updateOrderStatus/:orderId", async (req, res) => {
         await orderDocRef.update({orderStatus: newStatusEnum});
         return res.status(200).send({status: "Success", msg: `Order ${orderId} has been updated to ${newStatusEnum}`})
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -163,11 +163,12 @@ router.put("/api/order/updateOrderItemStatus/:orderId", async (req, res) => {
             throw Error(`No order of ID ${orderItemIdToBeChanged} found`);
         } else {
             order.orderItems[index].status = newStatusEnum;
-            orderDocRef.update({"orderItems":order.orderItems});
+            orderDocRef.update({"orderItems":order.orderItems.map((orderItem)=>orderItem.toMap())});
         }
         return res.status(200).send({status: "Success", msg: `Item ${orderItemIdToBeChanged} in Order ${orderId} has been updated to ${newStatusEnum}`})
     } catch (error) {
-        logger.info(error);
+        log(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -179,7 +180,7 @@ router.get("/api/order/getOrder/:orderId", async (req, res) => {
         const order = orderFromDoc(await orderDocRef.get());
         return res.status(200).send({status: "Success", data: order.toMap()})
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -191,7 +192,7 @@ router.delete("/api/order/deleteOrder/:orderId", async (req, res) => {
         await orderDocRef.delete();
         return res.status(200).send({status: "Success", msg: `Order ${orderId} has been successfully deleted`})
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -208,7 +209,7 @@ router.get("/api/order/getPurchasedOrders/:userId", async (req, res) => {
         return res.status(200).send({status: "Success", data: orderList.map((order)=>order.toMap())})
     } catch (error) {
         log(error);
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -225,7 +226,7 @@ router.get("/api/order/getSoldOrders/:userId", async (req, res) => {
         return res.status(200).send({status: "Success", data: orderList.map((order)=>order.toMap())})
     } catch (error) {
         log(error);
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });

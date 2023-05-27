@@ -3,6 +3,7 @@ import * as db from "../../../../services/database";
 import { userFromDoc } from "../../../../services/functions";
 import * as express from "express";
 import logger from "../../../../services/logger";
+import { log } from "firebase-functions/logger";
 const router = express.Router();
 
 
@@ -14,7 +15,7 @@ router.put("/api/post/likePost/:userId/:postId", async (req, res) => {
         await likesRef.doc(userId).set({"timestamp": Date.now()});
         return res.status(200).send({status: "Success", msg: `${userId} liked ${postId}`}); 
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -27,7 +28,7 @@ router.delete("/api/post/unlikePost/:userId/:postId", async (req, res) => {
         await likesRef.doc(userId).delete();
         return res.status(200).send({status: "Success", msg: `${userId} unliked ${postId}`}); 
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -43,7 +44,7 @@ router.get("/api/post/isLiked/:userId/:postId", async (req, res) => {
             return res.status(200).send({status: "Success", liked: false});
         }
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -73,7 +74,7 @@ router.get("/api/post/getLikes/:postId", async (req, res) => {
         
         return res.status(200).send({status: "Success", data: usersWhoLiked});
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
 });

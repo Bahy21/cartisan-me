@@ -4,6 +4,7 @@ import * as db from "../../../../services/database";
 
 import { NotificationModel } from "../../../../models/notification_model";
 import logger from "../../../../services/logger";
+import { log } from "firebase-functions/logger";
 
 exports.sendNotificationToIndividual = functions.https.onCall((data, _) =>
   sendNotification(data)
@@ -54,7 +55,7 @@ export async function sendNotification(request: {
     newNotif.notificationId = notifId;
     db.userNotificationCollection(request.uid).doc(notifId).set(newNotif.toMap());
   } catch (error) {
-    logger.info(error);
+    log(error);
     return false;
   }
   try {
@@ -101,7 +102,7 @@ exports.sendNotificationToList = functions.https.onCall(
       newNotif.notificationId = notifId;
       db.userNotificationCollection(request.uid).doc(notifId).set(newNotif.toMap());
     } catch (error) {
-      logger.info(error);
+      log(error);
       return false;
     }
     try {

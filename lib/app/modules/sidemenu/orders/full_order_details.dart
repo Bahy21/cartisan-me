@@ -7,6 +7,7 @@ import 'package:cartisan/app/modules/cart/components/address_card.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/components/order_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class FullOrderDetails extends StatelessWidget {
   final OrderModel order;
@@ -21,49 +22,96 @@ class FullOrderDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 20.h),
-        decoration: BoxDecoration(
-          color: AppColors.kFilledColor,
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              OrderDetailsCard(
-                orderId: order.orderId,
-                timestamp: order.timestamp,
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              AddressCard(
-                addressModel: order.shippingAddress,
-              ),
-              SizedBox(
-                height: AppSpacing.seventeenHorizontal,
-              ),
-              ListView.separated(
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return OrderItemCard(
-                    orderItem: order.orderItems[index],
-                    order: order,
-                    itemIndex: index,
-                    product: (posts[order.orderItems[index].orderItemID]
-                            as PostResponse)
-                        .post,
-                    buyer: buyer,
-                  );
-                },
-                separatorBuilder: (context, index) => SizedBox(
-                  height: 10.w,
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 20.h),
+          decoration: BoxDecoration(
+            color: AppColors.kFilledColor,
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Order Details',
+                  style: AppTypography.kExtraLight18,
                 ),
-                itemCount: order.orderItems.length,
-              ),
-            ],
+                SizedBox(
+                  height: AppSpacing.eightVertical,
+                ),
+                OrderDetailsCard(
+                  orderId: order.orderId,
+                  timestamp: order.timestamp,
+                ),
+                const Divider(
+                  color: AppColors.kWhite,
+                ),
+                SizedBox(
+                  height: AppSpacing.eightVertical,
+                ),
+                Text(
+                  'Shipping Address',
+                  style: AppTypography.kExtraLight18,
+                ),
+                SizedBox(
+                  height: AppSpacing.eightVertical,
+                ),
+                AddressCard(
+                  addressModel: order.shippingAddress,
+                ),
+                SizedBox(
+                  height: AppSpacing.eightVertical,
+                ),
+                const Divider(
+                  color: AppColors.kWhite,
+                ),
+                SizedBox(
+                  height: AppSpacing.eightVertical,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Order Item(s)',
+                      style: AppTypography.kExtraLight18,
+                    ),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0.w),
+                        child: Text('(auto) ${order.orderStatus.name}'),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: AppSpacing.eightVertical,
+                ),
+                ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return OrderItemCard(
+                      orderItem: order.orderItems[index],
+                      order: order,
+                      itemIndex: index,
+                      product: (posts[order.orderItems[index].orderItemID]
+                              as PostResponse)
+                          .post,
+                      buyer: buyer,
+                    );
+                  },
+                  separatorBuilder: (context, index) => SizedBox(
+                    height: 10.w,
+                  ),
+                  itemCount: order.orderItems.length,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -83,7 +131,8 @@ class OrderDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 13.w, right: 13.0.w, top: 19.h),
+      width: double.maxFinite,
+      padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 19.h),
       decoration: BoxDecoration(
         color: AppColors.kGrey,
         borderRadius: BorderRadius.circular(10.r),
@@ -95,8 +144,11 @@ class OrderDetailsCard extends StatelessWidget {
             'Order ID: $orderId',
             style: AppTypography.kMedium16,
           ),
+          SizedBox(
+            height: AppSpacing.sixVertical,
+          ),
           Text(
-            'Ordered At: ${DateTime.fromMillisecondsSinceEpoch(timestamp)}',
+            'Ordered At: ${DateFormat.yMMMd().format(DateTime.fromMillisecondsSinceEpoch(timestamp))} @ ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(timestamp))}',
             style: AppTypography.kExtraLight12,
           ),
         ],

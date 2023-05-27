@@ -3,6 +3,7 @@ import { onAccountUpdated, onPaymentFailed, onPaymentSucceeded } from "../paymen
 import express = require("express");
 import { stripeWebhookReportsReference } from "../../../../services/database";
 import logger from "../../../../services/logger";
+import { log } from "firebase-functions/logger";
 const router = express.Router();
 
 
@@ -26,7 +27,7 @@ router.post("/api/payment/stripe/webhook", async (req, res) => {
       return res.status(200).send();
   
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
   });

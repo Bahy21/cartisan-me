@@ -7,6 +7,7 @@ import { CollectionReference, DocumentReference, DocumentSnapshot } from "fireba
 import { PostModel } from "../../../../models/post_model";
 import * as express from "express";
 import logger from "../../../../services/logger";
+import { log } from "firebase-functions/logger";
 const router = express.Router();
 
 // create user
@@ -44,7 +45,7 @@ router.post("/api/user/createUser/:userId", async (req, res) => {
       await db.userFollowingCollection(userId).doc(userId).set({userId: true})
       return res.status(200).send({status: "Success", data: `Successfully created user ${userId}`});
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
 });
@@ -62,7 +63,7 @@ router.get("/api/user/getUser/:userId", async (req, res) => {
     const user: UserModel = userFromDoc(userDocSnap);
     return res.status(200).send({status: `Success in fetching user ${userId}`, data: user.toMap()});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -87,7 +88,7 @@ router.get("/api/user/getAllPosts/:userId", async (req, res) => {
     
     return res.status(200).send({status: "Success", data: posts});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -103,7 +104,7 @@ router.put("/api/user/addAddress/:userId", async (req, res) => {
     await addressDoc.doc().set(address.toMap());
     return res.status(200).send({status: "Success", data: `Successfully added address for user ${userId}`});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -120,7 +121,7 @@ router.get("/api/user/getAllAddresses/:userId", async (req, res) => {
     });
     return res.status(200).send({status: "Success", data: addresses});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -135,7 +136,7 @@ router.put("/api/user/updateAddress/:userId/:addressId", async (req, res) => {
     await addressDoc.update(address.toMap());
     return res.status(200).send({status: "Success", data: `Successfully added address for user ${userId}`});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -149,7 +150,7 @@ router.delete("/api/user/deleteAddress/:userId/:addressId", async (req, res) => 
     await addressDoc.delete();
     return res.status(200).send({status: "Success", data: `Successfully added address for user ${userId}`});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -169,7 +170,7 @@ router.put("/api/user/updateArea/:userId", async (req, res) => {
     })
     return res.status(200).send({status: "Success", data: `Successfully added address for user ${userId}`});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -198,7 +199,7 @@ router.put("/api/user/updateDeliveryInfo/:userId", async (req, res) => {
     })
     return res.status(200).send({status: "Success", data: `Successfully updated delivery info for ${userId}`});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -212,7 +213,7 @@ router.put("/api/user/updateUser/:userId", async (req, res) => {
     userDoc.update(updatedUser.toMap());
     return res.status(200).send({status: "Success", data: `Successfully updated delivery info for ${userId}`});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -227,7 +228,7 @@ router.get("/api/user/getPostCount/:userId", async (req, res) => {
     const postCount = queryResult.data().count;
     return res.status(200).send({ status: "Success", data: postCount });
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({ status: "Failed", msg: error.message });
   }
 });

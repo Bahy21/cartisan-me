@@ -6,6 +6,7 @@ import { PostModel } from "../../../../models/post_model";
 import { CartItemModel } from "../../../../models/cart_item_model";
 import * as express from "express";
 import logger from "../../../../services/logger";
+import { log } from "firebase-functions/logger";
 const router = express.Router();
 
 // add to cart
@@ -51,7 +52,7 @@ router.put("/api/user/addToCart/:userId/:postId", async(req,res)=>{
       }
       return res.status(200).send({status: "Success", msg: `Product ${postId} added to cart`});
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
@@ -70,7 +71,7 @@ router.delete("/api/user/deleteFromCart/:userId/:itemId", async(req,res)=>{
     }
     return res.status(200).send({status: "Success", msg: `Product ${itemId} deleted from cart`});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -83,7 +84,7 @@ router.delete("/api/user/clearCart/:userId", async(req,res)=>{
     await new Promise((resolve, reject)=>{deleteQueryBatch(db, cartRef, resolve).catch(reject);});
     return res.status(200).send({status: "Success", msg: `Cart for ${userId} cleared`});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
 }});
 
@@ -101,7 +102,7 @@ router.get("/api/user/getPostsFromCart/:userId", async (req, res) => {
     });
     return res.status(200).send({status: "Success", data: postsFromCart});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -119,7 +120,7 @@ router.get("/api/user/getCart/:userId", async(req,res)=>{
     }
     return res.status(200).send({status: "Success", data: itemsFromCart});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });
@@ -134,7 +135,7 @@ router.put("/api/user/setCartItemCount/:userId/:cartItemId", async(req,res)=>{
     cartRef.update({'quantity': amount});
     return res.status(200).send({status: "Success"});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });

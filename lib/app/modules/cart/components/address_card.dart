@@ -16,7 +16,7 @@ class AddressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 13.w, right: 13.0.w, top: 19.h),
+      padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 19.h),
       decoration: BoxDecoration(
         color: AppColors.kGrey,
         borderRadius: BorderRadius.circular(10.r),

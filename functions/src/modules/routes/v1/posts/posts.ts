@@ -6,7 +6,7 @@ import * as express from "express";
 import { DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
 import { UserModel } from "../../../../models/user_model";
 import logger from "../../../../services/logger";
-
+import { log } from "firebase-functions/logger";
 const router = express.Router();
 
 
@@ -25,7 +25,7 @@ router.get("/api/post/getPost/:postId", async (req, res) => {
       return res.status(500).send({ status: "Failed", msg: `Document ${req.params.postId} does not exist` });
     }
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({ status: "Failed", msg: error.message });
   }
 });
@@ -64,7 +64,7 @@ router.post("/api/newPost/:userId", async (req, res) => {
     await db.postsCollection.doc(postId).set(post.toMap());
     return res.status(200).send({ status: "Success", data: `post written with ID: ${postId}` });
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({ status: "Failed", msg: error.message });
   }
 });
@@ -82,7 +82,7 @@ router.delete("/api/post/deletePost/:postId", async (req, res) => {
       return res.status(500).send({ status: "Failed", msg: `Document ${req.params.postId} does not exist` });
     }
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({ status: "Failed", msg: error.message });
   }
 });

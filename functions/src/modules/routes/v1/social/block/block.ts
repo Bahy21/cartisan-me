@@ -2,6 +2,7 @@
 import * as db from "../../../../../services/database";
 import * as express from "express";
 import logger from "../../../../../services/logger";
+import { log } from "firebase-functions/logger";
 const router = express.Router();
 
 // block user
@@ -15,7 +16,7 @@ router.put("/api/social/blockUser/:blockerId/:blockedId", async(req,res) => {
       })
       return res.status(200).send({status: "Success", data: `User ${blockedId} succesfully blocked by ${blockerId}`});
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
@@ -28,7 +29,7 @@ router.put("/api/social/blockUser/:blockerId/:blockedId", async(req,res) => {
       await db.userBlockedUsersCollection(blockerId).doc(blockedId).delete();
       return res.status(200).send({status: "Success", data: `User ${blockedId} succesfully unblocked by ${blockerId}`});
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
@@ -45,7 +46,7 @@ router.put("/api/social/blockUser/:blockerId/:blockedId", async(req,res) => {
         return res.status(500).send({status: false, data: `User ${blockedId} is not blocked by ${blockerId}`});
       }
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
@@ -67,7 +68,7 @@ router.get("/api/social/getBlockList/:userId", async(req,res)=>{
           });
       return res.status(200).send({status: "Success", data: blockList});
     } catch (error) {
-        logger.info(error);
+        log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }
    });

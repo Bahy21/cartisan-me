@@ -5,6 +5,7 @@ import { CollectionReference, QuerySnapshot } from "firebase-admin/firestore";
 import * as express from "express";
 import { PostResponse } from "../../../../models/post_response";
 import logger from "../../../../services/logger";
+import { log } from "firebase-functions/logger";
 const router = express.Router();
 
 // fetch timeline posts
@@ -49,7 +50,7 @@ router.get("/api/timeline/fetchPosts/:userId/:count", async(req,res)=>{
     } 
     return res.status(200).send({status: "Success", result: responseResult});
   } catch (error) {
-    logger.info(error);
+    log(error);
     return res.status(500).send({status: "Failed", msg: error.message});
   }
 });

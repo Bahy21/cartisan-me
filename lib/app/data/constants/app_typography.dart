@@ -38,6 +38,8 @@ class AppTypography {
       GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.w600);
 
   // Bold - 700.
+  static TextStyle kBold12 =
+      GoogleFonts.inter(fontSize: 12.sp, fontWeight: FontWeight.w700);
   static TextStyle kBold14 =
       GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.w700);
   static TextStyle kBold16 =

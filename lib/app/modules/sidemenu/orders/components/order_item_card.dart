@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cartisan/app/data/constants/app_spacing.dart';
+import 'package:cartisan/app/data/constants/app_typography.dart';
 import 'package:cartisan/app/models/order_item_model.dart';
 import 'package:cartisan/app/models/order_item_status.dart';
 import 'package:cartisan/app/models/order_model.dart';
@@ -10,6 +12,7 @@ import 'package:cartisan/app/modules/sidemenu/orders/components/cancel_and_refun
 import 'package:cartisan/app/modules/sidemenu/orders/components/change_order_status_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class OrderItemCard extends StatefulWidget {
@@ -40,9 +43,7 @@ class _OrderItemCardState extends State<OrderItemCard> {
       widget.orderItem.status == OrderItemStatus.awaitingFulfillment &&
       !widget.isCheckout;
 
-  bool get isEditable =>
-      widget.sellerMode &&
-      [
+  bool get isEditable => [
         OrderItemStatus.awaitingFulfillment,
         OrderItemStatus.awaitingShipment,
         OrderItemStatus.shipped,
@@ -52,41 +53,51 @@ class _OrderItemCardState extends State<OrderItemCard> {
         OrderItemStatus.pending,
         OrderItemStatus.awaitingPayment,
       ].contains(widget.orderItem.status);
-//setstate call horhi? idk
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Divider(
-          color: Colors.white,
-        ),
-        ListTile(
-          leading: CachedNetworkImage(
-            imageUrl: widget.product.images.first,
-            width: 50,
-            placeholder: (context, url) =>
-                Center(child: CircularProgressIndicator.adaptive()),
-            errorWidget: (context, url, dynamic error) => Icon(Icons.error),
+        Row(children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10.r),
+            child: CachedNetworkImage(
+              imageUrl: widget.product.images.first,
+              width: 50.w,
+              placeholder: (context, url) =>
+                  const Center(child: CircularProgressIndicator.adaptive()),
+              errorWidget: (
+                context,
+                url,
+                dynamic error,
+              ) =>
+                  const Icon(Icons.error),
+            ),
           ),
-          title: Text(widget.product.productName),
-          subtitle: Text('For: ${widget.buyer.profileName}'),
-          trailing: showStatus
-              ? Card(
-                  color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      widget.orderItem.status.name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                )
-              : null,
-        ),
+          SizedBox(
+            width: AppSpacing.eightHorizontal,
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.product.productName,
+                style: AppTypography.kBold14,
+              ),
+              Text(
+                'For: ${widget.buyer.profileName}',
+                style: AppTypography.kExtraLight12,
+              ),
+            ],
+          ),
+          Spacer(),
+          if (showStatus)
+            ChangeOrderStatusButton(
+              order: widget.order,
+              orderItem: widget.orderItem,
+            ),
+        ]),
         Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -148,11 +159,6 @@ class _OrderItemCardState extends State<OrderItemCard> {
         ),
         if (cancelable)
           CancelAndRefundButton(
-            order: widget.order,
-            orderItem: widget.orderItem,
-          ),
-        if (isEditable)
-          ChangeOrderStatusButton(
             order: widget.order,
             orderItem: widget.orderItem,
           ),

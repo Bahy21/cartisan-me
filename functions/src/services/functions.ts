@@ -11,6 +11,7 @@ import { OrderItemModel } from "../models/order_item_model";
 // 
 import { userCollection } from "./database";
 import logger from "./logger";
+import { log } from "firebase-functions/logger";
 
 
 export function postFromDoc(doc:firestore.DocumentSnapshot): PostModel{
@@ -431,7 +432,7 @@ export function deliveryOptionFromIndex(index: number,): DeliveryOptions{
     const user: UserModel = userFromDoc(userDocSnap);
     return user;
   } catch (error) {
-    logger.info(error);
+    log(error);
     return null;
   }
 

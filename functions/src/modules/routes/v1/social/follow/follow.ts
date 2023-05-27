@@ -3,6 +3,7 @@ import * as db from "../../../../../services/database";
 import { DocumentSnapshot, QuerySnapshot } from "firebase-admin/firestore";
 import * as express from "express";
 import logger from "../../../../../services/logger";
+import { log } from "firebase-functions/logger";
 const router = express.Router();
 
 
@@ -16,7 +17,7 @@ router.put("/api/social/followUser/:userId/:followId", async(req,res) => {
       await db.userFollowersCollection(followId).doc(userId).set({timestamp: Date.now()});   
       return res.status(200).send({status: "Success", data: `User ${userId} succesfully following ${followId}`});
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
@@ -33,7 +34,7 @@ router.put("/api/social/followUser/:userId/:followId", async(req,res) => {
         return res.status(500).send({status: "Failure", data: false});
       }
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
@@ -53,7 +54,7 @@ router.put("/api/social/followUser/:userId/:followId", async(req,res) => {
         return res.status(500).send({status: "Failed", msg: "Unsuccesful, check IDs"});
       }
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
@@ -77,7 +78,7 @@ router.put("/api/social/followUser/:userId/:followId", async(req,res) => {
       })
       return res.status(200).send({status: "Success", data: followers});
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });
@@ -100,7 +101,7 @@ router.put("/api/social/followUser/:userId/:followId", async(req,res) => {
       });
       return res.status(200).send({status: "Success", data: followers});
     } catch (error) {
-      logger.info(error);
+      log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
     }
   });

@@ -2,7 +2,9 @@ import 'package:cartisan/app/controllers/sales_history_controller.dart';
 import 'package:cartisan/app/models/order_item_model.dart';
 import 'package:cartisan/app/models/order_item_status.dart';
 import 'package:cartisan/app/models/order_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/instance_manager.dart';
 
 class UpdateStatusCard extends StatelessWidget {
@@ -30,39 +32,37 @@ class UpdateStatusCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Wrap(
-            children: List.generate(
-              updatableStatus.length,
-              (index) => ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: InkWell(
-                  onTap: () {
-                    Get.find<SalesHistoryController>().updateOrderItemStatus(
-                      orderId: orderId,
-                      orderItemId: orderItem.orderItemID,
-                      status: updatableStatus[index],
-                    );
-                  },
-                  child: Container(
-                    color: orderItem.status == updatableStatus[index]
-                        ? Colors.pink
-                        : Colors.transparent,
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 20,
-                      ),
-                      child: Text(
-                        updatableStatus[index]
-                            .toString()
-                            .replaceAll('OrderItemStatus.', ''),
-                        style: TextStyle(
-                          color: orderItem.status == updatableStatus[index]
-                              ? Colors.white
-                              : Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
+          ...List.generate(
+            updatableStatus.length,
+            (index) => ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: InkWell(
+                onTap: () {
+                  Get.find<SalesHistoryController>().updateOrderItemStatus(
+                    orderId: orderId,
+                    orderItemId: orderItem.orderItemID,
+                    status: updatableStatus[index],
+                  );
+                },
+                child: Container(
+                  color: orderItem.status == updatableStatus[index]
+                      ? Colors.pink
+                      : Colors.transparent,
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 20,
+                    ),
+                    child: Text(
+                      updatableStatus[index]
+                          .toString()
+                          .replaceAll('OrderItemStatus.', ''),
+                      style: TextStyle(
+                        color: orderItem.status == updatableStatus[index]
+                            ? Colors.white
+                            : Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -75,3 +75,5 @@ class UpdateStatusCard extends StatelessWidget {
     );
   }
 }
+
+//
