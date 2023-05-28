@@ -17,7 +17,7 @@ class SearchResultTile extends StatelessWidget {
       onTap: () => Get.to<Widget>(() => PostFullScreen(postId: post.postId)),
       horizontalTitleGap: 10.w,
       visualDensity: const VisualDensity(vertical: 1),
-      titleAlignment: ListTileTitleAlignment.center,
+      // titleAlignment: ListTileTitleAlignment.center,
       leading: CircleAvatar(
         radius: 30.r,
         backgroundColor: Colors.black,

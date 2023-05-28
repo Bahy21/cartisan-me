@@ -25,7 +25,7 @@ class SoldOrders extends StatelessWidget {
             child: CircularProgressIndicator.adaptive(),
           );
         }
-        return RefreshIndicator.adaptive(
+        return RefreshIndicator(
           onRefresh: () async {
             await sc.loadSalesFromApi();
           },
