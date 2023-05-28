@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/modules/profile/become_a_seller.dart';
 import 'package:cartisan/app/modules/profile/components/custom_bottom_sheet.dart';
 import 'package:cartisan/app/modules/profile/components/stripe_button.dart';
 import 'package:cartisan/app/services/database.dart';
@@ -34,6 +35,10 @@ class _EditStoreViewState extends State<EditStoreView> {
       newProfileImage = null;
     });
     return url;
+  }
+
+  Widget _buildStripeButton() {
+    return StripeSection();
   }
 
   @override
@@ -142,15 +147,6 @@ class _EditStoreViewState extends State<EditStoreView> {
         ),
       );
     });
-  }
-
-  Widget _buildStripeButton() {
-    return uc.currentUser!.isActiveSeller
-        ? StripeSection()
-        : HighImportanceTaskButton(
-            onTap: () {},
-            text: "Become a Seller",
-          );
   }
 }
 
