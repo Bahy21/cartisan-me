@@ -20,7 +20,7 @@ class PurchasedOrder extends StatelessWidget {
       if (pc.purchases.isEmpty) {
         return const Center(child: CircularProgressIndicator.adaptive());
       }
-      return RefreshIndicator.adaptive(
+      return RefreshIndicator(
         onRefresh: () async {
           await pc.loadPurchasesFromApi();
         },

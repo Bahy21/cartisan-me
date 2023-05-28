@@ -1,5 +1,3 @@
-import 'package:cartisan/app/data/constants/app_spacing.dart';
-import 'package:cartisan/app/modules/chat/components/data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

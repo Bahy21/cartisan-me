@@ -112,7 +112,7 @@ class _TimelineViewState extends State<TimelineView> {
             );
           }
           log('now displaying live');
-          return RefreshIndicator.adaptive(
+          return RefreshIndicator(
             onRefresh: () => Future.sync(
               _pagingController.refresh,
             ),
