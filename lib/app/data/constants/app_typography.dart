@@ -56,4 +56,6 @@ class AppTypography {
   // Extra Bold - 800.
   static TextStyle kExtraBold20 =
       GoogleFonts.inter(fontSize: 20.sp, fontWeight: FontWeight.w800);
+  static TextStyle kExtraBold32 =
+      GoogleFonts.inter(fontSize: 32.sp, fontWeight: FontWeight.w800);
 }

@@ -171,71 +171,78 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                             height: AppSpacing.eighteenVertical,
                           ),
                           SizedBox(height: AppSpacing.eighteenVertical),
-                          Text(
-                            'State',
-                            style: AppTypography.kBold14,
-                          ),
-                          CustomTextFormField(
-                            controller: _stateController,
-                            validator: (value) {
-                              return null;
-                            },
-                            hintText: currentUser.state.isEmpty
-                                ? 'Enter your state here'
-                                : currentUser.state,
-                          ),
-                          SizedBox(height: AppSpacing.eighteenVertical),
-                          Text(
-                            'Tax Percentage',
-                            style: AppTypography.kBold14,
-                          ),
-                          CustomTextFormField(
-                            controller: _taxController,
-                            validator: (value) {
-                              return null;
-                            },
-                            hintText: currentUser.taxPercentage == null
-                                ? 'Enter tax here'
-                                : currentUser.taxPercentage.toString(),
-                          ),
-                          SizedBox(height: 25.h),
-                          Text(
-                            'More Options',
-                            style: AppTypography.kBold14,
-                          ),
-                          CustomSwitch(
-                            isDisabled: !_isSeller,
-                            text: 'Pick Up Available',
-                            value: _pickUpAvailable,
-                            onChanged: (value) {
-                              setState(() {
-                                _pickUpAvailable = value;
-                              });
-                            },
-                          ),
-                          CustomSwitch(
-                            isDisabled: !_isSeller,
-                            text: 'Shipping Available',
-                            value: _shippingAvailable,
-                            onChanged: (value) {
-                              setState(() {
-                                _shippingAvailable = value;
-                              });
-                            },
-                          ),
-                          CustomSwitch(
-                            isDisabled: !_isSeller,
-                            text: 'Delivery Available',
-                            value: _deliveryAvailable,
-                            onChanged: (value) {
-                              setState(() {
-                                _deliveryAvailable = value;
-                              });
-                            },
-                          ),
-                          SizedBox(
-                            height: 50.0.h,
-                          ),
+                          if (uc.currentUser?.isActiveSeller ?? false)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'State',
+                                  style: AppTypography.kBold14,
+                                ),
+                                CustomTextFormField(
+                                  controller: _stateController,
+                                  validator: (value) {
+                                    return null;
+                                  },
+                                  hintText: currentUser.state.isEmpty
+                                      ? 'Enter your state here'
+                                      : currentUser.state,
+                                ),
+                                SizedBox(height: AppSpacing.eighteenVertical),
+                                Text(
+                                  'Tax Percentage',
+                                  style: AppTypography.kBold14,
+                                ),
+                                CustomTextFormField(
+                                  controller: _taxController,
+                                  validator: (value) {
+                                    return null;
+                                  },
+                                  hintText: currentUser.taxPercentage == null
+                                      ? 'Enter tax here'
+                                      : currentUser.taxPercentage.toString(),
+                                ),
+                                SizedBox(height: 25.h),
+                                Text(
+                                  'More Options',
+                                  style: AppTypography.kBold14,
+                                ),
+                                CustomSwitch(
+                                  isDisabled: !_isSeller,
+                                  text: 'Pick Up Available',
+                                  value: _pickUpAvailable,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _pickUpAvailable = value;
+                                    });
+                                  },
+                                ),
+                                CustomSwitch(
+                                  isDisabled: !_isSeller,
+                                  text: 'Shipping Available',
+                                  value: _shippingAvailable,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _shippingAvailable = value;
+                                    });
+                                  },
+                                ),
+                                CustomSwitch(
+                                  isDisabled: !_isSeller,
+                                  text: 'Delivery Available',
+                                  value: _deliveryAvailable,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _deliveryAvailable = value;
+                                    });
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 50.0.h,
+                                ),
+                              ],
+                            ),
                           PrimaryButton(
                             onTap: updateUserDetails,
                             text: 'Save Changes',

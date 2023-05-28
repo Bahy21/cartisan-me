@@ -38,7 +38,14 @@ class _EditStoreViewState extends State<EditStoreView> {
   }
 
   Widget _buildStripeButton() {
-    return StripeSection();
+    return uc.currentUser!.isActiveSeller
+        ? StripeSection()
+        : HighImportanceTaskButton(
+            onTap: () {
+              Get.to<Widget>(BecomeASeller.new);
+            },
+            text: "Become a Seller",
+          );
   }
 
   @override
