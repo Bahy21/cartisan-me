@@ -141,10 +141,10 @@ class _EditStoreViewState extends State<EditStoreView> {
               ),
               _buildStripeButton(),
               SizedBox(
-                height: 10.h,
+                height: AppSpacing.tenVertical,
               ),
               SizedBox(
-                height: 10.h,
+                height: AppSpacing.tenVertical,
               ),
               CustomBottomSheet(
                 updateUserImage: uploadNewProfileImage,

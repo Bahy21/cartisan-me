@@ -11,7 +11,9 @@ class NotificationModel {
   int timestamp;
   String username;
   String userProfileImg;
-
+  String? chatRoomId;
+  String? postId;
+  String? orderId;
   NotificationModel({
     required this.notificationId,
     required this.ownerId,
@@ -20,6 +22,9 @@ class NotificationModel {
     required this.timestamp,
     required this.username,
     required this.userProfileImg,
+    this.chatRoomId,
+    this.postId,
+    this.orderId,
   });
 
   NotificationModel copyWith({
@@ -30,6 +35,9 @@ class NotificationModel {
     int? timestamp,
     String? username,
     String? userProfileImg,
+    String? chatRoomId,
+    String? postId,
+    String? orderId,
   }) {
     return NotificationModel(
       notificationId: notificationId ?? this.notificationId,
@@ -39,6 +47,9 @@ class NotificationModel {
       timestamp: timestamp ?? this.timestamp,
       username: username ?? this.username,
       userProfileImg: userProfileImg ?? this.userProfileImg,
+      chatRoomId: chatRoomId ?? this.chatRoomId,
+      postId: postId ?? this.postId,
+      orderId: orderId ?? this.orderId,
     );
   }
 
@@ -63,6 +74,9 @@ class NotificationModel {
       timestamp: map['timestamp'] as int,
       username: map['username'] as String,
       userProfileImg: map['userProfileImg'] as String,
+      chatRoomId: map['chatRoomId'] as String?,
+      postId: map['postId'] as String?,
+      orderId: map['orderId'] as String?,
     );
   }
 
@@ -73,7 +87,7 @@ class NotificationModel {
 
   @override
   String toString() {
-    return 'NotificationModel(notificationId: $notificationId, ownerId: $ownerId, userId: $userId, type: $type, timestamp: $timestamp, username: $username, userProfileImg: $userProfileImg)';
+    return 'NotificationModel(notificationId: $notificationId, ownerId: $ownerId, userId: $userId, type: $type, timestamp: $timestamp, username: $username, userProfileImg: $userProfileImg , chatRoomId: $chatRoomId, postId: $postId, orderId: $orderId)';
   }
 
   @override
@@ -86,7 +100,10 @@ class NotificationModel {
         other.type == type &&
         other.timestamp == timestamp &&
         other.username == username &&
-        other.userProfileImg == userProfileImg;
+        other.userProfileImg == userProfileImg &&
+        other.chatRoomId == chatRoomId &&
+        other.postId == postId &&
+        other.orderId == orderId;
   }
 
   @override
@@ -97,6 +114,9 @@ class NotificationModel {
         type.hashCode ^
         timestamp.hashCode ^
         username.hashCode ^
-        userProfileImg.hashCode;
+        userProfileImg.hashCode ^
+        chatRoomId.hashCode ^
+        postId.hashCode ^
+        orderId.hashCode;
   }
 }

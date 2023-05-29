@@ -50,32 +50,19 @@ class SalesHistoryController extends GetxController {
   }
 
   Future<void> updateOrderItemStatus({
-    required String orderId,
-    required String orderItemId,
+    required int orderIndex,
+    required int orderItemIndex,
     required OrderItemStatus status,
   }) async {
     Get.dialog<Widget>(const LoadingDialog());
+    final sale = Get.find<SalesHistoryController>().sales[orderIndex];
     final result = await orderApi.updateOrderItemStatus(
-      orderId: orderId,
-      orderItemId: orderItemId,
+      orderId: sale.orderId,
+      orderItemId: sale.orderItems[orderItemIndex].orderItemID,
       newStatus: status,
     );
     if (result) {
-      _sales.value.asMap().forEach(
-        (key, value) {
-          value.orderItems.asMap().forEach(
-            (index, value) async {
-              if (value.orderItemID == orderItemId) {
-                _sales.value[key].orderItems[index].status = status;
-                await box.write(
-                  'purchases',
-                  _sales.value.map((e) => e.toMap()).toList(),
-                );
-              }
-            },
-          );
-        },
-      );
+      sale.orderItems[orderItemIndex].status = status;
       Get.back<void>();
     } else {
       await showErrorDialog('Error\nFailed to update status');

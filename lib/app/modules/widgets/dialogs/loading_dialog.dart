@@ -8,18 +8,15 @@ class LoadingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: 50.h,
-        maxWidth: 50.w,
-      ),
-      child: Center(
-        child: Lottie.asset(
-          'assets/lottie/loading.json',
-          height: 150.h,
-          width: 150.w,
-          fit: BoxFit.fitHeight,
-        ),
+    return Dialog(
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      child: Lottie.asset(
+        'assets/lottie/loading.json',
+        height: 150.h,
+        width: 150.w,
+        fit: BoxFit.contain,
+        alignment: Alignment.center,
       ),
     );
   }

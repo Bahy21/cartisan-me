@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/controllers/sales_history_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/order_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
@@ -17,14 +18,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class FullSaleCard extends StatelessWidget {
-  final OrderModel order;
+  final int orderIndex;
 
   const FullSaleCard({
-    required this.order,
+    required this.orderIndex,
     super.key,
   });
   String get currentUid => Get.find<AuthService>().currentUser!.uid;
-
+  OrderModel get order => Get.find<SalesHistoryController>().sales[orderIndex];
   Future<Map<String, dynamic>> fetchPostAndUserData() async {
     try {
       final posts = <String, dynamic>{};
@@ -69,7 +70,7 @@ class FullSaleCard extends StatelessWidget {
           onTap: () {
             Get.to<Widget>(
               () => FullOrderDetails(
-                order: order,
+                orderIndex: orderIndex,
                 posts: posts,
                 buyer: buyer,
               ),
@@ -168,8 +169,8 @@ class FullSaleCard extends StatelessWidget {
                     post: (posts[order.orderItems[index].orderItemID]
                             as PostResponse)
                         .post,
-                    orderItem: order.orderItems[index],
-                    orderId: order.orderId,
+                    orderItemIndex: index,
+                    orderIndex: orderIndex,
                   ),
                 ),
               ],

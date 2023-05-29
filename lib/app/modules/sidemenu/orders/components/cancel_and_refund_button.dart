@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CancelAndRefundButton extends StatefulWidget {
-  final OrderModel order;
-  final OrderItemModel orderItem;
+  final int orderIndex;
+  final int orderItemIndex;
   const CancelAndRefundButton({
-    required this.order,
-    required this.orderItem,
+    required this.orderIndex,
+    required this.orderItemIndex,
     Key? key,
   }) : super(key: key);
 
@@ -28,8 +28,8 @@ class _CancelAndRefundButtonState extends State<CancelAndRefundButton> {
         child: InkWell(
           onTap: () async {
             await cancelOrderItem(
-              widget.order,
-              widget.orderItem,
+              widget.orderIndex,
+              widget.orderItemIndex,
             );
           },
           child: Container(

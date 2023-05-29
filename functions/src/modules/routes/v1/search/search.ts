@@ -18,11 +18,11 @@ router.get("/api/search/fetchPosts/:userId/:count", async(req,res)=>{
     const postRef: CollectionReference = db.postsCollection;
     let queryDocs: QuerySnapshot;
     if (lastPostId == null || lastPostId == undefined || lastPostId == ""){
-      queryDocs  = await postRef.orderBy("timestamp","desc").limit(count).get();
+      queryDocs  = await postRef.orderBy("timestamp","desc").where('archived',"==",false).limit(count).get();
     } else {
       const startAt = await postRef.doc(lastPostId.toString()).get();
       const startPost = postFromDoc(startAt);
-        queryDocs  = await postRef.orderBy("timestamp","desc").startAfter(startPost.timestamp).limit(count).get();
+        queryDocs  = await postRef.orderBy("timestamp","desc").where('archived',"==",false).startAfter(startPost.timestamp).limit(count).get();
     }
     let blockList:string[] = <string[]>[];
     await db

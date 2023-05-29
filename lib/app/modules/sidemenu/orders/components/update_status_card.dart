@@ -15,14 +15,17 @@ class UpdateStatusCard extends StatelessWidget {
     OrderItemStatus.awaitingPickup,
     OrderItemStatus.completed,
   ];
-  final OrderItemModel orderItem;
-  final String orderId;
+  final int orderItemIndex;
+  final int orderIndex;
 
   const UpdateStatusCard({
-    required this.orderItem,
-    required this.orderId,
+    required this.orderItemIndex,
+    required this.orderIndex,
     Key? key,
   }) : super(key: key);
+  OrderItemModel get orderItem => Get.find<SalesHistoryController>()
+      .sales[orderIndex]
+      .orderItems[orderItemIndex];
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +42,8 @@ class UpdateStatusCard extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   Get.find<SalesHistoryController>().updateOrderItemStatus(
-                    orderId: orderId,
-                    orderItemId: orderItem.orderItemID,
+                    orderIndex: orderIndex,
+                    orderItemIndex: orderItemIndex,
                     status: updatableStatus[index],
                   );
                 },

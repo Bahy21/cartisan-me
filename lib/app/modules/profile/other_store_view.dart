@@ -128,22 +128,24 @@ class _OtherStoreViewState extends State<OtherStoreView> {
                 style: AppTypography.kMedium18,
               ),
             ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(AppAssets.kCartisanLogo),
-                Text(
-                  '${controller.storeOwner!.username} is blocked',
-                  style: AppTypography.kBold32.copyWith(
-                    color: AppColors.kWhite,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(AppAssets.kCartisanLogo),
+                  Text(
+                    '${controller.storeOwner!.username} is blocked',
+                    style: AppTypography.kBold32.copyWith(
+                      color: AppColors.kWhite,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: AppSpacing.eighteenVertical,
-                ),
-                PrimaryButton(
-                    onTap: () => controller.unblockUser(), text: 'Unblock'),
-              ],
+                  SizedBox(
+                    height: AppSpacing.eighteenVertical,
+                  ),
+                  PrimaryButton(
+                      onTap: () => controller.unblockUser(), text: 'Unblock'),
+                ],
+              ),
             ),
           );
         }

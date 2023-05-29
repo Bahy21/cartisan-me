@@ -5,7 +5,6 @@ import 'package:cartisan/app/modules/auth/auth_wrapper.dart';
 import 'package:cartisan/app/services/translation_service.dart';
 import 'package:cartisan/default_firebase_options.dart';
 import 'package:cartisan/secrets.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';

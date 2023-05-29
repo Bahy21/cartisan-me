@@ -69,14 +69,57 @@ router.post("/api/newPost/:userId", async (req, res) => {
   }
 });
 
-// delete post
-router.delete("/api/post/deletePost/:postId", async (req, res) => {
+// create post
+router.post("/api/updatePost/:postId", async (req, res) => {
+  try {
+    const postId: string = req.params.postId;
+    if (Object.keys(req.body).length === 0) {
+      return res.status(500).send({ status: "Failed", msg: "Empty body" });
+    }
+    const post =  {
+      postId: postId,
+      description: req.body.description as string,
+      productName: req.body.productName as string,
+      brand: req.body.brand as string,
+      variants: req.body.variants as string[],
+      price: req.body.price as number,
+      location: req.body.location as string ,
+      images: req.body.images as string[],
+    };
+    await db.postsCollection.doc(postId).update(post);
+    return res.status(200).send({ status: "Success", data: `post updated with ID: ${postId}` });
+  } catch (error) {
+    log(error);
+    return res.status(500).send({ status: "Failed", msg: error.message });
+  }
+});
+
+
+// archive post
+router.delete("/api/post/archivePost/:postId", async (req, res) => {
   try {
     const postId = req.params.postId
     let docref = await db.postsCollection.doc(postId);
     const doc = await docref.get();
     if (doc.exists) {
-      await db.postsCollection.doc(postId).delete();
+      await db.postsCollection.doc(postId).update({'archived': true},);
+      return res.status(200).send({ status: "success", msg: `Document ${postId} successfully deleted` });
+    } else {
+      return res.status(500).send({ status: "Failed", msg: `Document ${req.params.postId} does not exist` });
+    }
+  } catch (error) {
+    log(error);
+    return res.status(500).send({ status: "Failed", msg: error.message });
+  }
+});
+// unarchive post
+router.put("/api/post/unarchivePost/:postId", async (req, res) => {
+  try {
+    const postId = req.params.postId
+    let docref = await db.postsCollection.doc(postId);
+    const doc = await docref.get();
+    if (doc.exists) {
+      await db.postsCollection.doc(postId).update({'archived': false},);
       return res.status(200).send({ status: "success", msg: `Document ${postId} successfully deleted` });
     } else {
       return res.status(500).send({ status: "Failed", msg: `Document ${req.params.postId} does not exist` });

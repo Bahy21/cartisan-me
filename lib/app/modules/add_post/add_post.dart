@@ -234,7 +234,8 @@ class _AddPostState extends State<AddPost> {
                             if (text == null || text.isEmpty) {
                               return 'Product quantity cannot be empty';
                             }
-                            if (int.tryParse(text) == null) {
+                            if (int.tryParse(text) == null ||
+                                int.tryParse(text) == 0) {
                               return 'Product quantity must be a whole number';
                             }
                             return null;
@@ -363,7 +364,7 @@ class _AddPostState extends State<AddPost> {
       rating: 0,
       images: uploadedImagesLinks,
       selectedVariant: _variants.first,
-      quantity: int.tryParse(_productQuantityText.text) ?? 0,
+      quantity: int.tryParse(_productQuantityText.text) ?? 1,
       isProductInStock: true,
       archived: false,
       sellCount: 0,

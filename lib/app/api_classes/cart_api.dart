@@ -64,7 +64,10 @@ class CartAPI {
     try {
       final result = await apiService.put<Map>(
         '$ADD_TO_CART/$userId/$postId',
-        {'selectedVariant': selectedVariant, 'quantity': quantity},
+        {
+          'selectedVariant': selectedVariant,
+          'quantity': quantity == 0 ? 1 : quantity,
+        },
       );
       if (result.statusCode != 200) {
         throw Exception('Error updating user delivery');

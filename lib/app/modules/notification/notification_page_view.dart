@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cartisan/app/api_classes/notifications_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
@@ -99,10 +101,16 @@ class _NotificationPageViewState extends State<NotificationPageView> {
         padding: EdgeInsets.symmetric(horizontal: 13.w),
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<NotificationModel>(
-            itemBuilder: (context, item, index) => NotificationCard(
-                  notification: item,
-                )),
-        separatorBuilder: (context, index) => SizedBox(height: 10.h),
+          itemBuilder: (context, item, index) {
+            log(item.toString());
+            return NotificationCard(
+              notification: item,
+            );
+          },
+        ),
+        separatorBuilder: (context, index) => SizedBox(
+          height: AppSpacing.tenVertical,
+        ),
       ),
     );
   }

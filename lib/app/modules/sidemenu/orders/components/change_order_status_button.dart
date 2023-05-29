@@ -1,3 +1,4 @@
+import 'package:cartisan/app/controllers/sales_history_controller.dart';
 import 'package:cartisan/app/data/constants/app_colors.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
 import 'package:cartisan/app/models/order_item_model.dart';
@@ -8,11 +9,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class ChangeOrderStatusButton extends StatefulWidget {
-  final OrderModel order;
-  final OrderItemModel orderItem;
+  final int orderIndex;
+  final int orderItemIndex;
   const ChangeOrderStatusButton({
-    required this.order,
-    required this.orderItem,
+    required this.orderIndex,
+    required this.orderItemIndex,
     Key? key,
   }) : super(key: key);
 
@@ -22,14 +23,17 @@ class ChangeOrderStatusButton extends StatefulWidget {
 }
 
 class _ChangeOrderStatusButtonState extends State<ChangeOrderStatusButton> {
+  OrderItemModel get orderItem => Get.find<SalesHistoryController>()
+      .sales[widget.orderIndex]
+      .orderItems[widget.orderItemIndex];
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
         await Get.bottomSheet<Widget>(
           UpdateStatusCard(
-            orderItem: widget.orderItem,
-            orderId: widget.order.orderId,
+            orderItemIndex: widget.orderItemIndex,
+            orderIndex: widget.orderIndex,
           ),
         );
       },
@@ -41,7 +45,7 @@ class _ChangeOrderStatusButtonState extends State<ChangeOrderStatusButton> {
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Text(
-          widget.orderItem.status.name,
+          orderItem.status.name,
           style: AppTypography.kBold12,
         ),
       ),

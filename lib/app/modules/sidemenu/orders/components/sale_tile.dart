@@ -23,15 +23,19 @@ import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 
 class SaleTile extends StatelessWidget {
-  final OrderItemModel orderItem;
+  final int orderItemIndex;
   final PostModel post;
-  final String orderId;
-  const SaleTile(
-      {required this.orderItem,
-      required this.orderId,
-      required this.post,
-      super.key});
+  final int orderIndex;
+  const SaleTile({
+    required this.orderItemIndex,
+    required this.orderIndex,
+    required this.post,
+    super.key,
+  });
   SalesHistoryController get sc => Get.find<SalesHistoryController>();
+  OrderItemModel get orderItem =>
+      sc.sales[orderIndex].orderItems[orderItemIndex];
+  String get orderId => sc.sales[orderIndex].orderId;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -111,10 +115,16 @@ class SaleTile extends StatelessWidget {
   }) async {
     Get.dialog<Widget>(const LoadingDialog(), barrierDismissible: false);
     final result = await OrderAPI().updateOrderItemStatus(
-        orderItemId: orderItemId, newStatus: newStatus, orderId: orderId);
+      orderItemId: orderItemId,
+      newStatus: newStatus,
+      orderId: orderId,
+    );
     if (result) {
       await sc.updateOrderItemStatus(
-          orderId: orderId, orderItemId: orderItemId, status: newStatus);
+        orderIndex: orderIndex,
+        orderItemIndex: orderItemIndex,
+        status: newStatus,
+      );
       Get.back<void>();
       showToast('Successfully changed staus');
     } else {

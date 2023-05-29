@@ -1,7 +1,9 @@
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/modules/cart/cart_view_pages.dart';
 import 'package:cartisan/app/modules/home/components/timeline_view.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/toast.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -54,7 +56,7 @@ class _HomeViewState extends State<HomeView> {
           ),
           IconButton(
             onPressed: () {
-              showToast('sample toast');
+              Get.dialog<Widget>(LoadingDialog());
             },
             icon: Icon(Icons.breakfast_dining),
           ),

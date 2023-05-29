@@ -111,7 +111,6 @@ class CreateProductImagePick extends StatelessWidget {
               SizedBox(height: 30.h),
               InkWell(
                 onTap: () async {
-                  log('pressed');
                   pickedFiles =
                       await ImagePickerServices().pickMultipleImages() ?? [];
                   if (pickedFiles.isNotEmpty) {
@@ -143,8 +142,7 @@ class CreateProductRoot extends StatelessWidget {
   final uc = Get.find<UserController>();
   @override
   Widget build(BuildContext context) {
-    return (uc.currentUser?.isSeller ?? false) &&
-            (uc.currentUser?.sellerID != '')
+    return (uc.currentUser?.isActiveSeller ?? false)
         ? CreateProductImagePick()
         : ProfileSetup();
   }

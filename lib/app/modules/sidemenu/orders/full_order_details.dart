@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cartisan/app/controllers/sales_history_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/order_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
@@ -7,19 +8,20 @@ import 'package:cartisan/app/modules/cart/components/address_card.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/components/order_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class FullOrderDetails extends StatelessWidget {
-  final OrderModel order;
+  final int orderIndex;
   final Map<String, dynamic> posts;
   final UserModel buyer;
   const FullOrderDetails({
-    required this.order,
+    required this.orderIndex,
     required this.posts,
     required this.buyer,
     super.key,
   });
-
+  OrderModel get order => Get.find<SalesHistoryController>().sales[orderIndex];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -96,8 +98,8 @@ class FullOrderDetails extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return OrderItemCard(
-                      orderItem: order.orderItems[index],
-                      order: order,
+                      orderItemIndex: index,
+                      orderIndex: orderIndex,
                       itemIndex: index,
                       product: (posts[order.orderItems[index].orderItemID]
                               as PostResponse)

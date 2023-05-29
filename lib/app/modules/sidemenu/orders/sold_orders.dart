@@ -35,7 +35,7 @@ class SoldOrders extends StatelessWidget {
             padding: EdgeInsets.only(top: 20.h, left: 23.w, right: 23.0.w),
             itemBuilder: (context, index) {
               return FullSaleCard(
-                order: sc.sales[index],
+                orderIndex: index,
               );
             },
           ),

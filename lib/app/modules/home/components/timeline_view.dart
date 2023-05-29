@@ -123,6 +123,11 @@ class _TimelineViewState extends State<TimelineView> {
                   addToCartCallback: () {
                     addToCart(item.post);
                   },
+                  updatePostCallback: (post) {
+                    setState(() {
+                      item.post = post;
+                    });
+                  },
                   postResponse: item,
                 ),
               ),

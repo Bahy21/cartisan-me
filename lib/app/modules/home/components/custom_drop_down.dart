@@ -5,8 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CustomDropDown extends StatefulWidget {
   final List<String> items;
   final ValueChanged<String>? onChanged;
-  const CustomDropDown({
+  String defaultValue;
+  CustomDropDown({
     required this.items,
+    required this.defaultValue,
     this.onChanged,
     super.key,
   });
@@ -16,7 +18,6 @@ class CustomDropDown extends StatefulWidget {
 }
 
 class _CustomDropDownState extends State<CustomDropDown> {
-  String? _selectedValue;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -31,7 +32,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
             border: Border.all(color: AppColors.kWhite),
           ),
           child: DropdownButton<String>(
-            value: _selectedValue,
+            value: widget.defaultValue,
             isDense: true,
             isExpanded: true,
             items: widget.items
@@ -42,7 +43,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 .toList(),
             onChanged: (value) {
               setState(() {
-                _selectedValue = value;
+                widget.defaultValue = value ?? widget.items.first;
               });
 
               if (widget.onChanged != null) {

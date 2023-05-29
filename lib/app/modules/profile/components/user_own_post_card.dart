@@ -78,6 +78,7 @@ class UserOwnPostCard extends StatelessWidget {
               Expanded(
                 flex: 4,
                 child: CustomDropDown(
+                  defaultValue: post.variants.first,
                   items: post.variants,
                   onChanged: (value) {},
                 ),

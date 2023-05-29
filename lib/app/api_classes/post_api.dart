@@ -15,14 +15,45 @@ String CREATE_REVIEW = '$BASE_URL/review/postReview';
 String CREATE_COMMENT = '$BASE_URL/post/comments/newComment';
 String DELETE_COMMENT = '$BASE_URL/post/comments/deleteComment';
 String UNLIKE_POST = '$BASE_URL/post/unlikePost';
-String DELETE_POST = '$BASE_URL/post/deletePost';
+String ARCHIVE_POST = '$BASE_URL/post/archivePost';
+String UNARCHIVE_POST = '$BASE_URL/post/unarchivePost';
+String UPDATE_POST = '$BASE_URL/updatePost';
 
 class PostAPI {
   final apiService = APIService();
 
-  Future<bool> deletePost(String postId) async {
+  Future<bool> archivePost(String postId) async {
     try {
-      final result = await apiService.delete<Map>('$UNLIKE_POST/$postId');
+      final result = await apiService.delete<Map>('$ARCHIVE_POST/$postId');
+      if (result.statusCode != 200) {
+        throw Exception('Error unliking post');
+      }
+      return true;
+    } on Exception catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> unarchivePost(String postId) async {
+    try {
+      final result = await apiService.put<Map>('$UNARCHIVE_POST/$postId', null);
+      if (result.statusCode != 200) {
+        throw Exception('Error unliking post');
+      }
+      return true;
+    } on Exception catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> updatePost(PostModel post) async {
+    try {
+      final result = await apiService.post<Map>(
+        '$UPDATE_POST/${post.postId}',
+        post.toMap(),
+      );
       if (result.statusCode != 200) {
         throw Exception('Error unliking post');
       }

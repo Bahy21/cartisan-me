@@ -10,11 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class BasicChat extends StatefulWidget {
+class ChatFromNotificationsView extends StatefulWidget {
   final ChatRoomModel chatRoomModel;
   final String otherParticipantName;
   final String? otherParticipantAvatarURL;
-  const BasicChat({
+  const ChatFromNotificationsView({
     required this.chatRoomModel,
     required this.otherParticipantName,
     required this.otherParticipantAvatarURL,
@@ -22,10 +22,11 @@ class BasicChat extends StatefulWidget {
   });
 
   @override
-  _BasicChatState createState() => _BasicChatState();
+  _ChatFromNotificationsViewState createState() =>
+      _ChatFromNotificationsViewState();
 }
 
-class _BasicChatState extends State<BasicChat> {
+class _ChatFromNotificationsViewState extends State<ChatFromNotificationsView> {
   final cc = Get.find<ChatController>();
   List<ChatMessage> messages = basicSample;
   final _avatarSize = 50;
