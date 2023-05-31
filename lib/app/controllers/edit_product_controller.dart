@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/controllers/user_controller.dart';
+import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
@@ -120,6 +121,40 @@ class EditProductController extends GetxController {
       log(e.toString());
       return '';
     }
+  }
+
+  Future<bool> addImage(String current) async {
+    var photo = await takeImage();
+    if (photo == null) return false;
+    post.images.insert(
+      post.images.indexOf(current),
+      (await db.uploadImage(photo))!,
+    );
+    await updatePost();
+    return true;
+  }
+
+  Future<void> deleteImageDecisionDialog(String original) async {
+    await Get.defaultDialog<Widget>(
+      title: 'Delete image',
+      onConfirm: () async {
+        await removeImage(post.images.indexOf(original));
+        Get.back<void>();
+      },
+      onCancel: () => Get.back<void>(),
+      middleText: 'Are you sure you want to delete this image?',
+      textConfirm: 'Yes',
+      textCancel: 'No',
+      buttonColor: AppColors.kPrimary,
+      confirmTextColor: AppColors.kWhite,
+      cancelTextColor: AppColors.kPrimary,
+    );
+  }
+
+  Future<void> removeImage(int index) async {
+    post.images.removeAt(index);
+    await updatePost();
+    update();
   }
 
   Future<File?> takeImage() async {

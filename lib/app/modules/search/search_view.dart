@@ -15,8 +15,6 @@ import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class SearchView extends StatefulWidget {
-  static const _pageSize = 20;
-
   const SearchView({super.key});
 
   @override
@@ -45,7 +43,7 @@ class _SearchViewState extends State<SearchView> {
             ? allItems![pageKey - 1].postId
             : null,
       );
-      final isLastPage = newItems.length < SearchView._pageSize;
+      final isLastPage = newItems.isEmpty;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
       } else {
@@ -74,7 +72,6 @@ class _SearchViewState extends State<SearchView> {
       init: SearchPageController(),
       builder: (controller) {
         final localPosts = controller.loadLocal();
-        log('local search posts length: ${localPosts.length}');
         if (localPosts.isEmpty) {
           controller.setLocalFalse();
         }
@@ -93,7 +90,7 @@ class _SearchViewState extends State<SearchView> {
               centerTitle: true,
             ),
             body: RefreshIndicator(
-              onRefresh: () => Future.sync(_pagingController.refresh),
+              onRefresh: () => _fetchPage(0),
               child: GridView.builder(
                 itemCount: localPosts.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -156,8 +153,8 @@ class _SearchViewState extends State<SearchView> {
                   );
                 },
               ),
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3),
             ),
           ),
         );

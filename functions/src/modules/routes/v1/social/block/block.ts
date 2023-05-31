@@ -3,6 +3,10 @@ import * as db from "../../../../../services/database";
 import * as express from "express";
 import logger from "../../../../../services/logger";
 import { log } from "firebase-functions/logger";
+import { UserModel } from "../../../../../models/user_model";
+import { getUser, userFromDoc } from "../../../../../services/functions";
+import { DocumentReference, DocumentSnapshot, QuerySnapshot } from "firebase-admin/firestore";
+import { userCollection } from "../../../../../services/database";
 const router = express.Router();
 
 // block user
@@ -12,9 +16,9 @@ router.put("/api/social/blockUser/:blockerId/:blockedId", async(req,res) => {
       const blockedId: string = req.params.blockedId;
       await db.userBlockedUsersCollection(blockerId).doc(blockedId).set({
         blocked: true,
-        timsestamp: Date.now()
+        timestamp: Date.now()
       })
-      return res.status(200).send({status: "Success", data: `User ${blockedId} succesfully blocked by ${blockerId}`});
+      return res.status(200).send({status: "Success", data: `User ${blockedId} successfully blocked by ${blockerId}`});
     } catch (error) {
       log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
@@ -27,7 +31,7 @@ router.put("/api/social/blockUser/:blockerId/:blockedId", async(req,res) => {
       const blockerId: string = req.params.blockerId;
       const blockedId: string = req.params.blockedId;
       await db.userBlockedUsersCollection(blockerId).doc(blockedId).delete();
-      return res.status(200).send({status: "Success", data: `User ${blockedId} succesfully unblocked by ${blockerId}`});
+      return res.status(200).send({status: "Success", data: `User ${blockedId} successfully unblocked by ${blockerId}`});
     } catch (error) {
       log(error);
       return res.status(500).send({status: "Failed", msg: error.message});
@@ -52,21 +56,34 @@ router.put("/api/social/blockUser/:blockerId/:blockedId", async(req,res) => {
   });
 
 // get block list
-router.get("/api/social/getBlockList/:userId", async(req,res)=>{
+router.get("/api/social/getBlockList/:userId/:limit", async(req,res)=>{
     try {
-      let blockList:string[] = <string[]>[];
+      let blockList:UserModel[] = <UserModel[]>[];
       const userId:string = req.params.userId;
-      await db
-        .userBlockedUsersCollection(userId)
-        .get()
-        .then(
-          (data)=>{
-            let docs = data.docs;
-            docs.map((doc)=>{
-              blockList.push(doc.ref.id);
-            });
-          });
-      return res.status(200).send({status: "Success", data: blockList});
+      const limit: number = parseInt(req.params.limit);
+      const lastBlockedUser:any = req.query.lastBlockedUser;
+      if(lastBlockedUser != null && lastBlockedUser != undefined && lastBlockedUser.toString() != ""){
+        const lastBlockedUserDoc = await db.userBlockedUsersCollection(userId).doc(lastBlockedUser).get();
+        const blockedUsers = await db.userBlockedUsersCollection(userId).orderBy('timestamp', 'desc').startAfter(lastBlockedUserDoc).limit(limit).get();
+        for(const blockedUser of blockedUsers.docs){
+          const newUser = await getUser(blockedUser.ref.id);
+          
+          if(newUser != null && newUser != undefined){
+            return res.status(500).send({status: "Error", data: `no user of id ${blockedUser.ref.id} found`});
+          }
+          blockList.push(newUser);
+        }
+      } else {
+        const blockedUsers = await db.userBlockedUsersCollection(userId).orderBy('timestamp', 'desc').limit(limit).get();
+        for(const blockedUser of blockedUsers.docs){
+          const userDoc: DocumentReference = userCollection.doc(blockedUser.ref.id);
+          const userDocSnap: DocumentSnapshot  = await userDoc.get();
+          const user: UserModel = userFromDoc(userDocSnap);
+          blockList.push(user);
+        }
+      }
+      
+      return res.status(200).send({status: "Success", data: blockList.map((user) => user.toMap())});
     } catch (error) {
         log(error);
         return res.status(500).send({status: "Failed", msg: error.message});

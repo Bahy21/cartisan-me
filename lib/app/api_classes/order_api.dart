@@ -88,10 +88,30 @@ class OrderAPI {
     try {
       final result = await apiService.put<Map>(
         '$UPDATE_ORDER_STATUS/$orderId',
-        {'status': newSatus.index},
+        {'status': newSatus.name},
       );
       if (result.statusCode != 200) {
         throw Exception('Error updating order status');
+      }
+      return true;
+    } on Exception catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> updateOrderItemStatus({
+    required String orderId,
+    required String orderItemId,
+    required OrderItemStatus newStatus,
+  }) async {
+    try {
+      final result = await apiService.put<Map>(
+        '$UPDATE_ORDER_ITEM_STATUS/$orderId',
+        {'status': newStatus.name, 'orderItemId': orderItemId},
+      );
+      if (result.statusCode != 200) {
+        throw Exception('Error updating order item status');
       }
       return true;
     } on Exception catch (e) {
@@ -128,26 +148,6 @@ class OrderAPI {
     } on Exception catch (e) {
       log(e.toString());
       return null;
-    }
-  }
-
-  Future<bool> updateOrderItemStatus({
-    required String orderId,
-    required String orderItemId,
-    required OrderItemStatus newStatus,
-  }) async {
-    try {
-      final result = await apiService.put<Map>(
-        '$UPDATE_ORDER_ITEM_STATUS/$orderId',
-        {'status': newStatus.name, 'orderItemId': orderItemId},
-      );
-      if (result.statusCode != 200) {
-        throw Exception('Error updating order item status');
-      }
-      return true;
-    } on Exception catch (e) {
-      log(e.toString());
-      return false;
     }
   }
 }

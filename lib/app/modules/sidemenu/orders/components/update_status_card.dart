@@ -5,6 +5,7 @@ import 'package:cartisan/app/models/order_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/instance_manager.dart';
 
 class UpdateStatusCard extends StatelessWidget {
@@ -40,12 +41,14 @@ class UpdateStatusCard extends StatelessWidget {
             (index) => ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: InkWell(
-                onTap: () {
-                  Get.find<SalesHistoryController>().updateOrderItemStatus(
+                onTap: () async {
+                  await Get.find<SalesHistoryController>()
+                      .updateOrderItemStatus(
                     orderIndex: orderIndex,
                     orderItemIndex: orderItemIndex,
                     status: updatableStatus[index],
                   );
+                  Get.back<void>();
                 },
                 child: Container(
                   color: orderItem.status == updatableStatus[index]
@@ -58,9 +61,7 @@ class UpdateStatusCard extends StatelessWidget {
                       vertical: 20,
                     ),
                     child: Text(
-                      updatableStatus[index]
-                          .toString()
-                          .replaceAll('OrderItemStatus.', ''),
+                      updatableStatus[index].name,
                       style: TextStyle(
                         color: orderItem.status == updatableStatus[index]
                             ? Colors.white

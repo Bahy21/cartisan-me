@@ -54,18 +54,46 @@ class SalesHistoryController extends GetxController {
     required int orderItemIndex,
     required OrderItemStatus status,
   }) async {
-    Get.dialog<Widget>(const LoadingDialog());
+    Get.dialog<Widget>(
+      const LoadingDialog(),
+      barrierDismissible: false,
+    );
     final sale = Get.find<SalesHistoryController>().sales[orderIndex];
+
     final result = await orderApi.updateOrderItemStatus(
       orderId: sale.orderId,
       orderItemId: sale.orderItems[orderItemIndex].orderItemID,
       newStatus: status,
     );
-    if (result) {
-      sale.orderItems[orderItemIndex].status = status;
+    if (!result) {
       Get.back<void>();
+      await showErrorDialog('Error\nFailed to update status');
+      return;
+    }
+    sale.orderItems[orderItemIndex].status = status;
+    final newOrderStatus = getNewOrderStatus(sale.orderItems);
+    final result2 = await orderApi.updateOrderStatus(
+      orderId: sale.orderId,
+      newSatus: newOrderStatus,
+    );
+    Get.back<void>();
+    if (result2) {
+      sale.orderStatus = newOrderStatus;
+      _sales.refresh();
     } else {
       await showErrorDialog('Error\nFailed to update status');
     }
+  }
+
+  OrderItemStatus getNewOrderStatus(
+    List<OrderItemModel> items,
+  ) {
+    var status = OrderItemStatus.values.last;
+    for (var item in items) {
+      if (item.status.index < status.index) {
+        status = item.status;
+      }
+    }
+    return status;
   }
 }

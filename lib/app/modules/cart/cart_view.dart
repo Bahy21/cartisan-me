@@ -28,14 +28,19 @@ class _CartViewState extends State<CartView> {
                       itemCount: controller.cart.length,
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 15.h),
-                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      padding: EdgeInsets.only(
+                        right: 24.w,
+                        left: 24.w,
+                        bottom: 35.h,
+                      ),
                       itemBuilder: (context, index) => CartItemCard(
                         cartItem: controller.cart[index],
                         deleteCallback: () {
                           Get.dialog<void>(DeleteCartItemDialog(
                             deleteConfirmationCallback: () {
                               controller.deleteCartItem(
-                                controller.cart[index].cartItemId,
+                                cartItemId: controller.cart[index].cartItemId,
+                                cartItemIndex: index,
                               );
                               Get.back<void>();
                               controller.getCart();

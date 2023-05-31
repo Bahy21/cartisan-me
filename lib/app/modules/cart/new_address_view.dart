@@ -29,19 +29,21 @@ class NnewAddressStateView extends State<NewAddressView> {
   final _cityController = TextEditingController();
 
   Future<void> createNewAddress() async {
-    final newAddress = AddressModel(
-      userID: Get.find<AuthService>().currentUser!.uid,
-      addressID: '',
-      addressLine1: _addressLine1Controller.text,
-      addressLine2: _addressLine2Controller.text,
-      addressLine3: _addressLine3Controller.text,
-      postalCode: _zipCodeController.text,
-      contactNumber: _numberController.text,
-      city: _cityController.text,
-      state: _stateController.text,
-      fullname: _receiptNameController.text,
-    );
-    await ac.newAddress(newAddress);
+    if (_formKey.currentState?.validate() ?? false) {
+      final newAddress = AddressModel(
+        userID: Get.find<AuthService>().currentUser!.uid,
+        addressID: '',
+        addressLine1: _addressLine1Controller.text,
+        addressLine2: _addressLine2Controller.text,
+        addressLine3: _addressLine3Controller.text,
+        postalCode: _zipCodeController.text,
+        contactNumber: _numberController.text,
+        city: _cityController.text,
+        state: _stateController.text,
+        fullname: _receiptNameController.text,
+      );
+      await ac.newAddress(newAddress);
+    }
   }
 
   final ac = Get.find<AddressController>();
@@ -111,6 +113,7 @@ class NnewAddressStateView extends State<NewAddressView> {
                   return null;
                 },
               ),
+              SizedBox(height: AppSpacing.seventeenVertical),
               CustomAddressTextField(
                 heading: 'Address Line 3 (optional)',
                 hintText: 'Enter Address',
@@ -158,7 +161,7 @@ class NnewAddressStateView extends State<NewAddressView> {
                   ),
                 ],
               ),
-              SizedBox(height: 33.w),
+              SizedBox(height: AppSpacing.seventeenVertical),
               Expanded(
                 child: CustomAddressTextField(
                   heading: 'City',
@@ -188,7 +191,7 @@ class NnewAddressStateView extends State<NewAddressView> {
                   return null;
                 },
               ),
-              SizedBox(height: 50.h),
+              SizedBox(height: AppSpacing.seventeenVertical),
               PrimaryButton(
                 text: 'Save',
                 onTap: createNewAddress,

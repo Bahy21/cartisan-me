@@ -155,16 +155,23 @@ class SocialAPI {
     }
   }
 
-  Future<List<Map>> getBlockList(String userId) async {
+  Future<List<UserModel>> getBlockList(String userId,
+      {String? lastBlockedUser}) async {
     try {
+      const limit = 10;
       final result = await apiService.get<Map>(
-        '$GET_BLOCK_LIST/$userId',
+        '$GET_BLOCK_LIST/$userId/$limit',
+        queryParameters: <String, dynamic>{'lastBlockedUser': lastBlockedUser},
       );
       if (result.statusCode != 200) {
         throw Exception('Error fetching block list');
       }
-      final data = jsonDecode(result.data.toString()) as List;
-      return data.cast<Map>();
+      final data = result.data!['data'] as List;
+      final blockList = <UserModel>[];
+      for (final block in data) {
+        blockList.add(UserModel.fromMap(block as Map<String, dynamic>));
+      }
+      return blockList;
     } on Exception catch (e) {
       log(e.toString());
       return [];

@@ -1,5 +1,5 @@
 
-import { getUserFromPost, postFromDoc } from "../../../../services/functions";
+import { getUser, postFromDoc } from "../../../../services/functions";
 import * as db from "../../../../services/database";
 import { CollectionReference, QuerySnapshot } from "firebase-admin/firestore";
 import * as express from "express";
@@ -23,29 +23,25 @@ router.get("/api/timeline/fetchPosts/:userId/:count", async(req,res)=>{
     const postRef: CollectionReference = db.postsCollection;
     let queryDocs: QuerySnapshot;
     if (lastPostId == null || lastPostId == ''){
-      queryDocs  = await postRef.orderBy("timestamp","desc").where('archived',"==",false).limit(count).get();
+      queryDocs  = await postRef.where('archived',"==",false).orderBy("timestamp","desc").limit(count).get();
     } else {
       const startAt = await postRef.doc(lastPostId).get();
-      queryDocs  = await postRef.orderBy("timestamp","desc").startAt(startAt).where('archived',"==",false).limit(count).get();
+      queryDocs  = await postRef.where('archived',"==",false).orderBy("timestamp","desc").startAt(startAt).limit(count).get();
     }
     let blockList:string[] = <string[]>[];
-    await db
-      .userBlockedUsersCollection(userId)
-      .get()
-      .then(
-        (data)=>{
-          let docs = data.docs;
-          docs.map((doc)=>{
-            blockList.push(doc.ref.id);
-          });
-        });
+    const data = await db.userBlockedUsersCollection(userId).get();
+    for(const doc of data.docs){
+      blockList.push(doc.ref.id);
+    }
+      
+       
 
-    let resultdocs = queryDocs.docs.filter((doc)=> !blockList.includes(doc.id));
+    let resultDocs = queryDocs.docs.filter((doc)=> !blockList.includes(doc.data().ownerId));
     
-    const postList = resultdocs.map((doc)=> postFromDoc(doc));
+    const postList = resultDocs.map((doc)=> postFromDoc(doc));
     const responseResult = <PostResponse[]>[];
     for (const post of postList){
-      const owner = await getUserFromPost(post.ownerId);
+      const owner = await getUser(post.ownerId);
       responseResult.push(new PostResponse({post: post, user: owner}));
     } 
     return res.status(200).send({status: "Success", result: responseResult});

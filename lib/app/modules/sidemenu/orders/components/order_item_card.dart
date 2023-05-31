@@ -40,140 +40,134 @@ class OrderItemCard extends StatefulWidget {
 }
 
 class _OrderItemCardState extends State<OrderItemCard> {
-  OrderModel get order =>
-      Get.find<SalesHistoryController>().sales[widget.orderIndex];
-  OrderItemModel get orderItem => order.orderItems[widget.orderItemIndex];
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final order = Get.find<SalesHistoryController>().sales[widget.orderIndex];
+      final orderItem = order.orderItems[widget.orderItemIndex];
 
-  bool get cancelable =>
-      orderItem.status == OrderItemStatus.awaitingFulfillment &&
-      !widget.isCheckout;
-
-  bool get isEditable => [
-        OrderItemStatus.awaitingFulfillment,
-        OrderItemStatus.awaitingShipment,
-        OrderItemStatus.shipped,
-        OrderItemStatus.awaitingPickup,
-      ].contains(orderItem.status);
-  bool get showStatus => ![
+      final cancelable =
+          orderItem.status == OrderItemStatus.awaitingFulfillment &&
+              !widget.isCheckout;
+      final showStatus = ![
         OrderItemStatus.pending,
         OrderItemStatus.awaitingPayment,
       ].contains(orderItem.status);
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10.r),
-            child: CachedNetworkImage(
-              imageUrl: widget.product.images.first,
-              width: 50.w,
-              placeholder: (context, url) =>
-                  const Center(child: CircularProgressIndicator.adaptive()),
-              errorWidget: (
-                context,
-                url,
-                dynamic error,
-              ) =>
-                  const Icon(Icons.error),
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10.r),
+              child: CachedNetworkImage(
+                imageUrl: widget.product.images.first,
+                width: 50.w,
+                placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator.adaptive()),
+                errorWidget: (
+                  context,
+                  url,
+                  dynamic error,
+                ) =>
+                    const Icon(Icons.error),
+              ),
+            ),
+            SizedBox(
+              width: AppSpacing.eightHorizontal,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.product.productName,
+                  style: AppTypography.kBold14,
+                ),
+                Text(
+                  'For: ${widget.buyer.profileName}',
+                  style: AppTypography.kExtraLight12,
+                ),
+              ],
+            ),
+            Spacer(),
+            if (showStatus)
+              ChangeOrderStatusButton(
+                orderIndex: widget.orderIndex,
+                orderItemIndex: widget.orderItemIndex,
+              ),
+          ]),
+          Divider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Price'),
+                    Text('\$${widget.product.price.toStringAsFixed(2)}'),
+                  ],
+                ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Quantity'),
+                    Text('x${orderItem.quantity}'),
+                  ],
+                ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Service Fee'),
+                    Text(
+                        '\$${(orderItem.serviceFeeInCents / 100).toPrecision(2).toStringAsFixed(2)}'),
+                  ],
+                ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Delivery Cost'),
+                    Text(
+                        '\$${(orderItem.deliveryCostInCents / 100).toPrecision(2).toStringAsFixed(2)}'),
+                  ],
+                ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Tax Amount'),
+                    Text('\$${orderItem.tax.toStringAsFixed(2)}'),
+                  ],
+                ),
+                Divider(
+                  thickness: 2,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total'),
+                    Text('\$${orderItem.grossTotal.toStringAsFixed(2)}'),
+                  ],
+                ),
+              ],
             ),
           ),
-          SizedBox(
-            width: AppSpacing.eightHorizontal,
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.product.productName,
-                style: AppTypography.kBold14,
-              ),
-              Text(
-                'For: ${widget.buyer.profileName}',
-                style: AppTypography.kExtraLight12,
-              ),
-            ],
-          ),
-          Spacer(),
-          if (showStatus)
-            ChangeOrderStatusButton(
+          if (cancelable)
+            CancelAndRefundButton(
               orderIndex: widget.orderIndex,
               orderItemIndex: widget.orderItemIndex,
             ),
-        ]),
-        Divider(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Price'),
-                  Text('\$${widget.product.price.toStringAsFixed(2)}'),
-                ],
-              ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Quantity'),
-                  Text('x${orderItem.quantity}'),
-                ],
-              ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Service Fee'),
-                  Text(
-                      '\$${(orderItem.serviceFeeInCents / 100).toPrecision(2).toStringAsFixed(2)}'),
-                ],
-              ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Delivery Cost'),
-                  Text(
-                      '\$${(orderItem.deliveryCostInCents / 100).toPrecision(2).toStringAsFixed(2)}'),
-                ],
-              ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Tax Amount'),
-                  Text('\$${orderItem.tax.toStringAsFixed(2)}'),
-                ],
-              ),
-              Divider(
-                thickness: 2,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Total'),
-                  Text('\$${orderItem.grossTotal.toStringAsFixed(2)}'),
-                ],
-              ),
-            ],
+          SizedBox(
+            height: 5,
           ),
-        ),
-        if (cancelable)
-          CancelAndRefundButton(
-            orderIndex: widget.orderIndex,
-            orderItemIndex: widget.orderItemIndex,
+          Divider(
+            color: Colors.white,
           ),
-        SizedBox(
-          height: 5,
-        ),
-        Divider(
-          color: Colors.white,
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }

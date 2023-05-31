@@ -54,12 +54,6 @@ class _HomeViewState extends State<HomeView> {
               AppAssets.kCart,
             ),
           ),
-          IconButton(
-            onPressed: () {
-              Get.dialog<Widget>(LoadingDialog());
-            },
-            icon: Icon(Icons.breakfast_dining),
-          ),
           SizedBox(width: AppSpacing.fourteenHorizontal),
         ],
       ),

@@ -86,17 +86,59 @@ class _EditPostViewState extends State<EditPostView> {
                             height: Get.height * 0.5,
                             fit: BoxFit.contain,
                           ),
+                          SizedBox(
+                            height: AppSpacing.tenVertical,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              TextButton(
-                                  onPressed: () {}, child: Text("Remove")),
-                              TextButton(
-                                  onPressed: () {
-                                    controller.replacePhoto(
+                              InkWell(
+                                onTap: controller.post.images.length == 1
+                                    ? null
+                                    : () {
+                                        controller.deleteImageDecisionDialog(
+                                          controller.post.images[index],
+                                        );
+                                      },
+                                child: Text(
+                                  "Remove",
+                                  style: AppTypography.kMedium12.copyWith(
+                                      color: controller.post.images.length == 1
+                                          ? AppColors.kGrey2
+                                          : AppColors.kPrimary),
+                                ),
+                              ),
+                              SizedBox(
+                                width: AppSpacing.eightHorizontal,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  controller.replacePhoto(
+                                    controller.post.images[index],
+                                  );
+                                },
+                                child: Text(
+                                  "Replace",
+                                  style: AppTypography.kMedium12
+                                      .copyWith(color: AppColors.kPrimary),
+                                ),
+                              ),
+                              if (controller.post.images.length <= 5) ...[
+                                SizedBox(
+                                  width: AppSpacing.sixHorizontal,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    controller.addImage(
                                         controller.post.images[index]);
                                   },
-                                  child: Text("Replace")),
+                                  child: Text(
+                                    'Add',
+                                    style: AppTypography.kMedium12
+                                        .copyWith(color: AppColors.kPrimary),
+                                  ),
+                                ),
+                              ]
                             ],
                           ),
                         ],

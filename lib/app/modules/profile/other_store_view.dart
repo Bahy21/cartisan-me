@@ -5,12 +5,14 @@ import 'package:cartisan/app/controllers/chat_controller.dart';
 import 'package:cartisan/app/controllers/store_page_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
+import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/chat/basic_chat.dart';
 import 'package:cartisan/app/modules/profile/components/other_store_profile_card.dart';
 import 'package:cartisan/app/modules/profile/components/report_pop_up.dart';
 import 'package:cartisan/app/modules/profile/components/store_facility_column.dart';
 import 'package:cartisan/app/modules/profile/grid_all_user_profile_post.dart';
 import 'package:cartisan/app/modules/profile/list_all_user_profile_post.dart';
+import 'package:cartisan/app/modules/share/share_bottom_sheet.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/toast.dart';
@@ -37,7 +39,10 @@ class _OtherStoreViewState extends State<OtherStoreView> {
   String get currentUid => Get.find<AuthService>().currentUser!.uid;
 
   Future<void> reportUser() async {
-    await Get.dialog<Widget>(const LoadingDialog());
+    Get.dialog<Widget>(
+      const LoadingDialog(),
+      barrierDismissible: false,
+    );
     final result = await reportApi.reportUser(
       reportedId: widget.userId,
       reportedFor: '',
@@ -51,11 +56,15 @@ class _OtherStoreViewState extends State<OtherStoreView> {
   }
 
   Future<void> blockUser() async {
-    await Get.dialog<Widget>(const LoadingDialog());
+    Get.dialog<Widget>(
+      const LoadingDialog(),
+      barrierDismissible: false,
+    );
     final result = await socialApi.blockUser(
       blockerId: currentUid,
       blockedId: widget.userId,
     );
+    Get.back<void>();
     if (result) {
       Get.back<void>();
     } else {
@@ -143,7 +152,9 @@ class _OtherStoreViewState extends State<OtherStoreView> {
                     height: AppSpacing.eighteenVertical,
                   ),
                   PrimaryButton(
-                      onTap: () => controller.unblockUser(), text: 'Unblock'),
+                    onTap: () => controller.unblockUser(),
+                    text: 'Unblock',
+                  ),
                 ],
               ),
             ),
@@ -166,6 +177,9 @@ class _OtherStoreViewState extends State<OtherStoreView> {
                       break;
                     case 2:
                       blockUser();
+                      break;
+                    case 3:
+                      shareUser(controller.storeOwner!);
                       break;
                   }
                 },

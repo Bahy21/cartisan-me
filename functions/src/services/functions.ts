@@ -422,7 +422,7 @@ export function deliveryOptionFromIndex(index: number,): DeliveryOptions{
   }
 }
 
- export async function getUserFromPost(userId:string): Promise<UserModel>{
+ export async function getUser(userId:string): Promise<UserModel>{
   try {
     const userDoc: DocumentReference = userCollection.doc(userId);
     const userDocSnap: DocumentSnapshot  = await userDoc.get();

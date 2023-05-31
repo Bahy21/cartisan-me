@@ -139,7 +139,7 @@ router.put("/api/order/updateOrderStatus/:orderId", async (req, res) => {
         const newStatus = req.body.status;
         const orderDocRef = db.ordersCollection.doc(orderId);
         const newStatusEnum = getOrderItemStatusFromString(newStatus);
-        await orderDocRef.update({orderStatus: newStatusEnum});
+        await orderDocRef.update({orderStatus: newStatusEnum.valueOf()});
         return res.status(200).send({status: "Success", msg: `Order ${orderId} has been updated to ${newStatusEnum}`})
     } catch (error) {
         log(error);
@@ -155,6 +155,7 @@ router.put("/api/order/updateOrderItemStatus/:orderId", async (req, res) => {
         if(!newStatus || !orderItemIdToBeChanged || newStatus == '' || orderItemIdToBeChanged == ''){
             throw Error(`Invalid paramteres passed newStatus: ${newStatus} orderItemIdToBeChanged: ${orderItemIdToBeChanged}`);
         }
+        
         const newStatusEnum = getOrderItemStatusFromString(newStatus);
         const orderDocRef = db.ordersCollection.doc(orderId);
         const order = orderFromDoc(await orderDocRef.get());
@@ -167,7 +168,6 @@ router.put("/api/order/updateOrderItemStatus/:orderId", async (req, res) => {
         }
         return res.status(200).send({status: "Success", msg: `Item ${orderItemIdToBeChanged} in Order ${orderId} has been updated to ${newStatusEnum}`})
     } catch (error) {
-        log(error);
         log(error);
         return res.status(500).send({status: "Failed", msg: error.message});
     }

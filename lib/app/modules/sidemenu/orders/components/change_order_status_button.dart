@@ -36,6 +36,7 @@ class _ChangeOrderStatusButtonState extends State<ChangeOrderStatusButton> {
             orderIndex: widget.orderIndex,
           ),
         );
+        setState(() {});
       },
       child: Container(
         alignment: Alignment.center,

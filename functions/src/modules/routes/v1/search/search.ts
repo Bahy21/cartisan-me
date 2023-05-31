@@ -18,27 +18,21 @@ router.get("/api/search/fetchPosts/:userId/:count", async(req,res)=>{
     const postRef: CollectionReference = db.postsCollection;
     let queryDocs: QuerySnapshot;
     if (lastPostId == null || lastPostId == undefined || lastPostId == ""){
-      queryDocs  = await postRef.orderBy("timestamp","desc").where('archived',"==",false).limit(count).get();
+      queryDocs  = await postRef.where('archived',"==",false).orderBy("timestamp","desc").limit(count).get();
     } else {
       const startAt = await postRef.doc(lastPostId.toString()).get();
       const startPost = postFromDoc(startAt);
-        queryDocs  = await postRef.orderBy("timestamp","desc").where('archived',"==",false).startAfter(startPost.timestamp).limit(count).get();
+        queryDocs  = await postRef.where('archived',"==",false).orderBy("timestamp","desc").startAfter(startPost.timestamp).limit(count).get();
     }
     let blockList:string[] = <string[]>[];
-    await db
-      .userBlockedUsersCollection(userId)
-      .get()
-      .then(
-        (data)=>{
-          let docs = data.docs;
-          docs.map((doc)=>{
-            blockList.push(doc.ref.id);
-          });
-        });
+    const data = await db.userBlockedUsersCollection(userId).get();
+    for(const doc of data.docs){
+      blockList.push(doc.ref.id);
+    }
 
-    let resultdocs = queryDocs.docs.filter((doc)=> !blockList.includes(doc.id));
+    let resultDocs = queryDocs.docs.filter((doc)=> !blockList.includes(doc.data().ownerId));
     
-    const postList = resultdocs.map((doc)=> postFromDoc(doc));
+    const postList = resultDocs.map((doc)=> postFromDoc(doc));
     const searchResults = postList.map((post)=> new SearchResult({postId: post.postId, imageUrl: post.images[0]}));
     const result = Array.from(searchResults);
     return res.status(200).send({status: "Success", result});

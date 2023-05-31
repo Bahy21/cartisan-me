@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/search_model.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +19,15 @@ class ExploreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          image: post.imageUrl.isURL
-              ? DecorationImage(
-                  image: NetworkImage(post.imageUrl),
-                  fit: BoxFit.cover,
-                )
-              : null,
-          color: AppColors.kGrey2,
-        ),
+      child: CachedNetworkImage(
+        imageUrl: post.imageUrl,
+        errorWidget: (context, url, dynamic error) {
+          log(error.toString());
+          return const Icon(
+            Icons.error,
+          );
+        },
+        fit: BoxFit.cover,
       ),
     );
   }

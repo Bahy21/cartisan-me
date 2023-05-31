@@ -54,7 +54,9 @@ class PostFullScreen extends StatelessWidget {
               ),
             ),
           ),
-          body: PostCard(postResponse: postResponse),
+          body: SingleChildScrollView(
+            child: PostCard(postResponse: postResponse),
+          ),
         );
       },
     );

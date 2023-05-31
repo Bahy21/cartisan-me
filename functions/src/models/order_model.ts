@@ -64,7 +64,7 @@ export class OrderModel {
             timestamp: this.timestamp,
             involvedSellersList: this.involvedSellersList,
             totalInCents: this.totalInCents,
-            orderStatus: this.orderStatus,
+            orderStatus: this.orderStatus.valueOf(),
             address: this.address.toMap(),
             shippingAddress: this.shippingAddress.toMap(),
             currency: this.currency,

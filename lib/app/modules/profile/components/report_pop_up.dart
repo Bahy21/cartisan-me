@@ -24,6 +24,10 @@ class _ReportPopupState extends State<ReportPopup> {
             value: 2,
             child: Text('Block'),
           ),
+          const PopupMenuItem(
+            value: 3,
+            child: Text('Share'),
+          ),
         ];
       },
     );

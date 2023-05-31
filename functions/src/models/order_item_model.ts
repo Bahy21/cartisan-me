@@ -112,7 +112,7 @@ export class OrderItemModel {
             serviceFeeInCents: this.serviceFeeInCents,
             sellerStripeId: this.sellerStripeId ?? this.sellerId,
             tax: this.tax,
-            status: this.status,
+            status: this.status.valueOf(),
             
         }
     }

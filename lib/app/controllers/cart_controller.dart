@@ -40,18 +40,17 @@ class CartController extends GetxController {
     checkCartEmpty();
   }
 
-  Future<void> deleteCartItem(String cartItemId) async {
+  Future<void> deleteCartItem({
+    required String cartItemId,
+    required int cartItemIndex,
+  }) async {
     final success = await cartAPI.deleteCartItem(
       userId: _currentUid,
       cartItemId: cartItemId,
     );
     if (success) {
-      for (final cartItem in cart) {
-        if (cartItem.cartItemId == cartItemId) {
-          cart.remove(cartItem);
-          break;
-        }
-      }
+      _cart.value.removeAt(cartItemIndex);
+      _cart.refresh();
       checkCartEmpty();
     } else {
       await showErrorDialog('Error deleting item from cart');

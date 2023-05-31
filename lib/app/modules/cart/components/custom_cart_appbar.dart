@@ -1,14 +1,11 @@
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 class CustomCartAppbar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback leadingCallback;
-  final VoidCallback chatCallback;
   const CustomCartAppbar({
     required this.leadingCallback,
-    required this.chatCallback,
     super.key,
   });
 
@@ -31,10 +28,6 @@ class CustomCartAppbar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        IconButton(
-          onPressed: chatCallback,
-          icon: SvgPicture.asset(AppAssets.kChat),
-        ),
         SizedBox(width: AppSpacing.fourteenHorizontal),
       ],
     );

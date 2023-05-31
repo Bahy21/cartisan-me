@@ -1,6 +1,6 @@
 
 import * as db from "../../../../services/database";
-import { deliveryOptionFromIndex, getUserFromPost, postFromDoc, userFromDoc } from "../../../../services/functions";
+import { deliveryOptionFromIndex, getUser, postFromDoc, userFromDoc } from "../../../../services/functions";
 import { PostModel } from "../../../../models/post_model";
 import * as express from "express";
 import { DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
@@ -13,13 +13,11 @@ const router = express.Router();
 // get post
 router.get("/api/post/getPost/:postId", async (req, res) => {
   try {
-    req.headers["content-type"] = "application/json";
-
     let docref = await db.postsCollection.doc(req.params.postId);
     const doc = await docref.get();
     if (doc.exists) {
       const post = postFromDoc(doc);
-      const owner = await getUserFromPost(post.ownerId);
+      const owner = await getUser(post.ownerId);
       return res.status(200).send({ status: "Success", data: {'post':post.toMap(), 'owner':owner.toMap() } });
     } else {
       return res.status(500).send({ status: "Failed", msg: `Document ${req.params.postId} does not exist` });

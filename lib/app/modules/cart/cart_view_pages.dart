@@ -58,7 +58,6 @@ class CartViewPages extends GetView<CartPageController> {
           child: Scaffold(
             appBar: (statusController.initialPageIndex == 0)
                 ? CustomCartAppbar(
-                    chatCallback: () {},
                     leadingCallback: () {
                       Get
                         ..delete<CartPageController>()

@@ -21,102 +21,108 @@ class FullOrderDetails extends StatelessWidget {
     required this.buyer,
     super.key,
   });
-  OrderModel get order => Get.find<SalesHistoryController>().sales[orderIndex];
+  SalesHistoryController get sc => Get.find<SalesHistoryController>();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 20.h),
-          decoration: BoxDecoration(
-            color: AppColors.kFilledColor,
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Order Details',
-                  style: AppTypography.kExtraLight18,
-                ),
-                SizedBox(
-                  height: AppSpacing.eightVertical,
-                ),
-                OrderDetailsCard(
-                  orderId: order.orderId,
-                  timestamp: order.timestamp,
-                ),
-                const Divider(
-                  color: AppColors.kWhite,
-                ),
-                SizedBox(
-                  height: AppSpacing.eightVertical,
-                ),
-                Text(
-                  'Shipping Address',
-                  style: AppTypography.kExtraLight18,
-                ),
-                SizedBox(
-                  height: AppSpacing.eightVertical,
-                ),
-                AddressCard(
-                  addressModel: order.shippingAddress,
-                ),
-                SizedBox(
-                  height: AppSpacing.eightVertical,
-                ),
-                const Divider(
-                  color: AppColors.kWhite,
-                ),
-                SizedBox(
-                  height: AppSpacing.eightVertical,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Obx(
+      () {
+        return SafeArea(
+          child: Scaffold(
+            body: Container(
+              padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 20.h),
+              decoration: BoxDecoration(
+                color: AppColors.kFilledColor,
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Order Item(s)',
+                      'Order Details',
                       style: AppTypography.kExtraLight18,
                     ),
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10.r),
+                    SizedBox(
+                      height: AppSpacing.eightVertical,
+                    ),
+                    OrderDetailsCard(
+                      orderId: sc.sales[orderIndex].orderId,
+                      timestamp: sc.sales[orderIndex].timestamp,
+                    ),
+                    const Divider(
+                      color: AppColors.kWhite,
+                    ),
+                    SizedBox(
+                      height: AppSpacing.eightVertical,
+                    ),
+                    Text(
+                      'Shipping Address',
+                      style: AppTypography.kExtraLight18,
+                    ),
+                    SizedBox(
+                      height: AppSpacing.eightVertical,
+                    ),
+                    AddressCard(
+                      addressModel: sc.sales[orderIndex].shippingAddress,
+                    ),
+                    SizedBox(
+                      height: AppSpacing.eightVertical,
+                    ),
+                    const Divider(
+                      color: AppColors.kWhite,
+                    ),
+                    SizedBox(
+                      height: AppSpacing.eightVertical,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Order Item(s)',
+                          style: AppTypography.kExtraLight18,
+                        ),
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0.w),
+                            child: Text(
+                              '(auto) ${sc.sales[orderIndex].orderStatus.name}',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: AppSpacing.eightVertical,
+                    ),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return OrderItemCard(
+                          orderItemIndex: index,
+                          orderIndex: orderIndex,
+                          itemIndex: index,
+                          product: (posts[sc.sales[orderIndex].orderItems[index]
+                                  .orderItemID] as PostResponse)
+                              .post,
+                          buyer: buyer,
+                        );
+                      },
+                      separatorBuilder: (context, index) => SizedBox(
+                        height: 10.w,
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0.w),
-                        child: Text('(auto) ${order.orderStatus.name}'),
-                      ),
+                      itemCount: sc.sales[orderIndex].orderItems.length,
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: AppSpacing.eightVertical,
-                ),
-                ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return OrderItemCard(
-                      orderItemIndex: index,
-                      orderIndex: orderIndex,
-                      itemIndex: index,
-                      product: (posts[order.orderItems[index].orderItemID]
-                              as PostResponse)
-                          .post,
-                      buyer: buyer,
-                    );
-                  },
-                  separatorBuilder: (context, index) => SizedBox(
-                    height: 10.w,
-                  ),
-                  itemCount: order.orderItems.length,
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

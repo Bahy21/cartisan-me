@@ -1,6 +1,8 @@
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/modules/sidemenu/settings/blocked_users_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class SettingView extends StatelessWidget {
   const SettingView({Key? key}) : super(key: key);
@@ -15,7 +17,9 @@ class SettingView extends StatelessWidget {
       body: Column(
         children: [
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Get.to<Widget>(BlockedUsersView.new);
+            },
             title: Text('Blocked User', style: AppTypography.kMedium14),
             trailing: SvgPicture.asset(AppAssets.kChevronRight),
           ),
