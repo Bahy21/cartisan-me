@@ -2,7 +2,6 @@
 import 'package:cartisan/app/controllers/sales_history_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/order_item_status.dart';
-import 'package:cartisan/app/models/order_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/cart/components/address_card.dart';
@@ -12,10 +11,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class FullOrderDetails extends StatelessWidget {
+class FullSaleDetails extends StatelessWidget {
   final int orderIndex;
-  const FullOrderDetails({
+  final Map<String, dynamic> posts;
+  final UserModel buyer;
+  const FullSaleDetails({
     required this.orderIndex,
+    required this.posts,
+    required this.buyer,
     super.key,
   });
   SalesHistoryController get sc => Get.find<SalesHistoryController>();

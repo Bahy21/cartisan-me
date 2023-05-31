@@ -2,6 +2,7 @@ import 'package:cartisan/app/controllers/sales_history_controller.dart';
 import 'package:cartisan/app/data/constants/app_colors.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
 import 'package:cartisan/app/models/order_item_model.dart';
+import 'package:cartisan/app/models/order_item_status.dart';
 import 'package:cartisan/app/models/order_model.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/components/update_status_card.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,6 @@ class _ChangeOrderStatusButtonState extends State<ChangeOrderStatusButton> {
             orderIndex: widget.orderIndex,
           ),
         );
-        setState(() {});
       },
       child: Container(
         alignment: Alignment.center,
@@ -46,7 +46,7 @@ class _ChangeOrderStatusButtonState extends State<ChangeOrderStatusButton> {
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Text(
-          orderItem.status.name,
+          orderItemStatusToString(orderItem.status),
           style: AppTypography.kBold12,
         ),
       ),

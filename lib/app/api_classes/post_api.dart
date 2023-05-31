@@ -12,6 +12,8 @@ String GET_POST = '$BASE_URL/post/getPost';
 String GET_COMMENTS = '$BASE_URL/post/comments/getComments';
 String CREATE_POST = '$BASE_URL/newPost';
 String CREATE_REVIEW = '$BASE_URL/review/postReview';
+String GET_REVIEW = '$BASE_URL/review/getOneReview';
+String GET_REVIEWS = '$BASE_URL/review/getAllReviews';
 String CREATE_COMMENT = '$BASE_URL/post/comments/newComment';
 String DELETE_COMMENT = '$BASE_URL/post/comments/deleteComment';
 String UNLIKE_POST = '$BASE_URL/post/unlikePost';
@@ -21,6 +23,54 @@ String UPDATE_POST = '$BASE_URL/updatePost';
 
 class PostAPI {
   final apiService = APIService();
+
+  Future<bool> postReview(
+      {required ReviewModel review, required String postId}) async {
+    try {
+      final result =
+          await apiService.post<Map>('$CREATE_REVIEW/$postId', review.toMap());
+      if (result.statusCode != 200) {
+        throw Exception('Error posting review');
+      }
+      return true;
+    } on Exception catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<ReviewModel?> getReviewById(
+      {required String postId, required String reviewId}) async {
+    try {
+      final result = await apiService.get<Map>('$GET_REVIEW/$postId/$reviewId');
+      if (result.statusCode != 200) {
+        throw Exception('Error getting review');
+      }
+      final data = result.data!['data'] as Map<String, dynamic>;
+      return ReviewModel.fromMap(data);
+    } on Exception catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  Future<List<ReviewModel>> getPostReviews(String postId) async {
+    try {
+      final result = await apiService.get<Map>('$GET_REVIEWS/$postId');
+      if (result.statusCode != 200) {
+        throw Exception('Error getting reviews');
+      }
+      final data = result.data!['data'] as List<dynamic>;
+      final reviews = <ReviewModel>[];
+      for (final review in data) {
+        reviews.add(ReviewModel.fromMap(review as Map<String, dynamic>));
+      }
+      return reviews;
+    } on Exception catch (e) {
+      log(e.toString());
+      return [];
+    }
+  }
 
   Future<bool> archivePost(String postId) async {
     try {

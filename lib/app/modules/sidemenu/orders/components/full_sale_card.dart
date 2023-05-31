@@ -12,7 +12,7 @@ import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/chat/components/chatroom_tile.dart';
 import 'package:cartisan/app/modules/profile/other_store_view.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/components/sale_tile.dart';
-import 'package:cartisan/app/modules/sidemenu/orders/full_order_details.dart';
+import 'package:cartisan/app/modules/sidemenu/orders/full_sale_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -69,7 +69,7 @@ class FullSaleCard extends StatelessWidget {
         return InkWell(
           onTap: () {
             Get.to<Widget>(
-              () => FullOrderDetails(
+              () => FullSaleDetails(
                 orderIndex: orderIndex,
                 posts: posts,
                 buyer: buyer,

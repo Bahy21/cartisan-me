@@ -6,12 +6,13 @@ import { Address } from "../models/address";
 import { CartItemModel } from "../models/cart_item_model";
 import { OrderModel } from "../models/order_model";
 import { CommentModel } from "../models/comment_model";
-import { DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
+import { DocumentData, DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
 import { OrderItemModel } from "../models/order_item_model";
 // 
 import { userCollection } from "./database";
 import logger from "./logger";
 import { log } from "firebase-functions/logger";
+import { ReviewModel } from "../models/review_model";
 
 
 export function postFromDoc(doc:firestore.DocumentSnapshot): PostModel{
@@ -438,5 +439,23 @@ export function deliveryOptionFromIndex(index: number,): DeliveryOptions{
 
 }
 
+export function reviewFromDoc( doc: DocumentSnapshot): ReviewModel{
+  return new ReviewModel({
+    reviewId: doc.data().reviewId,
+    reviewerId: doc.data().buyerId,
+    reviewerName: doc.data().reviewerName,
+    reviewText: doc.data().review,
+    rating: doc.data().rating,
+  })
+}
+export function reviewFromDocData( docData: DocumentData): ReviewModel{
+  return new ReviewModel({
+    reviewId: docData.reviewId,
+    reviewerId: docData.buyerId,
+    reviewerName: docData.reviewerName,
+    reviewText: docData.review,
+    rating: docData.rating,
+  })
+}
 
 
