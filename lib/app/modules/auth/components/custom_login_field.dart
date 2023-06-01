@@ -6,8 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CustomLoginField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
-  final String iconPath;
-  final FocusNode focusNode;
+  final String? iconPath;
+  final FocusNode? focusNode;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final String? Function(String?)? validator;
@@ -16,8 +16,8 @@ class CustomLoginField extends StatefulWidget {
   const CustomLoginField({
     required this.controller,
     required this.hintText,
-    required this.iconPath,
-    required this.focusNode,
+    this.iconPath,
+    this.focusNode,
     super.key,
     this.isSeller = false,
     this.keyboardType,
@@ -32,7 +32,7 @@ class CustomLoginField extends StatefulWidget {
 
 class _CustomLoginFieldState extends State<CustomLoginField> {
   bool isObscure = true;
-  
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -45,10 +45,10 @@ class _CustomLoginFieldState extends State<CustomLoginField> {
       style: AppTypography.kLight14,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 18.w),
-        prefixIcon: !widget.isSeller
+        prefixIcon: !widget.isSeller && widget.iconPath != null
             ? Padding(
                 padding: EdgeInsets.all(AppSpacing.twelveVertical),
-                child: SvgPicture.asset(widget.iconPath),
+                child: SvgPicture.asset(widget.iconPath!),
               )
             : null,
         suffixIcon: widget.isSeller

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/controllers/sales_history_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/order_item_model.dart';
+import 'package:cartisan/app/models/order_item_status.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/components/dotted_line_divider.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/components/order_receipts.dart';
@@ -90,7 +91,7 @@ class SaleTile extends StatelessWidget {
             ),
             OrderReceipts(
               title: 'Order Status :',
-              info: orderItem.status.name,
+              info: orderItemStatusToString(orderItem.status),
             ),
           ],
         ),

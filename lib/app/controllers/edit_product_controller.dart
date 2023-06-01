@@ -27,8 +27,10 @@ class EditProductController extends GetxController {
   final optionsTextEditingController = TextEditingController();
   final productVariantsTextController = TextEditingController();
   String postIdToBeEdited;
-  PostModel get post => _post.value!;
-  set post(PostModel newPost) => _post.value = newPost;
+  PostModel? get post => _post.value;
+  bool get loading => _loading.value;
+  set post(PostModel? newPost) => _post.value = newPost;
+
   File? file;
 
   List<String> optionsList = [];
@@ -37,6 +39,7 @@ class EditProductController extends GetxController {
   List<Widget> optionsTextFields = [];
   UserModel get currentUser => Get.find<UserController>().currentUser!;
   EditProductController({required this.postIdToBeEdited});
+  RxBool _loading = true.obs;
 
   Rx<PostModel?> _post = Rx<PostModel?>(null);
 
@@ -77,22 +80,22 @@ class EditProductController extends GetxController {
 
   Future<void> updatePost() async {
     Get.dialog<Widget>(LoadingDialog(), barrierDismissible: false);
-    final newPost = post.copyWith(
+    final newPost = post!.copyWith(
       productName: productNameTextEditingController.text,
       description: descriptionTextEditingController.text.isEmpty
-          ? post.description
+          ? post!.description
           : descriptionTextEditingController.text,
       brand: brandTextEditingController.text.isEmpty
-          ? post.brand
+          ? post!.brand
           : brandTextEditingController.text,
       price: int.tryParse(priceController.text) == null ||
               int.tryParse(priceController.text) == 0
-          ? post.price
+          ? post!.price
           : int.parse(priceController.text).toDouble(),
       location: locationTextEditingController.text.isEmpty
-          ? post.location
+          ? post!.location
           : locationTextEditingController.text,
-      variants: post.variants,
+      variants: post!.variants,
     );
     final result = await postApi.updatePost(newPost);
     Get.back<void>();
@@ -107,7 +110,8 @@ class EditProductController extends GetxController {
   Future<bool> replacePhoto(String original) async {
     var photo = await takeImage();
     if (photo == null) return false;
-    post.images[post.images.indexOf(original)] = (await db.uploadImage(photo))!;
+    post!.images[post!.images.indexOf(original)] =
+        (await db.uploadImage(photo))!;
     await updatePost();
     return true;
   }
@@ -126,8 +130,8 @@ class EditProductController extends GetxController {
   Future<bool> addImage(String current) async {
     var photo = await takeImage();
     if (photo == null) return false;
-    post.images.insert(
-      post.images.indexOf(current),
+    post!.images.insert(
+      post!.images.indexOf(current),
       (await db.uploadImage(photo))!,
     );
     await updatePost();
@@ -138,7 +142,7 @@ class EditProductController extends GetxController {
     await Get.defaultDialog<Widget>(
       title: 'Delete image',
       onConfirm: () async {
-        await removeImage(post.images.indexOf(original));
+        await removeImage(post!.images.indexOf(original));
         Get.back<void>();
       },
       onCancel: () => Get.back<void>(),
@@ -152,7 +156,7 @@ class EditProductController extends GetxController {
   }
 
   Future<void> removeImage(int index) async {
-    post.images.removeAt(index);
+    post!.images.removeAt(index);
     await updatePost();
     update();
   }

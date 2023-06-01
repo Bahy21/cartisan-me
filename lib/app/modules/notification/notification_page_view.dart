@@ -34,7 +34,7 @@ class _NotificationPageViewState extends State<NotificationPageView> {
   }
 
   Future<void> _clearNotifications() async {
-    await Get.dialog<Widget>(const LoadingDialog(), barrierDismissible: false);
+    Get.dialog<Widget>(const LoadingDialog(), barrierDismissible: false);
     final result = await notifsApi.clearNotifications(
       Get.find<AuthService>().currentUser!.uid,
     );

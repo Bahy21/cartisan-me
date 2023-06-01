@@ -1,28 +1,38 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:cartisan/app/controllers/sales_history_controller.dart';
-import 'package:cartisan/app/data/constants/constants.dart';
-import 'package:cartisan/app/models/order_item_status.dart';
-import 'package:cartisan/app/models/order_model.dart';
-import 'package:cartisan/app/models/post_response.dart';
-import 'package:cartisan/app/models/user_model.dart';
-import 'package:cartisan/app/modules/cart/components/address_card.dart';
-import 'package:cartisan/app/modules/sidemenu/orders/components/order_item_card.dart';
+import 'package:cartisan/app/modules/sidemenu/orders/components/order_details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class FullOrderDetails extends StatelessWidget {
+import 'package:cartisan/app/controllers/purchase_detail_controller.dart';
+import 'package:cartisan/app/controllers/purchase_history_controller.dart';
+import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/models/order_item_status.dart';
+import 'package:cartisan/app/models/post_response.dart';
+import 'package:cartisan/app/modules/cart/components/address_card.dart';
+import 'package:cartisan/app/modules/sidemenu/orders/components/purchased_item_card.dart';
+
+class FullPurchaseDetails extends StatelessWidget {
   final int orderIndex;
-  const FullOrderDetails({
+  const FullPurchaseDetails({
     required this.orderIndex,
     super.key,
   });
-  SalesHistoryController get sc => Get.find<SalesHistoryController>();
+  PurchaseHistoryController get pc => Get.find<PurchaseHistoryController>();
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () {
+    return GetX<PurchaseDetailController>(
+      init:
+          PurchaseDetailController(orderToBeFetched: pc.purchases[orderIndex]),
+      builder: (controller) {
+        if (controller.loading) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          );
+        }
         return SafeArea(
           child: Scaffold(
             body: Container(
@@ -36,15 +46,15 @@ class FullOrderDetails extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Order Details',
+                      'Purchase Details',
                       style: AppTypography.kExtraLight18,
                     ),
                     SizedBox(
                       height: AppSpacing.eightVertical,
                     ),
                     OrderDetailsCard(
-                      orderId: sc.sales[orderIndex].orderId,
-                      timestamp: sc.sales[orderIndex].timestamp,
+                      orderId: pc.purchases[orderIndex].orderId,
+                      timestamp: pc.purchases[orderIndex].timestamp,
                     ),
                     const Divider(
                       color: AppColors.kWhite,
@@ -60,7 +70,7 @@ class FullOrderDetails extends StatelessWidget {
                       height: AppSpacing.eightVertical,
                     ),
                     AddressCard(
-                      addressModel: sc.sales[orderIndex].shippingAddress,
+                      addressModel: pc.purchases[orderIndex].shippingAddress,
                     ),
                     SizedBox(
                       height: AppSpacing.eightVertical,
@@ -86,7 +96,7 @@ class FullOrderDetails extends StatelessWidget {
                           child: Padding(
                             padding: EdgeInsets.all(8.0.w),
                             child: Text(
-                              '(auto) ${orderItemStatusToString(sc.sales[orderIndex].orderStatus)}',
+                              '(auto) ${orderItemStatusToString(pc.purchases[orderIndex].orderStatus)}',
                             ),
                           ),
                         ),
@@ -98,20 +108,19 @@ class FullOrderDetails extends StatelessWidget {
                     ListView.separated(
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        return OrderItemCard(
+                        final post = controller.posts[pc.purchases[orderIndex]
+                            .orderItems[index].orderItemID] as PostResponse;
+                        return PurchasedItemCard(
                           orderItemIndex: index,
                           orderIndex: orderIndex,
-                          itemIndex: index,
-                          product: (posts[sc.sales[orderIndex].orderItems[index]
-                                  .orderItemID] as PostResponse)
-                              .post,
-                          buyer: buyer,
+                          product: post.post,
+                          seller: post.owner,
                         );
                       },
                       separatorBuilder: (context, index) => SizedBox(
                         height: 10.w,
                       ),
-                      itemCount: sc.sales[orderIndex].orderItems.length,
+                      itemCount: controller.order.orderItems.length,
                     ),
                   ],
                 ),
@@ -120,44 +129,6 @@ class FullOrderDetails extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class OrderDetailsCard extends StatelessWidget {
-  final String orderId;
-  final int timestamp;
-  const OrderDetailsCard({
-    required this.orderId,
-    required this.timestamp,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 19.h),
-      decoration: BoxDecoration(
-        color: AppColors.kGrey,
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Order ID: $orderId',
-            style: AppTypography.kMedium16,
-          ),
-          SizedBox(
-            height: AppSpacing.sixVertical,
-          ),
-          Text(
-            'Ordered At: ${DateFormat.yMMMd().format(DateTime.fromMillisecondsSinceEpoch(timestamp))} @ ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(timestamp))}',
-            style: AppTypography.kExtraLight12,
-          ),
-        ],
-      ),
     );
   }
 }

@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 class ReviewModel {
-  String reviewId;
+  String reviewID;
   String reviewText;
   double rating;
   String reviewerName;
@@ -10,7 +10,7 @@ class ReviewModel {
   int timestamp;
 
   ReviewModel({
-    required this.reviewId,
+    required this.reviewID,
     required this.reviewText,
     required this.rating,
     required this.reviewerName,
@@ -22,7 +22,7 @@ class ReviewModel {
 
   factory ReviewModel.fromMap(Map<String, dynamic> map) {
     return ReviewModel(
-      reviewId: map['reviewId'] as String,
+      reviewID: map['reviewID'] as String,
       reviewText: map['reviewText'] as String,
       rating: (map['rating'] as num).toDouble(),
       reviewerName: map['reviewerName'] as String,
@@ -33,7 +33,7 @@ class ReviewModel {
 
   @override
   int get hashCode {
-    return reviewId.hashCode ^
+    return reviewID.hashCode ^
         reviewText.hashCode ^
         rating.hashCode ^
         reviewerName.hashCode ^
@@ -43,14 +43,14 @@ class ReviewModel {
 
   @override
   String toString() {
-    return 'ReviewModel(reviewId: $reviewId, reviewText: $reviewText, rating: $rating, reviewerName: $reviewerName, reviewerId: $reviewerId, timestamp: $timestamp)';
+    return 'ReviewModel(reviewId: $reviewID, reviewText: $reviewText, rating: $rating, reviewerName: $reviewerName, reviewerId: $reviewerId, timestamp: $timestamp)';
   }
 
   @override
   bool operator ==(covariant ReviewModel other) {
     if (identical(this, other)) return true;
 
-    return other.reviewId == reviewId &&
+    return other.reviewID == reviewID &&
         other.reviewText == reviewText &&
         other.rating == rating &&
         other.reviewerName == reviewerName &&
@@ -59,7 +59,7 @@ class ReviewModel {
   }
 
   ReviewModel copyWith({
-    String? reviewId,
+    String? reviewID,
     String? reviewText,
     double? rating,
     String? reviewerName,
@@ -67,7 +67,7 @@ class ReviewModel {
     int? timestamp,
   }) {
     return ReviewModel(
-      reviewId: reviewId ?? this.reviewId,
+      reviewID: reviewID ?? this.reviewID,
       reviewText: reviewText ?? this.reviewText,
       rating: rating ?? this.rating,
       reviewerName: reviewerName ?? this.reviewerName,
@@ -78,7 +78,7 @@ class ReviewModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'reviewId': reviewId,
+      'reviewID': reviewID,
       'reviewText': reviewText,
       'rating': rating,
       'reviewerName': reviewerName,

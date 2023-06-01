@@ -18,6 +18,7 @@ String FOLLOW_USER = '$BASE_URL/social/followUser';
 String UNBLOCK_USER = '$BASE_URL/social/unblockUser';
 String BLOCK_USER = '$BASE_URL/social/blockUser';
 String LIKE_POST = '$BASE_URL/post/likePost';
+String UNLIKE_POST = '$BASE_URL/post/unlikePost';
 
 class SocialAPI {
   final apiService = APIService();
@@ -28,6 +29,24 @@ class SocialAPI {
     try {
       final result =
           await apiService.put<Map>('$LIKE_POST/$userId/$postId', null);
+      if (result.statusCode != 200) {
+        throw Exception('Error liking post');
+      }
+      return true;
+    } on Exception catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> unlikePost({
+    required String userId,
+    required String postId,
+  }) async {
+    try {
+      final result = await apiService.delete<Map>(
+        '$UNLIKE_POST/$userId/$postId',
+      );
       if (result.statusCode != 200) {
         throw Exception('Error liking post');
       }

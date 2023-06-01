@@ -3,6 +3,7 @@ import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/data/global_functions/success_dialog.dart';
 import 'package:cartisan/app/modules/auth/components/cartisan_logo.dart';
 import 'package:cartisan/app/modules/auth/components/custom_login_field.dart';
+import 'package:cartisan/app/modules/profile/components/custom_textformfield.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/services/translation_service.dart';
@@ -28,6 +29,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordFocus = FocusNode();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _taxController = TextEditingController();
   final _confirmPasswordFocus = FocusNode();
   bool _isSeller = false;
 
@@ -39,10 +42,10 @@ class _SignUpPageState extends State<SignUpPage> {
         password: _passwordController.text,
         name: _nameController.text,
         isSeller: _isSeller,
-        taxPercentage: 0,
-        city: 'Miami',
+        taxPercentage: double.tryParse(_taxController.text) ?? 0.0,
+        city: '',
         country: 'America',
-        state: 'LA',
+        state: _stateController.text,
       );
       if (status) {
         hideLoadingDialog();
@@ -184,6 +187,35 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                   ),
                 ),
+                if (_isSeller) ...[
+                  SizedBox(height: AppSpacing.tenVertical),
+                  CustomLoginField(
+                    controller: _stateController,
+                    hintText: 'State',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return TranslationsService
+                            .sigUpPageTranslation.fieldRequired;
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: AppSpacing.tenVertical),
+                  CustomLoginField(
+                    controller: _taxController,
+                    hintText: 'Tax',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return TranslationsService
+                            .sigUpPageTranslation.fieldRequired;
+                      } else if (double.tryParse(value) == null) {
+                        return 'Please enter a valid number';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: AppSpacing.tenVertical),
+                ],
                 SizedBox(height: 32.h),
                 PrimaryButton(
                   onTap: () {

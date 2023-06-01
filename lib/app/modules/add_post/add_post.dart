@@ -290,10 +290,18 @@ class _AddPostState extends State<AddPost> {
                   controller: _productVariantsText,
                   addIcon: InkWell(
                     onTap: () {
-                      setState(() {
-                        _variants.add(_productVariantsText.text);
-                        _productVariantsText.clear();
-                      });
+                      if (_productVariantsText.text.isEmpty) {
+                        showErrorDialog('Variant cannot be empty');
+                      } else if (_variants.contains(
+                        _productVariantsText.text,
+                      )) {
+                        showErrorDialog('Variant already exists');
+                      } else {
+                        setState(() {
+                          _variants.add(_productVariantsText.text);
+                          _productVariantsText.clear();
+                        });
+                      }
                     },
                     child: Icon(
                       Icons.add_circle_outline,

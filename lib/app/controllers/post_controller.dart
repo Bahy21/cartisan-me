@@ -3,9 +3,9 @@
 import 'package:cartisan/app/api_classes/cart_api.dart';
 import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/api_classes/report_api.dart';
+import 'package:cartisan/app/api_classes/social_api.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
-import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/modules/cart/cart_view_pages.dart';
 import 'package:cartisan/app/modules/profile/other_store_view.dart';
@@ -18,6 +18,7 @@ class PostController extends GetxController {
   final cartApi = CartAPI();
   final reportApi = ReportAPI();
   final postApi = PostAPI();
+  final socialApi = SocialAPI();
   String get currentUserId => Get.find<AuthService>().currentUser!.uid;
   void buyNow(PostResponse postResponse) async {
     Get.dialog<Widget>(LoadingDialog(), barrierDismissible: false);

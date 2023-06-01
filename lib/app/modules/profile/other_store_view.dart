@@ -73,7 +73,7 @@ class _OtherStoreViewState extends State<OtherStoreView> {
   }
 
   Future<void> startChat() async {
-    await Get.dialog<Widget>(const LoadingDialog());
+    Get.dialog<Widget>(const LoadingDialog());
     final storeOwner = Get.find<StorePageController>().storeOwner!;
     final checkChatroomExists = await chatController.chatExists(storeOwner.id);
     if (checkChatroomExists == null) {

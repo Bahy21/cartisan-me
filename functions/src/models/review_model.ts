@@ -4,29 +4,31 @@ export class ReviewModel {
     rating: number;
     reviewerName: string;
     reviewerId: string;
-    timestamp = Date.now();
-    constructor({reviewText, rating, reviewerName, reviewerId, reviewId} :{
+    timestamp : number;
+    constructor({reviewText, rating, reviewerName, reviewerId, reviewId, timestamp} :{
         reviewId: string,
         reviewText: string,
         rating: number,
         reviewerName: string,
         reviewerId: string,
+        timestamp: number,
     }){
         this.reviewId = reviewId;
         this.reviewText = reviewText;
         this.rating = rating;
         this.reviewerName = reviewerName;
         this.reviewerId = reviewerId;
+        this.timestamp = timestamp;
     }
 
     toMap(){
         return {
             reviewID: this.reviewId,
             reviewText: this.reviewText,
-            dateTime: this.timestamp,
             rating: this.rating,
             reviewerName: this.reviewerName,
-            reviewerID: this.reviewerId,
+            reviewerId: this.reviewerId,
+            timestamp: this.timestamp,
         }
     }
 

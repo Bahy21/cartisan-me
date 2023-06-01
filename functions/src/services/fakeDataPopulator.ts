@@ -154,6 +154,7 @@ export class FakeDataPopulator {
             reviewerName: reviewer.username,
             rating: faker.datatype.number({ max: 5, min: 1 }),
             reviewText: faker.lorem.sentence(faker.datatype.number({ max: 20, min: 10 })),
+            timestamp: Date.now()
           }));
         }
         for (const [key, value] of reviews.entries()) {

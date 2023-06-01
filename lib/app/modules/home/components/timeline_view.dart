@@ -53,6 +53,7 @@ class _TimelineViewState extends State<TimelineView> {
       tc.setLocalFalse();
       if (pageKey == 0) {
         await tc.storeLocal(newItems);
+        await tc.storeLocalLikes();
       }
     } on Exception catch (error) {
       retries++;
@@ -88,17 +89,18 @@ class _TimelineViewState extends State<TimelineView> {
   Widget build(BuildContext context) => GetX<TimelineController>(
         init: TimelineController(),
         builder: (controller) {
-          if (as.userToken.isEmpty) {
+          if (as.userToken.isEmpty || as.currentUser == null) {
             return const Center(
               child: CircularProgressIndicator.adaptive(),
             );
           }
           final posts = controller.loadLocal();
+          final likes = controller.loadLikes();
           if (posts.isEmpty) {
             controller.setLocalFalse();
           }
           if (controller.loadingLocal) {
-            log('loading local');
+            controller.addLikes(likes);
             return ListView.builder(
               itemCount: posts.length,
               itemBuilder: (context, index) {

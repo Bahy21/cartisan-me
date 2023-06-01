@@ -11,7 +11,7 @@ export class PostResponse{
     toMap(){
         return {
             'post': this.post.toMap(),
-            'user': this.user.toMap()
+            'user': this.user.toMap(),
         }
     }
 }

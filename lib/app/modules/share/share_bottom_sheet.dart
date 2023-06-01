@@ -41,6 +41,7 @@ class ShareBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomSheet(
+      constraints: BoxConstraints(maxHeight: Get.height * 0.35),
       onClosing: () {},
       builder: (context) => ListView(
         children: [

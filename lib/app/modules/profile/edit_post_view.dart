@@ -1,10 +1,12 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/controllers/edit_product_controller.dart';
 import 'package:cartisan/app/data/constants/app_spacing.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/add_post/components/chip_adding_textfield.dart';
@@ -31,12 +33,20 @@ class _EditPostViewState extends State<EditPostView> {
   final _formKey = GlobalKey<FormState>();
 
   UserModel get currentUser => Get.find<UserController>().currentUser!;
-
+  final _iconSize = 24;
   @override
   Widget build(BuildContext context) {
     return GetX<EditProductController>(
       init: EditProductController(postIdToBeEdited: widget.post.postId),
       builder: (controller) {
+        if (controller.post == null) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          );
+        }
+        final imageCount = controller.post!.images.length;
         return WillPopScope(
           onWillPop: () async {
             return false;
@@ -75,70 +85,101 @@ class _EditPostViewState extends State<EditPostView> {
               ),
               children: <Widget>[
                 SizedBox(
-                  height: Get.height * 0.6,
+                  height: Get.height * 0.5,
                   child: CarouselSlider(
                     children: List.generate(
-                      controller.post.images.length,
+                      imageCount,
                       (index) => Column(
                         children: [
-                          Image.network(
-                            controller.post.images[index],
-                            height: Get.height * 0.5,
-                            fit: BoxFit.contain,
-                          ),
-                          SizedBox(
-                            height: AppSpacing.tenVertical,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Stack(
                             children: [
-                              InkWell(
-                                onTap: controller.post.images.length == 1
-                                    ? null
-                                    : () {
-                                        controller.deleteImageDecisionDialog(
-                                          controller.post.images[index],
-                                        );
-                                      },
-                                child: Text(
-                                  "Remove",
-                                  style: AppTypography.kMedium12.copyWith(
-                                      color: controller.post.images.length == 1
-                                          ? AppColors.kGrey2
-                                          : AppColors.kPrimary),
+                              Align(
+                                alignment: Alignment.topCenter,
+                                child: CachedNetworkImage(
+                                  imageUrl: controller.post!.images[index],
+                                  height: Get.height * 0.5,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              SizedBox(
-                                width: AppSpacing.eightHorizontal,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  controller.replacePhoto(
-                                    controller.post.images[index],
-                                  );
-                                },
-                                child: Text(
-                                  "Replace",
-                                  style: AppTypography.kMedium12
-                                      .copyWith(color: AppColors.kPrimary),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Column(
+                                  children: [
+                                    DecoratedBox(
+                                      decoration: const BoxDecoration(
+                                        color: AppColors.kPrimary,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: Icon(
+                                          Icons.delete_rounded,
+                                          size: _iconSize.w,
+                                        ),
+                                        onPressed: imageCount == 1
+                                            ? () => showErrorDialog(
+                                                  'At least one image is needed\n Try replacing instead.',
+                                                )
+                                            : () {
+                                                controller
+                                                    .deleteImageDecisionDialog(
+                                                  controller
+                                                      .post!.images[index],
+                                                );
+                                              },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: AppSpacing.tenVertical,
+                                    ),
+                                    DecoratedBox(
+                                      decoration: const BoxDecoration(
+                                        color: AppColors.kPrimary,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: Icon(
+                                          Icons.find_replace_rounded,
+                                          size: _iconSize.w,
+                                        ),
+                                        onPressed: () {
+                                          controller.replacePhoto(
+                                            controller.post!.images[index],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: AppSpacing.tenVertical,
+                                    ),
+                                    DecoratedBox(
+                                      decoration: const BoxDecoration(
+                                        color: AppColors.kPrimary,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: Icon(
+                                          Icons.add_rounded,
+                                          size: _iconSize.w,
+                                        ),
+                                        onPressed:
+                                            controller.post!.images.length == 5
+                                                ? () => showErrorDialog(
+                                                      'Maximum of 5 images only',
+                                                    )
+                                                : () {
+                                                    controller.addImage(
+                                                      controller
+                                                          .post!.images[index],
+                                                    );
+                                                  },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              if (controller.post.images.length <= 5) ...[
-                                SizedBox(
-                                  width: AppSpacing.sixHorizontal,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    controller.addImage(
-                                        controller.post.images[index]);
-                                  },
-                                  child: Text(
-                                    'Add',
-                                    style: AppTypography.kMedium12
-                                        .copyWith(color: AppColors.kPrimary),
-                                  ),
-                                ),
-                              ]
                             ],
                           ),
                         ],
@@ -155,7 +196,7 @@ class _EditPostViewState extends State<EditPostView> {
                 ),
                 CustomTextFormField(
                   controller: controller.productNameTextEditingController,
-                  hintText: controller.post.productName,
+                  hintText: controller.post!.productName,
                 ),
                 const Divider(),
                 Text(
@@ -165,7 +206,7 @@ class _EditPostViewState extends State<EditPostView> {
                 CustomTextFormField(
                   maxLines: null,
                   controller: controller.descriptionTextEditingController,
-                  hintText: controller.post.description,
+                  hintText: controller.post!.description,
                 ),
                 const Divider(),
                 Row(
@@ -181,7 +222,7 @@ class _EditPostViewState extends State<EditPostView> {
                         ),
                         MiniTextField(
                           controller: controller.brandTextEditingController,
-                          hintText: controller.post.brand,
+                          hintText: controller.post!.brand,
                         ),
                       ],
                     ),
@@ -195,7 +236,7 @@ class _EditPostViewState extends State<EditPostView> {
                         ),
                         MiniTextField(
                           controller: controller.priceController,
-                          hintText: controller.post.price.toString(),
+                          hintText: controller.post!.price.toString(),
                         ),
                       ],
                     ),
@@ -208,7 +249,7 @@ class _EditPostViewState extends State<EditPostView> {
                 ),
                 CustomTextFormField(
                   controller: controller.locationTextEditingController,
-                  hintText: controller.post.location,
+                  hintText: controller.post!.location,
                 ),
                 const Divider(),
                 ProductVariantField(
@@ -216,11 +257,21 @@ class _EditPostViewState extends State<EditPostView> {
                   controller: controller.productVariantsTextController,
                   addIcon: InkWell(
                     onTap: () {
-                      setState(() {
-                        controller.post.variants
-                            .add(controller.productVariantsTextController.text);
-                        controller.productVariantsTextController.clear();
-                      });
+                      if (controller
+                          .productVariantsTextController.text.isEmpty) {
+                        showErrorDialog('Variant cannot be empty');
+                      } else if (controller.post!.variants.contains(
+                        controller.productVariantsTextController.text,
+                      )) {
+                        showErrorDialog('Variant already exists');
+                      } else {
+                        setState(() {
+                          controller.post!.variants.add(
+                            controller.productVariantsTextController.text,
+                          );
+                          controller.productVariantsTextController.clear();
+                        });
+                      }
                     },
                     child: Icon(
                       Icons.add_circle_outline,
@@ -230,7 +281,7 @@ class _EditPostViewState extends State<EditPostView> {
                   ),
                 ),
                 Wrap(
-                  children: controller.post.variants
+                  children: controller.post!.variants
                       .map(
                         (variant) => Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -247,7 +298,7 @@ class _EditPostViewState extends State<EditPostView> {
                             ),
                             onDeleted: () {
                               setState(() {
-                                controller.post.variants.remove(variant);
+                                controller.post!.variants.remove(variant);
                               });
                             },
                           ),

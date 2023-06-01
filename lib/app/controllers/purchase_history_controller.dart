@@ -35,11 +35,13 @@ class PurchaseHistoryController extends GetxController {
 
   Future<void> loadPurchasesFromApi() async {
     final result = await orderApi.getPurchasedOrders(userId);
+    log(result.toString());
     if (result.isNotEmpty) {
       _purchases.value = result;
       await box.write('purchases', result.map((e) => e.toMap()).toList());
     }
-    if (purchases.isEmpty) {
+    if (result.isEmpty) {
+      await box.write('purchases', <OrderModel>[]);
       _noPurchasesFound.value = true;
     }
   }

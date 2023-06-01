@@ -1,10 +1,10 @@
-
 import 'package:cartisan/app/api_classes/social_api.dart';
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class StorePageController extends GetxController {
@@ -45,7 +45,7 @@ class StorePageController extends GetxController {
   }
 
   Future<void> unblockUser() async {
-    await Get.dialog<void>(const LoadingDialog());
+    Get.dialog<Widget>(const LoadingDialog());
     final result = await socialApi.unblockUser(
       blockerId: _currentUid,
       blockedId: userId,

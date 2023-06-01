@@ -2,11 +2,15 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/api_service.dart';
+import 'package:cartisan/app/api_classes/social_api.dart';
+import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/models/comment_model.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/models/review_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
+import 'package:get/get.dart';
 
 String GET_POST = '$BASE_URL/post/getPost';
 String GET_COMMENTS = '$BASE_URL/post/comments/getComments';
@@ -54,13 +58,22 @@ class PostAPI {
     }
   }
 
-  Future<List<ReviewModel>> getPostReviews(String postId) async {
+  Future<List<ReviewModel>> getPostReviews(
+    String postId, {
+    String? lastSentReviewId,
+  }) async {
     try {
-      final result = await apiService.get<Map>('$GET_REVIEWS/$postId');
+      final limit = 10;
+      final result = await apiService.get<Map>(
+        '$GET_REVIEWS/$postId/$limit',
+        queryParameters: <String, dynamic>{
+          'lastSentReviewId': lastSentReviewId,
+        },
+      );
       if (result.statusCode != 200) {
         throw Exception('Error getting reviews');
       }
-      final data = result.data!['data'] as List<dynamic>;
+      final data = result.data!['data'] as List;
       final reviews = <ReviewModel>[];
       for (final review in data) {
         reviews.add(ReviewModel.fromMap(review as Map<String, dynamic>));

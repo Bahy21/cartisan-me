@@ -1,6 +1,6 @@
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/controllers/purchase_history_controller.dart';
-import 'package:cartisan/app/modules/sidemenu/orders/components/order_card.dart';
+import 'package:cartisan/app/modules/sidemenu/orders/components/purchase_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -29,7 +29,7 @@ class PurchasedOrder extends StatelessWidget {
           itemCount: pc.purchases.length,
           padding: EdgeInsets.only(top: 20.h, left: 23.w, right: 23.0.w),
           itemBuilder: (context, index) {
-            return OrderCard(
+            return PurchaseCard(
               orderIndex: index,
             );
           },

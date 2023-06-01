@@ -9,7 +9,7 @@ import { CommentModel } from "../models/comment_model";
 import { DocumentData, DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
 import { OrderItemModel } from "../models/order_item_model";
 // 
-import { userCollection } from "./database";
+import { likesCollection, userCollection } from "./database";
 import logger from "./logger";
 import { log } from "firebase-functions/logger";
 import { ReviewModel } from "../models/review_model";
@@ -446,16 +446,20 @@ export function reviewFromDoc( doc: DocumentSnapshot): ReviewModel{
     reviewerName: doc.data().reviewerName,
     reviewText: doc.data().review,
     rating: doc.data().rating,
+    timestamp: doc.data().timestamp,
   })
 }
 export function reviewFromDocData( docData: DocumentData): ReviewModel{
   return new ReviewModel({
-    reviewId: docData.reviewId,
-    reviewerId: docData.buyerId,
+    reviewId: docData.reviewID,
+    reviewerId: docData.reviewerId,
     reviewerName: docData.reviewerName,
-    reviewText: docData.review,
+    reviewText: docData.reviewText,
     rating: docData.rating,
+    timestamp: docData.timestamp,
   })
 }
+
+
 
 

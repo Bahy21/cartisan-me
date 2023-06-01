@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/controllers/purchase_history_controller.dart';
@@ -7,14 +9,14 @@ import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/modules/chat/components/chatroom_tile.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/components/dotted_line_divider.dart';
 import 'package:cartisan/app/modules/sidemenu/orders/components/order_receipts.dart';
-import 'package:cartisan/app/modules/sidemenu/orders/full_order_details.dart';
+import 'package:cartisan/app/modules/sidemenu/orders/full_purchase_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class OrderCard extends StatelessWidget {
+class PurchaseCard extends StatelessWidget {
   final int orderIndex;
-  const OrderCard({required this.orderIndex, super.key});
+  const PurchaseCard({required this.orderIndex, super.key});
   PurchaseHistoryController get controller =>
       Get.find<PurchaseHistoryController>();
   @override
@@ -43,10 +45,10 @@ class OrderCard extends StatelessWidget {
           totalOrderItems += item.quantity;
         }
         final title = orderItemCount > 1
-            ? post.productName
-            : 'post.productNames & ${orderItemCount - 1} other(s)';
+            ? '${post.productName} & ${orderItemCount - 1} other(s)'
+            : post.productName;
         return InkWell(
-          onTap: () => Get.to<Widget>(() => FullOrderDetails(
+          onTap: () => Get.to<Widget>(() => FullPurchaseDetails(
                 orderIndex: orderIndex,
               )),
           child: Container(

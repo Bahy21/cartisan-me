@@ -11,6 +11,7 @@ import 'package:cartisan/app/modules/home/components/custom_drop_down.dart';
 import 'package:cartisan/app/modules/home/components/expandable_text.dart';
 import 'package:cartisan/app/modules/home/components/quantity_card.dart';
 import 'package:cartisan/app/modules/profile/edit_post_view.dart';
+import 'package:cartisan/app/modules/review/see_all_reviews.dart';
 import 'package:cartisan/app/modules/share/share_bottom_sheet.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:cartisan/app/modules/widgets/popup_menu.dart';
@@ -37,6 +38,7 @@ class PostCard extends StatelessWidget {
   });
 
   PostController get pc => Get.find<PostController>();
+  TimelineController get tc => Get.find<TimelineController>();
   String get currentUid => Get.find<AuthService>().currentUser!.uid;
   int get _avatarSize => 60;
   @override
@@ -145,14 +147,14 @@ class PostCard extends StatelessWidget {
                   PopupMenuItem<dynamic>(
                     child: TextButton(
                       onPressed: () => pc.reportPost(postResponse),
-                      child: Text('Report'),
+                      child: Text('Report', style: AppTypography.kMedium18),
                     ),
                   ),
-                if (post.ownerId == currentUid)
+                if (post.ownerId == currentUid) ...[
                   PopupMenuItem<dynamic>(
                     child: StatefulBuilder(builder: (context, setState) {
-                      return TextButton(
-                        onPressed: () async {
+                      return ListTile(
+                        onTap: () async {
                           final result =
                               await pc.archiveController(postResponse);
                           if (result) {
@@ -161,16 +163,49 @@ class PostCard extends StatelessWidget {
                             });
                           }
                         },
-                        child: Text(post.archived ? 'Un-Archive' : 'Archive'),
+                        title: Text(
+                          post.archived ? 'Un-Archive' : 'Archive',
+                          style: AppTypography.kMedium14.copyWith(
+                            color: AppColors.kWhite,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
                       );
                     }),
                   ),
+                  PopupMenuItem<dynamic>(
+                    child: ListTile(
+                      onTap: () async {
+                        final result =
+                            await Get.to<PostModel>(EditPostView(post: post));
+                        if (result != null) {
+                          updatePostCallback!(result);
+                        }
+                      },
+                      title: Text(
+                        'Edit',
+                        style: AppTypography.kMedium14.copyWith(
+                          color: AppColors.kWhite,
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                    ),
+                  ),
+                ],
               ]),
             ],
           ),
           SizedBox(height: 13.h),
-          PostImageCarousel(images: post.images),
+          InkWell(
+            onDoubleTap: () => tc.handleLikeUnlike(post.postId),
+            child: PostImageCarousel(images: post.images),
+          ),
           SizedBox(height: AppSpacing.seventeenVertical),
+          PostControls(
+            postId: post.postId,
+          ),
           BuildPostMetadata(
             post: post,
             buyNowCallback: () => pc.buyNow(postResponse),
@@ -213,23 +248,32 @@ class PostImageCarousel extends StatelessWidget {
 }
 
 class PostControls extends StatelessWidget {
-  const PostControls({super.key});
-
+  final String postId;
+  const PostControls({
+    required this.postId,
+    super.key,
+  });
+  TimelineController get pc => Get.find<TimelineController>();
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.favorite_border_outlined),
+        Obx(
+          () => IconButton(
+            onPressed: () {},
+            icon: pc.likes[postId] == true
+                ? Icon(
+                    Icons.favorite,
+                    color: AppColors.kPrimary,
+                  )
+                : Icon(Icons.favorite_border_outlined),
+          ),
         ),
         IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.share_outlined),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.more_vert_outlined),
+          onPressed: () {
+            Get.to<Widget>(() => SeeAllReviews(postId: postId));
+          },
+          icon: Icon(Icons.reviews_outlined),
         ),
       ],
     );
@@ -317,7 +361,7 @@ class BuildPostMetadata extends StatelessWidget {
               Expanded(
                 flex: 4,
                 child: CustomDropDown(
-                  items: post.variants,
+                  items: Set<String>.from(post.variants).toList(),
                   defaultValue: post.variants.first,
                   onChanged: (value) {
                     post.selectedVariant = value;
@@ -325,20 +369,6 @@ class BuildPostMetadata extends StatelessWidget {
                 ),
               ),
             ],
-          )
-        else
-          Center(
-            child: PrimaryButton(
-              onTap: () async {
-                final result =
-                    await Get.to<PostModel>(EditPostView(post: post));
-                log(result.toString());
-                if (result != null) {
-                  updatePostCallback!(result);
-                }
-              },
-              text: 'Edit Post',
-            ),
           ),
       ],
     );
