@@ -2,9 +2,12 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/notification_model.dart';
 import 'package:cartisan/app/models/notification_type.dart';
 import 'package:cartisan/app/modules/profile/other_store_view.dart';
+import 'package:cartisan/app/modules/review/view_post_and_review_notification.dart';
+import 'package:cartisan/app/modules/search/components/post_full_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -104,15 +107,28 @@ class NotificationCard extends StatelessWidget {
         };
       case NotificationType.like:
         return () {
-          log('like pressed');
+          if (notification.postId == null) {
+            showErrorDialog('Unable fetch the post at the moment');
+          } else {
+            Get.to<Widget>(PostFullScreen(postId: notification.postId!));
+          }
         };
       case NotificationType.order:
         return () {
           log('order pressed');
         };
-      case NotificationType.messsage:
+      case NotificationType.message:
         return () {
           log('message pressed');
+        };
+      case NotificationType.review:
+        return () {
+          Get.to<Widget>(
+            () => ViewPostAndReviewNotification(
+              postId: notification.postId!,
+              reviewId: notification.reviewId!,
+            ),
+          );
         };
       default:
         return () {
@@ -135,8 +151,10 @@ String notificationText({
       return '$username liked your post';
     case NotificationType.order:
       return '$username ordered your product';
-    case NotificationType.messsage:
+    case NotificationType.message:
       return '$username sent you a message';
+    case NotificationType.review:
+      return '$username reviewed your product';
     default:
       return '';
   }

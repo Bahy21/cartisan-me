@@ -47,6 +47,7 @@ class PostAPI {
       {required String postId, required String reviewId}) async {
     try {
       final result = await apiService.get<Map>('$GET_REVIEW/$postId/$reviewId');
+      log('review result:$result');
       if (result.statusCode != 200) {
         throw Exception('Error getting review');
       }

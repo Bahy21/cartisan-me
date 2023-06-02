@@ -6,6 +6,7 @@ import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/data/constants/app_colors.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
+import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/data/global_functions/success_dialog.dart';
 import 'package:cartisan/app/models/delivery_options.dart';
@@ -93,17 +94,23 @@ class _AddPostState extends State<AddPost> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 210.h,
+                  height: 240.h,
                   width: double.maxFinite,
                   color: AppColors.kFilledColor,
                   child: Center(
                     child: widget.images.isEmpty
                         ? InkWell(
                             onTap: handleImageTaken,
-                            child: Text(
-                              'At least one image needed',
-                              style: AppTypography.kBold18
-                                  .copyWith(color: Colors.white),
+                            child: SizedBox(
+                              height: 200.h,
+                              width: double.maxFinite,
+                              child: Center(
+                                child: Text(
+                                  'At least one image needed',
+                                  style: AppTypography.kBold18
+                                      .copyWith(color: Colors.white),
+                                ),
+                              ),
                             ),
                           )
                         : ProductHeaderImage(
@@ -112,8 +119,12 @@ class _AddPostState extends State<AddPost> {
                                 widget.images.removeAt(0);
                               });
                             },
-                            image: widget.images.first),
+                            image: widget.images.first,
+                          ),
                   ),
+                ),
+                SizedBox(
+                  height: AppSpacing.eightVertical,
                 ),
                 if (length2 != 0)
                   Row(
@@ -121,18 +132,13 @@ class _AddPostState extends State<AddPost> {
                       ...List.generate(
                         length2 - 1,
                         (index) => ExtraPostImagesThumbnail(
-                            onTap: () {
-                              Get.dialog<Widget>(ThumbnailViewAndDeleteDialog(
-                                image: widget.images[index + 1],
-                                deleteImage: () {
-                                  Get.back<void>();
-                                  setState(() {
-                                    widget.images.removeAt(index + 1);
-                                  });
-                                },
-                              ));
-                            },
-                            image: widget.images[index + 1]),
+                          onTap: () {
+                            setState(() {
+                              widget.images.removeAt(index + 1);
+                            });
+                          },
+                          image: widget.images[index + 1],
+                        ),
                       ),
                       if (length2 <= 5)
                         Padding(
@@ -266,7 +272,7 @@ class _AddPostState extends State<AddPost> {
                               return 'Product price cannot be empty';
                             }
                             if (double.tryParse(text) == null) {
-                              return 'Product quantit must be a whole number';
+                              return 'Product quantity must be a whole number';
                             }
                             return null;
                           },
@@ -436,7 +442,7 @@ class ProductHeaderImage extends StatelessWidget {
     required this.image,
     super.key,
   });
-  int get _containerHeight => 350;
+  int get _containerHeight => 300;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -468,7 +474,7 @@ class ProductHeaderImage extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.delete_rounded,
+                    Icons.close_rounded,
                     color: AppColors.kWhite,
                     size: 20.w,
                   ),
@@ -490,35 +496,61 @@ class ExtraPostImagesThumbnail extends StatelessWidget {
     required this.image,
     super.key,
   });
-  int get _avatarSize => 60;
+  int get _avatarSize => 72;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: EdgeInsets.all(9.w),
-        child: SizedBox(
-          height: _avatarSize.w,
-          width: _avatarSize.w,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(5.r),
-            child: Image.file(
-              image,
-              fit: BoxFit.cover,
+    return SizedBox(
+      height: 75.w,
+      width: 75.w,
+      child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(9.w),
+            child: SizedBox(
+              height: _avatarSize.w,
+              width: _avatarSize.w,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5.r),
+                child: Image.file(
+                  image,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
-        ),
+          Align(
+            alignment: Alignment.topRight,
+            child: InkWell(
+              onTap: onTap,
+              child: Container(
+                height: 15.w,
+                width: 15.w,
+                decoration: BoxDecoration(
+                  color: AppColors.kPrimary,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.close_rounded,
+                  size: 12.w,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class ThumbnailViewAndDeleteDialog extends StatelessWidget {
+  static const _imageSize = 300;
   final File image;
   final void Function() deleteImage;
-  const ThumbnailViewAndDeleteDialog(
-      {required this.image, required this.deleteImage, super.key});
-  final _imageSize = 300;
+  const ThumbnailViewAndDeleteDialog({
+    required this.image,
+    required this.deleteImage,
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

@@ -14,6 +14,7 @@ class NotificationModel {
   String? chatRoomId;
   String? postId;
   String? orderId;
+  String? reviewId;
   NotificationModel({
     required this.notificationId,
     required this.ownerId,
@@ -25,6 +26,7 @@ class NotificationModel {
     this.chatRoomId,
     this.postId,
     this.orderId,
+    this.reviewId,
   });
 
   NotificationModel copyWith({
@@ -38,6 +40,7 @@ class NotificationModel {
     String? chatRoomId,
     String? postId,
     String? orderId,
+    String? reviewId,
   }) {
     return NotificationModel(
       notificationId: notificationId ?? this.notificationId,
@@ -50,6 +53,7 @@ class NotificationModel {
       chatRoomId: chatRoomId ?? this.chatRoomId,
       postId: postId ?? this.postId,
       orderId: orderId ?? this.orderId,
+      reviewId: reviewId ?? this.reviewId,
     );
   }
 
@@ -62,6 +66,10 @@ class NotificationModel {
       'timestamp': timestamp,
       'username': username,
       'userProfileImg': userProfileImg,
+      'chatRoomId': chatRoomId,
+      'postId': postId,
+      'orderId': orderId,
+      'reviewId': reviewId,
     };
   }
 
@@ -77,6 +85,7 @@ class NotificationModel {
       chatRoomId: map['chatRoomId'] as String?,
       postId: map['postId'] as String?,
       orderId: map['orderId'] as String?,
+      reviewId: map['reviewId'] as String?,
     );
   }
 
@@ -87,7 +96,7 @@ class NotificationModel {
 
   @override
   String toString() {
-    return 'NotificationModel(notificationId: $notificationId, ownerId: $ownerId, userId: $userId, type: $type, timestamp: $timestamp, username: $username, userProfileImg: $userProfileImg , chatRoomId: $chatRoomId, postId: $postId, orderId: $orderId)';
+    return 'NotificationModel(notificationId: $notificationId, ownerId: $ownerId, userId: $userId, type: $type, timestamp: $timestamp, username: $username, userProfileImg: $userProfileImg , chatRoomId: $chatRoomId, postId: $postId, orderId: $orderId , reviewId: $reviewId)';
   }
 
   @override
@@ -103,7 +112,8 @@ class NotificationModel {
         other.userProfileImg == userProfileImg &&
         other.chatRoomId == chatRoomId &&
         other.postId == postId &&
-        other.orderId == orderId;
+        other.orderId == orderId &&
+        other.reviewId == reviewId;
   }
 
   @override
@@ -117,6 +127,7 @@ class NotificationModel {
         userProfileImg.hashCode ^
         chatRoomId.hashCode ^
         postId.hashCode ^
-        orderId.hashCode;
+        orderId.hashCode ^
+        reviewId.hashCode;
   }
 }

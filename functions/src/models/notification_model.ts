@@ -8,6 +8,10 @@ export class NotificationModel {
     timestamp: number;
     username: string;
     userProfileImg: string;
+    chatRoomId: string;
+    postId: string;
+    orderId: string;
+    reviewId :string;
     constructor({notificationId,ownerId,userId,timestamp,username,type,userProfileImg}:{
       notificationId: string,
       ownerId: string,
@@ -32,10 +36,14 @@ export class NotificationModel {
             notificationId: this.notificationId,
             ownerId: this.ownerId,
             userId: this.userId,
+            type: this.type.valueOf(),
             timestamp: this.timestamp,
             username: this.username,
-            type: this.type,
-            userProfileImg: this.userProfileImg
+            userProfileImg: this.userProfileImg ?? '',
+            chatRoomId: this.chatRoomId ?? '',
+            postId: this.postId ?? '',
+            orderId: this.orderId ?? '',
+            reviewId: this.reviewId ?? '',
         }
     }
   }

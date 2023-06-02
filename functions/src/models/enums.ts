@@ -15,7 +15,8 @@ export enum NotificationType{
   comment,
   follow,
   order,
-  message
+  message,
+  review
 } 
 export enum DeliveryOptions { shipping, delivery, pickup }
 

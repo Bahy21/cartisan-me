@@ -81,7 +81,9 @@ class EditProductController extends GetxController {
   Future<void> updatePost() async {
     Get.dialog<Widget>(LoadingDialog(), barrierDismissible: false);
     final newPost = post!.copyWith(
-      productName: productNameTextEditingController.text,
+      productName: productNameTextEditingController.text.isEmpty
+          ? post!.productName
+          : productNameTextEditingController.text,
       description: descriptionTextEditingController.text.isEmpty
           ? post!.description
           : descriptionTextEditingController.text,
@@ -145,7 +147,7 @@ class EditProductController extends GetxController {
         await removeImage(post!.images.indexOf(original));
         Get.back<void>();
       },
-      onCancel: () => Get.back<void>(),
+      onCancel: () {},
       middleText: 'Are you sure you want to delete this image?',
       textConfirm: 'Yes',
       textCancel: 'No',

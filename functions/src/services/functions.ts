@@ -441,13 +441,13 @@ export function deliveryOptionFromIndex(index: number,): DeliveryOptions{
 
 export function reviewFromDoc( doc: DocumentSnapshot): ReviewModel{
   return new ReviewModel({
-    reviewId: doc.data().reviewId,
-    reviewerId: doc.data().buyerId,
+    reviewId: doc.data().reviewID,
+    reviewerId: doc.data().reviewerId,
     reviewerName: doc.data().reviewerName,
-    reviewText: doc.data().review,
+    reviewText: doc.data().reviewText,
     rating: doc.data().rating,
     timestamp: doc.data().timestamp,
-  })
+  });
 }
 export function reviewFromDocData( docData: DocumentData): ReviewModel{
   return new ReviewModel({

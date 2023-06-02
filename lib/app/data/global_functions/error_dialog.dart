@@ -1,3 +1,4 @@
+import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -18,10 +19,8 @@ class ErrorDialog extends StatelessWidget {
       title: Center(
         child: Text(
           'Error',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.red,
+          style: AppTypography.kExtraBold20.copyWith(
+            color: AppColors.kPrimary,
           ),
         ),
       ),
@@ -29,7 +28,7 @@ class ErrorDialog extends StatelessWidget {
         message,
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Colors.black,
+          color: AppColors.kWhite,
           fontSize: 14.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -42,10 +41,8 @@ class ErrorDialog extends StatelessWidget {
             },
             child: Text(
               'Ok',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 15.sp,
-                fontWeight: FontWeight.bold,
+              style: AppTypography.kLight15.copyWith(
+                color: AppColors.kPrimary,
               ),
             ),
           ),

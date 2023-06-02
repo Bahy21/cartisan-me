@@ -1,6 +1,7 @@
 import 'package:cartisan/app/api_classes/post_api.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/review_model.dart';
+import 'package:cartisan/app/modules/review/review_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,40 +59,7 @@ class _SeeAllReviewsState extends State<SeeAllReviews> {
           pagingController: _pageController,
           builderDelegate: PagedChildBuilderDelegate<ReviewModel>(
             itemBuilder: (context, item, index) {
-              return Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-                margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
-                decoration: BoxDecoration(
-                  color: AppColors.kGrey,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RatingBarIndicator(
-                      rating: item.rating,
-                      itemBuilder: (context, rating) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                    ),
-                    SizedBox(height: AppSpacing.eightVertical),
-                    Text(
-                      '${item.reviewerName} says:',
-                      style: AppTypography.kBold20
-                          .copyWith(color: AppColors.kPrimary),
-                    ),
-                    SizedBox(height: AppSpacing.twelveVertical),
-                    Text(
-                      item.reviewText,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.kMedium14,
-                    ),
-                  ],
-                ),
-              );
+              return ReviewCard(review: item);
             },
           ),
         ),

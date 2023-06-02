@@ -177,6 +177,7 @@ class PostCard extends StatelessWidget {
                   PopupMenuItem<dynamic>(
                     child: ListTile(
                       onTap: () async {
+                        Get.back<void>();
                         final result =
                             await Get.to<PostModel>(EditPostView(post: post));
                         if (result != null) {
@@ -286,7 +287,7 @@ class BuildPostMetadata extends StatelessWidget {
   final Function(PostModel)? updatePostCallback;
   final VoidCallback buyNowCallback;
 
-  final currentUid = Get.find<UserController>().currentUser!.id;
+  final currentUid = Get.find<AuthService>().currentUser!.uid;
 
   BuildPostMetadata({
     required this.post,

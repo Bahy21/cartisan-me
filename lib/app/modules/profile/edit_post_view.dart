@@ -70,7 +70,9 @@ class _EditPostViewState extends State<EditPostView> {
               ),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => controller.updatePost(),
+                  onPressed: () => _formKey.currentState!.validate()
+                      ? controller.updatePost()
+                      : null,
                   child: Text(
                     'Save',
                     style: AppTypography.kBold16.copyWith(color: Colors.green),
@@ -78,236 +80,275 @@ class _EditPostViewState extends State<EditPostView> {
                 ),
               ],
             ),
-            body: ListView(
-              shrinkWrap: true,
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.twentyFourHorizontal,
-              ),
-              children: <Widget>[
-                SizedBox(
-                  height: Get.height * 0.5,
-                  child: CarouselSlider(
-                    children: List.generate(
-                      imageCount,
-                      (index) => Column(
-                        children: [
-                          Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.topCenter,
-                                child: CachedNetworkImage(
-                                  imageUrl: controller.post!.images[index],
-                                  height: Get.height * 0.5,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Column(
-                                  children: [
-                                    DecoratedBox(
-                                      decoration: const BoxDecoration(
-                                        color: AppColors.kPrimary,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: IconButton(
-                                        padding: EdgeInsets.zero,
-                                        icon: Icon(
-                                          Icons.delete_rounded,
-                                          size: _iconSize.w,
-                                        ),
-                                        onPressed: imageCount == 1
-                                            ? () => showErrorDialog(
-                                                  'At least one image is needed\n Try replacing instead.',
-                                                )
-                                            : () {
-                                                controller
-                                                    .deleteImageDecisionDialog(
-                                                  controller
-                                                      .post!.images[index],
-                                                );
-                                              },
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: AppSpacing.tenVertical,
-                                    ),
-                                    DecoratedBox(
-                                      decoration: const BoxDecoration(
-                                        color: AppColors.kPrimary,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: IconButton(
-                                        padding: EdgeInsets.zero,
-                                        icon: Icon(
-                                          Icons.find_replace_rounded,
-                                          size: _iconSize.w,
-                                        ),
-                                        onPressed: () {
-                                          controller.replacePhoto(
-                                            controller.post!.images[index],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: AppSpacing.tenVertical,
-                                    ),
-                                    DecoratedBox(
-                                      decoration: const BoxDecoration(
-                                        color: AppColors.kPrimary,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: IconButton(
-                                        padding: EdgeInsets.zero,
-                                        icon: Icon(
-                                          Icons.add_rounded,
-                                          size: _iconSize.w,
-                                        ),
-                                        onPressed:
-                                            controller.post!.images.length == 5
-                                                ? () => showErrorDialog(
-                                                      'Maximum of 5 images only',
-                                                    )
-                                                : () {
-                                                    controller.addImage(
-                                                      controller
-                                                          .post!.images[index],
-                                                    );
-                                                  },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+            body: Form(
+              key: _formKey,
+              child: ListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.twentyFourHorizontal,
+                ),
+                children: <Widget>[
+                  CachedNetworkImage(
+                    imageUrl: controller.post!.images.first,
+                    height: Get.height * 0.5,
+                    fit: BoxFit.cover,
+                    imageBuilder: (context, imageProvider) => Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: AppSpacing.twentyFourVertical,
-                ),
-                Text(
-                  'Product Name',
-                  style: AppTypography.kBold14,
-                ),
-                CustomTextFormField(
-                  controller: controller.productNameTextEditingController,
-                  hintText: controller.post!.productName,
-                ),
-                const Divider(),
-                Text(
-                  'Product Description',
-                  style: AppTypography.kBold14,
-                ),
-                CustomTextFormField(
-                  maxLines: null,
-                  controller: controller.descriptionTextEditingController,
-                  hintText: controller.post!.description,
-                ),
-                const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Brand',
-                          style: AppTypography.kBold14,
                         ),
-                        MiniTextField(
-                          controller: controller.brandTextEditingController,
-                          hintText: controller.post!.brand,
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 8.w, top: 8.h),
+                            child: Column(
+                              children: [
+                                DecoratedBox(
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.kPrimary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: InkWell(
+                                    child: Container(
+                                      padding: EdgeInsets.all(7.w),
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.kPrimary,
+                                      ),
+                                      child: Icon(
+                                        Icons.close_rounded,
+                                        size: _iconSize.w,
+                                      ),
+                                    ),
+                                    onTap: imageCount == 1
+                                        ? () => showErrorDialog(
+                                              'At least one image is needed\n Try replacing instead.',
+                                            )
+                                        : () {
+                                            controller
+                                                .deleteImageDecisionDialog(
+                                              controller.post!.images.first,
+                                            );
+                                          },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Price',
-                          style: AppTypography.kBold14,
-                        ),
-                        MiniTextField(
-                          controller: controller.priceController,
-                          hintText: controller.post!.price.toString(),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const Divider(),
-                Text(
-                  'Location',
-                  style: AppTypography.kBold14,
-                ),
-                CustomTextFormField(
-                  controller: controller.locationTextEditingController,
-                  hintText: controller.post!.location,
-                ),
-                const Divider(),
-                ProductVariantField(
-                  hintText: 'Add Variants',
-                  controller: controller.productVariantsTextController,
-                  addIcon: InkWell(
-                    onTap: () {
-                      if (controller
-                          .productVariantsTextController.text.isEmpty) {
-                        showErrorDialog('Variant cannot be empty');
-                      } else if (controller.post!.variants.contains(
-                        controller.productVariantsTextController.text,
-                      )) {
-                        showErrorDialog('Variant already exists');
-                      } else {
-                        setState(() {
-                          controller.post!.variants.add(
-                            controller.productVariantsTextController.text,
-                          );
-                          controller.productVariantsTextController.clear();
-                        });
-                      }
-                    },
-                    child: Icon(
-                      Icons.add_circle_outline,
-                      color: AppColors.kWhite,
-                      size: 23.w,
-                    ),
                   ),
-                ),
-                Wrap(
-                  children: controller.post!.variants
-                      .map(
-                        (variant) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Chip(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6.r),
-                            ),
-                            label: Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 10.w,
-                                vertical: 5.h,
-                              ),
-                              child: Text(variant),
-                            ),
-                            onDeleted: () {
-                              setState(() {
-                                controller.post!.variants.remove(variant);
-                              });
+                  if (imageCount != 0)
+                    Row(
+                      children: [
+                        ...List.generate(
+                          imageCount - 1,
+                          (index) => ExtraPostImagesThumbnail(
+                            imageLink: controller.post!.images[index + 1],
+                            replace: () {
+                              controller.replacePhoto(
+                                controller.post!.images[index + 1],
+                              );
+                            },
+                            delete: () {
+                              controller.deleteImageDecisionDialog(
+                                controller.post!.images[index],
+                              );
                             },
                           ),
                         ),
-                      )
-                      .toList(),
-                ),
-                const Divider(),
-              ],
+                        if (imageCount < 5)
+                          InkWell(
+                            onTap: () {
+                              controller.addImage(widget.post.images.last);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.kPrimary,
+                                  width: 2.w,
+                                ),
+                                borderRadius: BorderRadius.circular(7.5.r),
+                              ),
+                              margin: EdgeInsets.only(left: 5.w),
+                              padding: EdgeInsets.all(15.w),
+                              alignment: Alignment.center,
+                              child: const Icon(
+                                Icons.add_rounded,
+                                color: AppColors.kPrimary,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  SizedBox(
+                    height: AppSpacing.twentyFourVertical,
+                  ),
+                  Text(
+                    'Product Name',
+                    style: AppTypography.kBold14,
+                  ),
+                  CustomTextFormField(
+                    controller: controller.productNameTextEditingController,
+                    hintText: controller.post!.productName,
+                    validator: (text) {
+                      if (text == null || text.isEmpty) {
+                        return 'Product name cannot be empty';
+                      }
+                      return null;
+                    },
+                  ),
+                  const Divider(),
+                  Text(
+                    'Product Description',
+                    style: AppTypography.kBold14,
+                  ),
+                  CustomTextFormField(
+                    maxLines: null,
+                    controller: controller.descriptionTextEditingController,
+                    hintText: controller.post!.description,
+                    validator: (text) {
+                      if (text == null || text.isEmpty) {
+                        return 'Product name cannot be empty';
+                      }
+                      return null;
+                    },
+                  ),
+                  const Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Brand',
+                            style: AppTypography.kBold14,
+                          ),
+                          MiniTextField(
+                            controller: controller.brandTextEditingController,
+                            hintText: controller.post!.brand,
+                            validator: (text) {
+                              if (text == null || text.isEmpty) {
+                                return 'Product name cannot be empty';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Price',
+                            style: AppTypography.kBold14,
+                          ),
+                          MiniTextField(
+                            controller: controller.priceController,
+                            hintText: controller.post!.price.toString(),
+                            validator: (text) {
+                              if (text == null || text.isEmpty) {
+                                return 'Product name cannot be empty';
+                              }
+                              if (double.tryParse(text) == null) {
+                                return 'Enter a valid number';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Text(
+                    'Location',
+                    style: AppTypography.kBold14,
+                  ),
+                  CustomTextFormField(
+                    controller: controller.locationTextEditingController,
+                    hintText: controller.post!.location,
+                    validator: (text) {
+                      if (text == null || text.isEmpty) {
+                        return 'Product name cannot be empty';
+                      }
+                      return null;
+                    },
+                  ),
+                  const Divider(),
+                  ProductVariantField(
+                    hintText: 'Add Variants',
+                    controller: controller.productVariantsTextController,
+                    addIcon: InkWell(
+                      onTap: () {
+                        if (controller
+                            .productVariantsTextController.text.isEmpty) {
+                          showErrorDialog('Variant cannot be empty');
+                        } else if (controller.post!.variants.contains(
+                          controller.productVariantsTextController.text,
+                        )) {
+                          showErrorDialog('Variant already exists');
+                        } else {
+                          setState(() {
+                            controller.post!.variants.add(
+                              controller.productVariantsTextController.text,
+                            );
+                            controller.productVariantsTextController.clear();
+                          });
+                        }
+                      },
+                      child: Icon(
+                        Icons.add_circle_outline,
+                        color: AppColors.kWhite,
+                        size: 23.w,
+                      ),
+                    ),
+                  ),
+                  Wrap(
+                    children: controller.post!.variants
+                        .map(
+                          (variant) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Chip(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.r),
+                              ),
+                              label: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 5.h,
+                                ),
+                                child: Text(variant),
+                              ),
+                              onDeleted: () {
+                                if (controller.post!.variants.length == 1) {
+                                  showErrorDialog(
+                                    'At least one variant is required',
+                                  );
+                                } else {
+                                  setState(() {
+                                    controller.post!.variants.remove(variant);
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  const Divider(),
+                ],
+              ),
             ),
           ),
         );
@@ -316,27 +357,61 @@ class _EditPostViewState extends State<EditPostView> {
   }
 }
 
-TextEditingController optionsTextEditingController = TextEditingController();
-
-class OptionTextFields extends StatefulWidget {
-  final int index;
-  const OptionTextFields(this.index, {super.key});
-  @override
-  _OptionTextFieldsState createState() => _OptionTextFieldsState();
-}
-
-class _OptionTextFieldsState extends State<OptionTextFields> {
-  @override
-  void initState() {
-    super.initState();
-    optionsTextEditingController = TextEditingController();
-  }
-
+class ExtraPostImagesThumbnail extends StatelessWidget {
+  final String imageLink;
+  final void Function() replace;
+  final void Function() delete;
+  const ExtraPostImagesThumbnail({
+    required this.replace,
+    required this.imageLink,
+    required this.delete,
+    super.key,
+  });
+  int get _avatarSize => 72;
   @override
   Widget build(BuildContext context) {
-    return CustomTextFormField(
-      controller: optionsTextEditingController,
-      hintText: 'Option...',
+    return SizedBox(
+      height: 75.w,
+      width: 75.w,
+      child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(9.w),
+            child: InkWell(
+              onTap: replace,
+              child: SizedBox(
+                height: _avatarSize.w,
+                width: _avatarSize.w,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5.r),
+                  child: CachedNetworkImage(
+                    imageUrl: imageLink,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: InkWell(
+              onTap: delete,
+              child: Container(
+                height: 15.w,
+                width: 15.w,
+                decoration: BoxDecoration(
+                  color: AppColors.kPrimary,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.close_rounded,
+                  size: 12.w,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

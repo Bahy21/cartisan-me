@@ -101,6 +101,7 @@ class _TimelineViewState extends State<TimelineView> {
           }
           if (controller.loadingLocal) {
             controller.addLikes(likes);
+
             return ListView.builder(
               itemCount: posts.length,
               itemBuilder: (context, index) {
