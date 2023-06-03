@@ -69,6 +69,7 @@ class CreateProductImagePick extends StatelessWidget {
               ),
               SizedBox(height: 45.h),
               InkWell(
+                splashColor: AppColors.kGrey2,
                 onTap: () async {
                   pickedFile = await ImagePickerServices().getImageFromCamera();
                   if (pickedFile != null) {
@@ -89,6 +90,7 @@ class CreateProductImagePick extends StatelessWidget {
               ),
               SizedBox(height: 30.h),
               InkWell(
+                splashColor: AppColors.kGrey2,
                 onTap: () async {
                   pickedFile =
                       await ImagePickerServices().getImageFromGallery();
@@ -110,6 +112,7 @@ class CreateProductImagePick extends StatelessWidget {
               ),
               SizedBox(height: 30.h),
               InkWell(
+                splashColor: AppColors.kGrey2,
                 onTap: () async {
                   pickedFiles =
                       await ImagePickerServices().pickMultipleImages() ?? [];

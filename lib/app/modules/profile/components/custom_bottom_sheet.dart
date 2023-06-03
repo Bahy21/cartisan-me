@@ -208,6 +208,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                                   'More Options',
                                   style: AppTypography.kBold14,
                                 ),
+                                SizedBox(
+                                  height: AppSpacing.twelveVertical,
+                                ),
                                 CustomSwitch(
                                   isDisabled: !_isSeller,
                                   text: 'Pick Up Available',

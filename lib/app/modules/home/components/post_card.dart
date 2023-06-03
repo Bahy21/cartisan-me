@@ -147,7 +147,12 @@ class PostCard extends StatelessWidget {
                   PopupMenuItem<dynamic>(
                     child: TextButton(
                       onPressed: () => pc.reportPost(postResponse),
-                      child: Text('Report', style: AppTypography.kMedium18),
+                      child: Text(
+                        'Report',
+                        style: AppTypography.kMedium14.copyWith(
+                          color: AppColors.kWhite,
+                        ),
+                      ),
                     ),
                   ),
                 if (post.ownerId == currentUid) ...[
@@ -254,15 +259,15 @@ class PostControls extends StatelessWidget {
     required this.postId,
     super.key,
   });
-  TimelineController get pc => Get.find<TimelineController>();
+  TimelineController get tc => Get.find<TimelineController>();
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Obx(
           () => IconButton(
-            onPressed: () {},
-            icon: pc.likes[postId] == true
+            onPressed: () => tc.handleLikeUnlike(postId),
+            icon: tc.likes[postId] == true
                 ? Icon(
                     Icons.favorite,
                     color: AppColors.kPrimary,
