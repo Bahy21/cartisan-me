@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cartisan/app/api_classes/user_api.dart';
-import 'package:cartisan/app/controllers/controllers.dart';
+import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/user_model.dart';

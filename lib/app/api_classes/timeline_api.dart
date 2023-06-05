@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:cartisan/app/api_classes/api_service.dart';
-import 'package:cartisan/app/controllers/controllers.dart';
+import 'package:cartisan/app/controllers/timeline_controller.dart';
 import 'package:cartisan/app/models/post_response.dart';
 import 'package:get/get.dart';
 

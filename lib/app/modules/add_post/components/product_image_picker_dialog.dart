@@ -67,69 +67,100 @@ class CreateProductImagePick extends StatelessWidget {
                   color: AppColors.kWhite,
                 ),
               ),
-              SizedBox(height: 45.h),
-              InkWell(
-                splashColor: AppColors.kGrey2,
-                onTap: () async {
-                  pickedFile = await ImagePickerServices().getImageFromCamera();
-                  if (pickedFile != null) {
-                    await Get.to<Widget>(() => AddPost(images: [pickedFile!]));
-                  }
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      'Select from Camera',
-                      style: optionStyle,
+              SizedBox(
+                height: 25.h,
+              ),
+              Material(
+                color: Colors.transparent,
+                child: SizedBox(
+                  height: 45.h,
+                  child: InkWell(
+                    onTap: () async {
+                      pickedFile =
+                          await ImagePickerServices().getImageFromCamera();
+                      if (pickedFile != null) {
+                        await Get.to<Widget>(
+                            () => AddPost(images: [pickedFile!]));
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Select from Camera',
+                          style: optionStyle,
+                        ),
+                        const Spacer(),
+                        Icon(
+                          Icons.camera_alt_rounded,
+                          color: AppColors.kWhite,
+                          size: 20.w,
+                        ),
+                      ],
                     ),
-                    const Spacer(),
-                    Icon(Icons.camera_alt_rounded,
-                        color: AppColors.kWhite, size: 20.w),
-                  ],
+                  ),
                 ),
               ),
-              SizedBox(height: 30.h),
-              InkWell(
-                splashColor: AppColors.kGrey2,
-                onTap: () async {
-                  pickedFile =
-                      await ImagePickerServices().getImageFromGallery();
-                  if (pickedFile != null) {
-                    await Get.to<Widget>(() => AddPost(images: [pickedFile!]));
-                  }
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      'Select from Gallery',
-                      style: optionStyle,
+              SizedBox(
+                height: 10.h,
+              ),
+              Material(
+                color: Colors.transparent,
+                child: SizedBox(
+                  height: 45.h,
+                  child: InkWell(
+                    splashColor: AppColors.kGrey2,
+                    onTap: () async {
+                      pickedFile =
+                          await ImagePickerServices().getImageFromGallery();
+                      if (pickedFile != null) {
+                        await Get.to<Widget>(
+                            () => AddPost(images: [pickedFile!]));
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Select from Gallery',
+                          style: optionStyle,
+                        ),
+                        const Spacer(),
+                        Icon(Icons.photo_rounded,
+                            color: AppColors.kWhite, size: 20.w),
+                      ],
                     ),
-                    const Spacer(),
-                    Icon(Icons.photo_rounded,
-                        color: AppColors.kWhite, size: 20.w),
-                  ],
+                  ),
                 ),
               ),
-              SizedBox(height: 30.h),
-              InkWell(
-                splashColor: AppColors.kGrey2,
-                onTap: () async {
-                  pickedFiles =
-                      await ImagePickerServices().pickMultipleImages() ?? [];
-                  if (pickedFiles.isNotEmpty) {
-                    await Get.to<Widget>(() => AddPost(images: pickedFiles));
-                  }
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      'Select Multiple from gallery',
-                      style: optionStyle,
+              SizedBox(
+                height: 10.h,
+              ),
+              Material(
+                color: Colors.transparent,
+                child: SizedBox(
+                  height: 45.h,
+                  child: InkWell(
+                    splashColor: AppColors.kGrey2,
+                    onTap: () async {
+                      pickedFiles =
+                          await ImagePickerServices().pickMultipleImages() ??
+                              [];
+                      if (pickedFiles.isNotEmpty) {
+                        await Get.to<Widget>(
+                            () => AddPost(images: pickedFiles));
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Select Multiple from gallery',
+                          style: optionStyle,
+                        ),
+                        const Spacer(),
+                        Icon(Icons.photo_library_rounded,
+                            color: AppColors.kWhite, size: 20.w),
+                      ],
                     ),
-                    const Spacer(),
-                    Icon(Icons.photo_library_rounded,
-                        color: AppColors.kWhite, size: 20.w),
-                  ],
+                  ),
                 ),
               ),
             ],

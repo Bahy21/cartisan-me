@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:cartisan/app/modules/sidemenu/orders/components/order_details_card.dart';
+import 'package:cartisan/app/modules/side_menu/orders/components/order_details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -11,7 +11,7 @@ import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/models/order_item_status.dart';
 import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/modules/cart/components/address_card.dart';
-import 'package:cartisan/app/modules/sidemenu/orders/components/purchased_item_card.dart';
+import 'package:cartisan/app/modules/side_menu/orders/components/purchased_item_card.dart';
 
 class FullPurchaseDetails extends StatelessWidget {
   final int orderIndex;

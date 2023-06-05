@@ -1,5 +1,5 @@
 import 'package:cartisan/app/data/constants/constants.dart';
-import 'package:cartisan/app/modules/sidemenu/settings/blocked_users_view.dart';
+import 'package:cartisan/app/modules/side_menu/settings/blocked_users_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';

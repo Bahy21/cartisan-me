@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/cart_api.dart';
 import 'package:cartisan/app/api_classes/timeline_api.dart';
-import 'package:cartisan/app/controllers/controllers.dart';
+import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/controllers/timeline_controller.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
@@ -43,9 +44,9 @@ class _TimelineViewState extends State<TimelineView> {
         uid: uid,
         lastPostId: allItems == null ? null : allItems[pageKey - 1].post.postId,
       );
+      if (!mounted) return;
       final isLastPage = newItems.isEmpty;
       if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
       } else {
         final nextPageKey = pageKey + newItems.length;
         _pagingController.appendPage(newItems, nextPageKey);

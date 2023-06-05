@@ -81,6 +81,7 @@ class _NotificationPageViewState extends State<NotificationPageView> {
 
   @override
   Widget build(BuildContext context) {
+    log((Get.find<AuthService>().currentUser?.uid).toString());
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -97,19 +98,22 @@ class _NotificationPageViewState extends State<NotificationPageView> {
           ),
         ],
       ),
-      body: PagedListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 13.w),
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<NotificationModel>(
-          itemBuilder: (context, item, index) {
-            log(item.toString());
-            return NotificationCard(
-              notification: item,
-            );
-          },
-        ),
-        separatorBuilder: (context, index) => SizedBox(
-          height: AppSpacing.tenVertical,
+      body: RefreshIndicator.adaptive(
+        onRefresh: () async => _pagingController.refresh(),
+        child: PagedListView.separated(
+          padding: EdgeInsets.symmetric(horizontal: 13.w),
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<NotificationModel>(
+            itemBuilder: (context, item, index) {
+              log(item.toString());
+              return NotificationCard(
+                notification: item,
+              );
+            },
+          ),
+          separatorBuilder: (context, index) => SizedBox(
+            height: AppSpacing.tenVertical,
+          ),
         ),
       ),
     );

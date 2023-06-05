@@ -43,6 +43,7 @@ class _SearchViewState extends State<SearchView> {
             ? allItems![pageKey - 1].postId
             : null,
       );
+      if (!mounted) return;
       final isLastPage = newItems.isEmpty;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);

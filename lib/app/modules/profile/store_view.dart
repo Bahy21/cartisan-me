@@ -13,8 +13,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-// state tax, shipping options, stripe ID connect. dialog box list of items. in orginal app.
-
 class StoreView extends StatelessWidget {
   StoreView({
     Key? key,

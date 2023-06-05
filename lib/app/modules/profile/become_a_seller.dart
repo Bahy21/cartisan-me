@@ -30,12 +30,20 @@ class _BecomeASellerState extends State<BecomeASeller> {
   UserModel get currentUser => Get.find<UserController>().currentUser!;
 
   bool get isReady =>
-      _stateController.text.isNotEmpty &&
-      _taxController.text.isNotEmpty &&
-      (_pickUpAvailable || _shippingAvailable || _deliveryAvailable);
+      (_stateController.text.isNotEmpty || currentUser.state.isNotEmpty) &&
+      (_taxController.text.isNotEmpty || currentUser.taxPercentage != null) &&
+      (_pickUpAvailable ||
+          _shippingAvailable ||
+          _deliveryAvailable ||
+          currentUser.activeShipping ||
+          currentUser.pickup ||
+          currentUser.isDeliveryAvailable);
 
   Future<void> updateUserDetails() async {
-    Get.dialog<Widget>(LoadingDialog(), barrierDismissible: false);
+    Get.dialog<Widget>(
+      LoadingDialog(),
+      barrierDismissible: false,
+    );
     final newUser = currentUser.copyWith(
       isDeliveryAvailable: _deliveryAvailable,
       pickup: _pickUpAvailable,
@@ -46,7 +54,7 @@ class _BecomeASellerState extends State<BecomeASeller> {
       userId: currentUser.id,
       newUser: newUser,
     );
-
+    Get.back<void>();
     if (value) {
       Get.find<UserController>().updateUserInController = newUser;
       Get.back<void>();
@@ -68,6 +76,7 @@ class _BecomeASellerState extends State<BecomeASeller> {
           ),
           onConfirm: () {
             shouldPop = true;
+            Get.back<void>();
           },
           onCancel: () {
             shouldPop = false;
@@ -104,22 +113,26 @@ class _BecomeASellerState extends State<BecomeASeller> {
                     style: AppTypography.kBold14,
                   ),
                   CustomTextFormField(
-                      controller: _stateController,
-                      validator: (value) {
-                        return null;
-                      },
-                      hintText: 'Enter your state here'),
+                    controller: _stateController,
+                    validator: (value) {
+                      return null;
+                    },
+                    hintText: currentUser.state.isEmpty
+                        ? 'Enter your state here'
+                        : currentUser.state,
+                  ),
                   SizedBox(height: AppSpacing.eighteenVertical),
                   Text(
                     'Tax Percentage',
                     style: AppTypography.kBold14,
                   ),
                   CustomTextFormField(
-                      controller: _taxController,
-                      validator: (value) {
-                        return null;
-                      },
-                      hintText: 'Enter tax here'),
+                    controller: _taxController,
+                    validator: (value) {
+                      return null;
+                    },
+                    hintText: (currentUser.taxPercentage ?? 0.0).toString(),
+                  ),
                   SizedBox(height: 25.h),
                   Text(
                     'More Options',
@@ -128,7 +141,7 @@ class _BecomeASellerState extends State<BecomeASeller> {
                   CustomSwitch(
                     isDisabled: false,
                     text: 'Pick Up Available',
-                    value: _pickUpAvailable,
+                    value: currentUser.pickup,
                     onChanged: (value) {
                       setState(() {
                         _pickUpAvailable = value;
@@ -138,7 +151,7 @@ class _BecomeASellerState extends State<BecomeASeller> {
                   CustomSwitch(
                     isDisabled: false,
                     text: 'Shipping Available',
-                    value: _shippingAvailable,
+                    value: currentUser.activeShipping,
                     onChanged: (value) {
                       setState(() {
                         _shippingAvailable = value;
@@ -148,7 +161,7 @@ class _BecomeASellerState extends State<BecomeASeller> {
                   CustomSwitch(
                     isDisabled: false,
                     text: 'Delivery Available',
-                    value: _deliveryAvailable,
+                    value: currentUser.isDeliveryAvailable,
                     onChanged: (value) {
                       setState(() {
                         _deliveryAvailable = value;
@@ -168,9 +181,11 @@ class _BecomeASellerState extends State<BecomeASeller> {
                           ),
                   ),
                   if (currentUser.sellerID.isNotEmpty)
-                    PrimaryButton(
-                      onTap: updateUserDetails,
-                      text: 'Update User Details',
+                    Center(
+                      child: PrimaryButton(
+                        onTap: updateUserDetails,
+                        text: 'Update and Finalize',
+                      ),
                     ),
                 ],
               ),

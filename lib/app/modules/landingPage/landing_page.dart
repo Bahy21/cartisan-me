@@ -9,7 +9,7 @@ import 'package:cartisan/app/modules/landingPage/components/custom_bottom_bar_it
 import 'package:cartisan/app/modules/notification/notification_page_view.dart';
 import 'package:cartisan/app/modules/profile/components/user_seller_wrapper.dart';
 import 'package:cartisan/app/modules/search/search_view.dart';
-import 'package:cartisan/app/modules/sidemenu/side_menu.dart';
+import 'package:cartisan/app/modules/side_menu/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,7 +21,6 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  int _currentIndex = 0;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override

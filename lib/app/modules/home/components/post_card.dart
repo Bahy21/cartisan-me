@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cartisan/app/controllers/controllers.dart';
+import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/controllers/post_controller.dart';
+import 'package:cartisan/app/controllers/timeline_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
 import 'package:cartisan/app/models/post_model.dart';

@@ -32,7 +32,7 @@ class _HomeViewState extends State<HomeView> {
             onPressed: () {
               widget.scaffoldKey.currentState!.openDrawer();
             },
-            icon: SvgPicture.asset(AppAssets.kMenu),
+            icon: SizedBox(child: SvgPicture.asset(AppAssets.kMenu)),
           ),
         ),
         centerTitle: true,
@@ -46,11 +46,11 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
+          InkWell(
+            onTap: () {
               Get.to<Widget>(CartViewPages.new);
             },
-            icon: SvgPicture.asset(
+            child: SvgPicture.asset(
               AppAssets.kCart,
             ),
           ),

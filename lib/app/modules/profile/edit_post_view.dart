@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/controllers/edit_product_controller.dart';
+import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/app_spacing.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
 import 'package:cartisan/app/data/constants/constants.dart';

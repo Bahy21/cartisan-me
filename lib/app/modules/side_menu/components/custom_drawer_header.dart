@@ -1,5 +1,5 @@
 import 'package:cartisan/app/data/constants/constants.dart';
-import 'package:cartisan/app/modules/sidemenu/components/custom_circle.dart';
+import 'package:cartisan/app/modules/side_menu/components/custom_circle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -1,54 +1,46 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cartisan/app/controllers/purchase_history_controller.dart';
 import 'package:cartisan/app/controllers/sales_history_controller.dart';
 import 'package:cartisan/app/data/constants/app_spacing.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
-import 'package:cartisan/app/models/order_item_model.dart';
 import 'package:cartisan/app/models/order_item_status.dart';
-import 'package:cartisan/app/models/order_model.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
-import 'package:cartisan/app/modules/sidemenu/orders/components/cancel_and_refund_button.dart';
-import 'package:cartisan/app/modules/sidemenu/orders/components/change_order_status_button.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cartisan/app/modules/review/create_review.dart';
+import 'package:cartisan/app/modules/side_menu/orders/components/cancel_and_refund_button.dart';
+import 'package:cartisan/app/modules/side_menu/orders/components/change_order_status_button.dart';
+import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class OrderItemCard extends StatefulWidget {
+class PurchasedItemCard extends StatefulWidget {
   final int orderIndex;
   final int orderItemIndex;
   final PostModel product;
-  final UserModel buyer;
-  final bool sellerMode;
-  final bool isCheckout;
-  final int itemIndex;
-  const OrderItemCard({
+  final UserModel seller;
+  const PurchasedItemCard({
     required this.orderItemIndex,
     required this.orderIndex,
-    required this.itemIndex,
     required this.product,
-    required this.buyer,
+    required this.seller,
     Key? key,
-    this.sellerMode = false,
-    this.isCheckout = false,
   }) : super(key: key);
 
   @override
-  _OrderItemCardState createState() => _OrderItemCardState();
+  _PurchasedItemCardState createState() => _PurchasedItemCardState();
 }
 
-class _OrderItemCardState extends State<OrderItemCard> {
+class _PurchasedItemCardState extends State<PurchasedItemCard> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final order = Get.find<SalesHistoryController>().sales[widget.orderIndex];
+      final order =
+          Get.find<PurchaseHistoryController>().purchases[widget.orderIndex];
       final orderItem = order.orderItems[widget.orderItemIndex];
 
       final cancelable =
-          orderItem.status == OrderItemStatus.awaitingFulfillment &&
-              !widget.isCheckout;
+          orderItem.status == OrderItemStatus.awaitingFulfillment;
       final showStatus = ![
         OrderItemStatus.pending,
         OrderItemStatus.awaitingPayment,
@@ -84,7 +76,7 @@ class _OrderItemCardState extends State<OrderItemCard> {
                   style: AppTypography.kBold14,
                 ),
                 Text(
-                  'For: ${widget.buyer.profileName}',
+                  'From: ${widget.seller.profileName}',
                   style: AppTypography.kExtraLight12,
                 ),
               ],
@@ -160,10 +152,27 @@ class _OrderItemCardState extends State<OrderItemCard> {
               orderIndex: widget.orderIndex,
               orderItemIndex: widget.orderItemIndex,
             ),
+          if (orderItem.status == OrderItemStatus.completed) ...[
+            SizedBox(
+              height: AppSpacing.eightVertical,
+            ),
+            PrimaryButton(
+              onTap: () {
+                Get.bottomSheet<Widget>(
+                  CreateReview(
+                    orderId: order.orderId,
+                    orderItem: orderItem,
+                    post: widget.product,
+                  ),
+                );
+              },
+              text: 'Leave a review',
+            ),
+          ],
           SizedBox(
-            height: 5,
+            height: 5.h,
           ),
-          Divider(
+          const Divider(
             color: Colors.white,
           ),
         ],

@@ -8,7 +8,7 @@ import { OrderModel } from "../models/order_model";
 import { CommentModel } from "../models/comment_model";
 import { DocumentData, DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
 import { OrderItemModel } from "../models/order_item_model";
-// 
+import { Transaction } from "../models/transaction_model";
 import { likesCollection, userCollection } from "./database";
 import logger from "./logger";
 import { log } from "firebase-functions/logger";
@@ -460,6 +460,24 @@ export function reviewFromDocData( docData: DocumentData): ReviewModel{
   })
 }
 
+
+export function transactionFromDocData(docData: DocumentData): Transaction{
+  const transaction: Transaction = {
+    id: docData.id,
+    orderId: docData.orderId,
+    buyerId: docData.buyerId,
+    chargeId: docData.chargeId,
+    amountInCents: docData.amountInCents,
+    status: docData.status,
+    receiptUrl: docData.receiptUrl,   
+    createdAt: docData.createdAt,
+    paymentMethod: docData.paymentMethod,
+    currency: docData.currency,
+    transfers: docData.transfers,
+    paymentDetail: docData.paymentDetail,
+  };
+  return transaction;
+}
 
 
 

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
-import 'package:cartisan/app/controllers/controllers.dart';
+import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/models/chat_room_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/services/database.dart';

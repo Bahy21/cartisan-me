@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cartisan/app/api_classes/post_api.dart';
-import 'package:cartisan/app/controllers/controllers.dart';
+import 'package:cartisan/app/controllers/auth_service.dart';
+import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/app_colors.dart';
 import 'package:cartisan/app/data/constants/app_typography.dart';
 import 'package:cartisan/app/data/constants/constants.dart';

@@ -24,9 +24,9 @@ class _StripeWebviewState extends State<StripeWebview> {
         NavigationDelegate(
           onProgress: onProgress,
           onPageStarted: (url) {
-            if (url.contains('/stripe/success')) {
+            if (url.contains('/stripe/success/')) {
               Navigator.of(context).pop(true);
-            } else if (url.contains('/stripe/retry')) {
+            } else if (url.contains('/stripe/retry/')) {
               Navigator.of(context).pop(false);
             }
           },

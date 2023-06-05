@@ -1,8 +1,8 @@
 import 'package:cartisan/app/controllers/purchase_history_controller.dart';
 import 'package:cartisan/app/controllers/sales_history_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
-import 'package:cartisan/app/modules/sidemenu/orders/purchased_order.dart';
-import 'package:cartisan/app/modules/sidemenu/orders/sold_orders.dart';
+import 'package:cartisan/app/modules/side_menu/orders/purchased_order.dart';
+import 'package:cartisan/app/modules/side_menu/orders/sold_orders.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

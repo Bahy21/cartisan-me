@@ -8,17 +8,13 @@ class AuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Rx<User?> firebaseUser = Rx<User?>(null);
 
+  RxString userToken = ''.obs;
+  Timer? timer;
   User? get currentUser => firebaseUser.value;
   bool get isLoading => _isLoading.value;
   set isLoading(bool value) => _isLoading.value = value;
   // ignore: prefer_final_fields
   RxBool _isLoading = true.obs;
-  RxString userToken = ''.obs;
-  Timer? timer;
-
-  Future<void> initAuthToken() async {
-    userToken.value = await FirebaseAuth.instance.currentUser!.getIdToken(true);
-  }
 
   @override
   void onInit() {
@@ -42,6 +38,10 @@ class AuthService extends GetxService {
   void onClose() {
     timer?.cancel();
     super.onClose();
+  }
+
+  Future<void> initAuthToken() async {
+    userToken.value = await FirebaseAuth.instance.currentUser!.getIdToken(true);
   }
 
   Future<void> handleEmailVerification() async {

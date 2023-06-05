@@ -8,6 +8,7 @@ import { OrderItemModel } from "../../../../models/order_item_model";
 import * as db from "../../../../services/database";
 import { Transaction, TransactionStatus } from "../../../../models/transaction_model";
 import logger from "../../../../services/logger";
+import { transactionFromDocData } from "../../../../services/functions";
 const cartisanStripeAccount = "acct_1Hga2kLRbI5gjrlU";
 export async function updateTransactionStatus(
     id: string,
@@ -70,7 +71,7 @@ export async function updateTransactionStatus(
     if (!result.docs.length) {
       return null;
     }
-    return result.docs[0].data() as Transaction;
+    return transactionFromDocData(result.docs[0].data());
   }
   
   export async function getOrderById(orderId: any) {

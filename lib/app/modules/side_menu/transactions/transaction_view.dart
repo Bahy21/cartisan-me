@@ -1,5 +1,5 @@
 import 'package:cartisan/app/data/constants/constants.dart';
-import 'package:cartisan/app/modules/sidemenu/transactions/components/transaction_card.dart';
+import 'package:cartisan/app/modules/side_menu/transactions/components/transaction_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -1,7 +1,7 @@
 import { firestore } from "../../../..";
 import * as db from "../../../../services/database";
 import * as functions from "firebase-functions";
-import { userFromDoc } from "../../../../services/functions";
+import { postFromDoc, userFromDoc } from "../../../../services/functions";
 import { NotificationType } from "../../../../models/enums";
 import { NotificationModel } from "../../../../models/notification_model";
 import { postsCollection } from "../../../../services/database";
@@ -49,7 +49,7 @@ exports.onPostLiked = functions
             userProfileImg: userWhoLiked.url ?? '',
         });
         newNotification.postId = postId;
-        await db.userNotificationCollection(userWhoLiked.id).add(newNotification.toMap());
+        await db.userNotificationCollection(notifId).add(newNotification.toMap());
 
 });
 exports.onPostUnliked = functions
@@ -110,3 +110,17 @@ exports.onPostReviewAdded = functions
         await db.userNotificationCollection(postOwnerId).add(newNotification.toMap());
         
     });
+// exports.onUserProfileUpdated = functions
+//     .firestore
+//     .document("users/{userId}")
+//     .onUpdate(async (snap, context) => {
+//         const newUser = userFromDoc(snap.after);
+//         const userPosts = await db.postsCollection.where("ownerId", "==", newUser.id).get();
+//         const batch = firestore.batch();
+//         for (const userPost of userPosts.docs) {
+//             const post = postFromDoc(userPost.data());
+//             post.username = newUser.username;
+//             post.userProfileImg = newUser.url ?? '';
+//             batch.update(userPost.ref, post);
+//         }
+//     });

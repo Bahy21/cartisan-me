@@ -2,9 +2,6 @@ import 'dart:convert';
 
 import 'package:cartisan/app/models/address__model.dart';
 
-import 'package:cartisan/app/services/database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 // import 'package:dash_chat/dash_chat.dart';
 
 class UserModel {
@@ -45,7 +42,6 @@ class UserModel {
   String uniqueStoreName;
   int followerCount;
   int followingCount;
-  Database db = Database();
 
   /// Cost in Cents to ship to customer.
   int get shippingCostInCents => (shippingCost! * 100).floor();
@@ -150,44 +146,6 @@ class UserModel {
         state.hashCode ^
         city.hashCode ^
         uniqueStoreName.hashCode;
-  }
-
-  factory UserModel.fromDocument(DocumentSnapshot documentSnapshot) {
-    if (!documentSnapshot.exists) throw Exception('No user found');
-
-    final doc = documentSnapshot.data() as Map<String, dynamic>;
-    final user = UserModel(
-      unreadMessageCount: doc['unreadMessageCount'] as int? ?? 0,
-      defaultAddress: (doc['defaultAddress'] as AddressModel?) == null
-          ? null
-          : AddressModel.fromMap(doc['defaultAddress'] as Map<String, dynamic>),
-      id: documentSnapshot.id,
-      email: doc['email'] as String? ?? '',
-      username: doc['uniqueStoreName'] as String? ?? '',
-      url: doc['url'] as String? ?? '',
-      profileName: doc['profileName'] as String? ?? '',
-      bio: doc['bio'] as String? ?? '',
-      customerId: doc['customer_id'] as String? ?? '',
-      shippingCost: doc['shippingCost'] as double? ?? 0.0,
-      deliveryCost: doc['deliveryCost'] as double? ?? 0.0,
-      freeShipping: doc['freeShipping'] as double? ?? 0.0,
-      freeDelivery: doc['freeDelivery'] as double? ?? 0.0,
-      activeShipping: doc['activeShipping'] as bool? ?? false,
-      pickup: doc['pickup'] as bool? ?? true,
-      sellerID: doc['sellerID'] as String? ?? '',
-      isDeliveryAvailable: doc['isDeliveryAvailable'] as bool? ?? false,
-      taxPercentage: doc['taxPercentage'] as double? ?? 0.0,
-      buyerID: doc['buyerID'] as String? ?? '',
-      city: doc['city'] as String? ?? '',
-      country: doc['country'] as String? ?? '',
-      state: doc['state'] as String? ?? '',
-      isSeller: doc['isSeller'] as bool? ?? false,
-      uniqueStoreName: doc['uniqueStoreName'] as String? ?? '',
-      followerCount: doc['followerCount'] as int? ?? 0,
-      followingCount: doc['followingCount'] as int? ?? 0,
-    );
-
-    return user;
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {

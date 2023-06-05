@@ -5,6 +5,7 @@ import 'package:cartisan/app/modules/auth/components/reset_password_dialog.dart'
 import 'package:cartisan/app/modules/auth/signup_page.dart';
 import 'package:cartisan/app/modules/widgets/buttons/custom_text_button.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
+import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/services/translation_service.dart';
 import 'package:cartisan/app/services/user_auth_service.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +27,15 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordFocus = FocusNode();
 
   Future<void> _handleLogin() async {
+    Get.dialog<Widget>(
+      const LoadingDialog(),
+      barrierDismissible: false,
+    );
     await UserAuthService().signInWithEmailAndPassword(
-        email: _emailController.text, password: _passwordController.text);
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+    Get.back<void>();
   }
 
   @override
@@ -61,6 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 35.h),
                 CustomLoginField(
+                  key: const Key('loginEmailField'),
                   controller: _emailController,
                   focusNode: _emailFocus,
                   hintText: TranslationsService.sigInPageTranslation.email,
@@ -80,6 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 10.h),
                 CustomLoginField(
+                  key: const Key('loginPasswordField'),
                   controller: _passwordController,
                   focusNode: _passwordFocus,
                   isPasswordField: true,
@@ -113,6 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 160.h),
                 PrimaryButton(
+                  key: const Key('loginButton'),
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       _handleLogin();

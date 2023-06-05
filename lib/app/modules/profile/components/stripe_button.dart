@@ -2,7 +2,7 @@
 
 import 'dart:developer';
 
-import 'package:cartisan/app/controllers/controllers.dart';
+import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/modules/profile/components/stripe_webview.dart';
 import 'package:cartisan/app/services/stripe_handler.dart';
 import 'package:flutter/foundation.dart';

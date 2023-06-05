@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/controllers/sales_history_controller.dart';
-import 'package:cartisan/app/modules/sidemenu/orders/components/full_sale_card.dart';
+import 'package:cartisan/app/modules/side_menu/orders/components/full_sale_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

@@ -2,15 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cartisan/app/api_classes/api_service.dart';
-import 'package:cartisan/app/api_classes/social_api.dart';
-import 'package:cartisan/app/controllers/auth_service.dart';
-import 'package:cartisan/app/controllers/controllers.dart';
 import 'package:cartisan/app/models/comment_model.dart';
 import 'package:cartisan/app/models/post_model.dart';
 import 'package:cartisan/app/models/post_response.dart';
 import 'package:cartisan/app/models/review_model.dart';
 import 'package:cartisan/app/models/user_model.dart';
-import 'package:get/get.dart';
 
 String GET_POST = '$BASE_URL/post/getPost';
 String GET_COMMENTS = '$BASE_URL/post/comments/getComments';
@@ -28,8 +24,10 @@ String UPDATE_POST = '$BASE_URL/updatePost';
 class PostAPI {
   final apiService = APIService();
 
-  Future<bool> postReview(
-      {required ReviewModel review, required String postId}) async {
+  Future<bool> postReview({
+    required ReviewModel review,
+    required String postId,
+  }) async {
     try {
       final result =
           await apiService.post<Map>('$CREATE_REVIEW/$postId', review.toMap());
@@ -43,8 +41,10 @@ class PostAPI {
     }
   }
 
-  Future<ReviewModel?> getReviewById(
-      {required String postId, required String reviewId}) async {
+  Future<ReviewModel?> getReviewById({
+    required String postId,
+    required String reviewId,
+  }) async {
     try {
       final result = await apiService.get<Map>('$GET_REVIEW/$postId/$reviewId');
       log('review result:$result');
