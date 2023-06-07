@@ -8,12 +8,25 @@
 import 'dart:async' as _i5;
 
 import 'package:cartisan/app/api_classes/api_service.dart' as _i4;
+import 'package:cartisan/app/api_classes/cart_api.dart' as _i13;
+import 'package:cartisan/app/api_classes/notifications_api.dart' as _i15;
+import 'package:cartisan/app/api_classes/order_api.dart' as _i17;
+import 'package:cartisan/app/api_classes/payment_api.dart' as _i21;
 import 'package:cartisan/app/api_classes/post_api.dart' as _i8;
+import 'package:cartisan/app/api_classes/report_api.dart' as _i22;
+import 'package:cartisan/app/api_classes/timeline_api.dart' as _i23;
+import 'package:cartisan/app/api_classes/user_api.dart' as _i24;
 import 'package:cartisan/app/controllers/auth_service.dart' as _i6;
+import 'package:cartisan/app/models/address__model.dart' as _i19;
+import 'package:cartisan/app/models/cart_item_model.dart' as _i14;
 import 'package:cartisan/app/models/comment_model.dart' as _i11;
+import 'package:cartisan/app/models/notification_model.dart' as _i16;
+import 'package:cartisan/app/models/order_item_status.dart' as _i20;
+import 'package:cartisan/app/models/order_model.dart' as _i18;
 import 'package:cartisan/app/models/post_model.dart' as _i10;
 import 'package:cartisan/app/models/post_response.dart' as _i12;
 import 'package:cartisan/app/models/review_model.dart' as _i9;
+import 'package:cartisan/app/models/user_model.dart' as _i25;
 import 'package:dio/dio.dart' as _i2;
 import 'package:firebase_auth/firebase_auth.dart' as _i7;
 import 'package:get/get.dart' as _i3;
@@ -642,4 +655,673 @@ class MockPostAPI extends _i1.Mock implements _i8.PostAPI {
         returnValueForMissingStub:
             _i5.Future<List<_i11.CommentModel>>.value(<_i11.CommentModel>[]),
       ) as _i5.Future<List<_i11.CommentModel>>);
+}
+
+/// A class which mocks [CartAPI].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockCartAPI extends _i1.Mock implements _i13.CartAPI {
+  @override
+  _i4.APIService get apiService => (super.noSuchMethod(
+        Invocation.getter(#apiService),
+        returnValue: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+        returnValueForMissingStub: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+      ) as _i4.APIService);
+  @override
+  set apiService(_i4.APIService? _apiService) => super.noSuchMethod(
+        Invocation.setter(
+          #apiService,
+          _apiService,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  _i5.Future<List<_i10.PostModel>> getPostsFromCart(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getPostsFromCart,
+          [userId],
+        ),
+        returnValue: _i5.Future<List<_i10.PostModel>>.value(<_i10.PostModel>[]),
+        returnValueForMissingStub:
+            _i5.Future<List<_i10.PostModel>>.value(<_i10.PostModel>[]),
+      ) as _i5.Future<List<_i10.PostModel>>);
+  @override
+  _i5.Future<List<_i14.CartItemModel>> getCart(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getCart,
+          [userId],
+        ),
+        returnValue:
+            _i5.Future<List<_i14.CartItemModel>>.value(<_i14.CartItemModel>[]),
+        returnValueForMissingStub:
+            _i5.Future<List<_i14.CartItemModel>>.value(<_i14.CartItemModel>[]),
+      ) as _i5.Future<List<_i14.CartItemModel>>);
+  @override
+  _i5.Future<bool> addToCart({
+    required String? postId,
+    required String? userId,
+    required String? selectedVariant,
+    required int? quantity,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addToCart,
+          [],
+          {
+            #postId: postId,
+            #userId: userId,
+            #selectedVariant: selectedVariant,
+            #quantity: quantity,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> setCartItemCount({
+    required String? userId,
+    required String? cartItemId,
+    required int? amount,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setCartItemCount,
+          [],
+          {
+            #userId: userId,
+            #cartItemId: cartItemId,
+            #amount: amount,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> deleteCartItem({
+    required String? cartItemId,
+    required String? userId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deleteCartItem,
+          [],
+          {
+            #cartItemId: cartItemId,
+            #userId: userId,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> clearCart(String? userId) => (super.noSuchMethod(
+        Invocation.method(
+          #clearCart,
+          [userId],
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+}
+
+/// A class which mocks [NotificationsAPI].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNotificationsAPI extends _i1.Mock implements _i15.NotificationsAPI {
+  @override
+  _i4.APIService get apiService => (super.noSuchMethod(
+        Invocation.getter(#apiService),
+        returnValue: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+        returnValueForMissingStub: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+      ) as _i4.APIService);
+  @override
+  _i5.Future<List<_i16.NotificationModel>> getNotifications({
+    required String? userId,
+    String? lastSentNotificationId,
+    int? limit,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getNotifications,
+          [],
+          {
+            #userId: userId,
+            #lastSentNotificationId: lastSentNotificationId,
+            #limit: limit,
+          },
+        ),
+        returnValue: _i5.Future<List<_i16.NotificationModel>>.value(
+            <_i16.NotificationModel>[]),
+        returnValueForMissingStub:
+            _i5.Future<List<_i16.NotificationModel>>.value(
+                <_i16.NotificationModel>[]),
+      ) as _i5.Future<List<_i16.NotificationModel>>);
+  @override
+  _i5.Future<bool> clearNotifications(String? userId) => (super.noSuchMethod(
+        Invocation.method(
+          #clearNotifications,
+          [userId],
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+}
+
+/// A class which mocks [OrderAPI].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockOrderAPI extends _i1.Mock implements _i17.OrderAPI {
+  @override
+  _i4.APIService get apiService => (super.noSuchMethod(
+        Invocation.getter(#apiService),
+        returnValue: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+        returnValueForMissingStub: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+      ) as _i4.APIService);
+  @override
+  _i5.Future<List<_i18.OrderModel>> getPurchasedOrders(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getPurchasedOrders,
+          [userId],
+        ),
+        returnValue:
+            _i5.Future<List<_i18.OrderModel>>.value(<_i18.OrderModel>[]),
+        returnValueForMissingStub:
+            _i5.Future<List<_i18.OrderModel>>.value(<_i18.OrderModel>[]),
+      ) as _i5.Future<List<_i18.OrderModel>>);
+  @override
+  _i5.Future<List<_i18.OrderModel>> getSoldOrders(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSoldOrders,
+          [userId],
+        ),
+        returnValue:
+            _i5.Future<List<_i18.OrderModel>>.value(<_i18.OrderModel>[]),
+        returnValueForMissingStub:
+            _i5.Future<List<_i18.OrderModel>>.value(<_i18.OrderModel>[]),
+      ) as _i5.Future<List<_i18.OrderModel>>);
+  @override
+  _i5.Future<_i18.OrderModel?> newOrder(_i19.AddressModel? address) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #newOrder,
+          [address],
+        ),
+        returnValue: _i5.Future<_i18.OrderModel?>.value(),
+        returnValueForMissingStub: _i5.Future<_i18.OrderModel?>.value(),
+      ) as _i5.Future<_i18.OrderModel?>);
+  @override
+  _i5.Future<bool> updateOrderStatus({
+    required String? orderId,
+    required _i20.OrderItemStatus? newStatus,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateOrderStatus,
+          [],
+          {
+            #orderId: orderId,
+            #newStatus: newStatus,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> updateOrderItemStatus({
+    required String? orderId,
+    required String? orderItemId,
+    required _i20.OrderItemStatus? newStatus,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateOrderItemStatus,
+          [],
+          {
+            #orderId: orderId,
+            #orderItemId: orderItemId,
+            #newStatus: newStatus,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> cancelOrder(String? orderId) => (super.noSuchMethod(
+        Invocation.method(
+          #cancelOrder,
+          [orderId],
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<_i18.OrderModel?> getOrder(String? orderId) => (super.noSuchMethod(
+        Invocation.method(
+          #getOrder,
+          [orderId],
+        ),
+        returnValue: _i5.Future<_i18.OrderModel?>.value(),
+        returnValueForMissingStub: _i5.Future<_i18.OrderModel?>.value(),
+      ) as _i5.Future<_i18.OrderModel?>);
+}
+
+/// A class which mocks [PaymentAPI].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPaymentAPI extends _i1.Mock implements _i21.PaymentAPI {
+  @override
+  _i4.APIService get apiService => (super.noSuchMethod(
+        Invocation.getter(#apiService),
+        returnValue: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+        returnValueForMissingStub: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+      ) as _i4.APIService);
+  @override
+  _i5.Future<String> getDashboardLink(String? sellerId) => (super.noSuchMethod(
+        Invocation.method(
+          #getDashboardLink,
+          [sellerId],
+        ),
+        returnValue: _i5.Future<String>.value(''),
+        returnValueForMissingStub: _i5.Future<String>.value(''),
+      ) as _i5.Future<String>);
+  @override
+  _i5.Future<bool> isStripeSetupComplete(String? sellerId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #isStripeSetupComplete,
+          [sellerId],
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<String> createAccount({
+    required String? email,
+    required String? businessType,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createAccount,
+          [],
+          {
+            #email: email,
+            #businessType: businessType,
+          },
+        ),
+        returnValue: _i5.Future<String>.value(''),
+        returnValueForMissingStub: _i5.Future<String>.value(''),
+      ) as _i5.Future<String>);
+  @override
+  _i5.Future<bool> deleteAccount({
+    required String? sellerId,
+    required String? userId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deleteAccount,
+          [],
+          {
+            #sellerId: sellerId,
+            #userId: userId,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> cancelAndRefund({
+    required String? orderId,
+    required String? orderItemId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #cancelAndRefund,
+          [],
+          {
+            #orderId: orderId,
+            #orderItemId: orderItemId,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<Map<String, dynamic>> getPaymentIntent(
+    String? orderId, {
+    String? currency,
+    int? appFeeInCents,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getPaymentIntent,
+          [orderId],
+          {
+            #currency: currency,
+            #appFeeInCents: appFeeInCents,
+          },
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+        returnValueForMissingStub:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+}
+
+/// A class which mocks [ReportAPI].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockReportAPI extends _i1.Mock implements _i22.ReportAPI {
+  @override
+  _i4.APIService get apiService => (super.noSuchMethod(
+        Invocation.getter(#apiService),
+        returnValue: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+        returnValueForMissingStub: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+      ) as _i4.APIService);
+  @override
+  _i5.Future<bool> reportUser({
+    required String? reportedId,
+    required String? reportedFor,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #reportUser,
+          [],
+          {
+            #reportedId: reportedId,
+            #reportedFor: reportedFor,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> reportPost({
+    required _i10.PostModel? post,
+    required String? reportedFor,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #reportPost,
+          [],
+          {
+            #post: post,
+            #reportedFor: reportedFor,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+}
+
+/// A class which mocks [TimelineAPI].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTimelineAPI extends _i1.Mock implements _i23.TimelineAPI {
+  @override
+  _i4.APIService get apiService => (super.noSuchMethod(
+        Invocation.getter(#apiService),
+        returnValue: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+        returnValueForMissingStub: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+      ) as _i4.APIService);
+  @override
+  set apiService(_i4.APIService? _apiService) => super.noSuchMethod(
+        Invocation.setter(
+          #apiService,
+          _apiService,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  _i5.Future<List<_i12.PostResponse>> fetchTimelinePosts({
+    required String? uid,
+    String? lastPostId,
+    int? count = 10,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #fetchTimelinePosts,
+          [],
+          {
+            #uid: uid,
+            #lastPostId: lastPostId,
+            #count: count,
+          },
+        ),
+        returnValue:
+            _i5.Future<List<_i12.PostResponse>>.value(<_i12.PostResponse>[]),
+        returnValueForMissingStub:
+            _i5.Future<List<_i12.PostResponse>>.value(<_i12.PostResponse>[]),
+      ) as _i5.Future<List<_i12.PostResponse>>);
+}
+
+/// A class which mocks [UserAPI].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockUserAPI extends _i1.Mock implements _i24.UserAPI {
+  @override
+  _i4.APIService get apiService => (super.noSuchMethod(
+        Invocation.getter(#apiService),
+        returnValue: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+        returnValueForMissingStub: _FakeAPIService_5(
+          this,
+          Invocation.getter(#apiService),
+        ),
+      ) as _i4.APIService);
+  @override
+  set apiService(_i4.APIService? _apiService) => super.noSuchMethod(
+        Invocation.setter(
+          #apiService,
+          _apiService,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  _i5.Future<_i25.UserModel?> getUser(String? userId) => (super.noSuchMethod(
+        Invocation.method(
+          #getUser,
+          [userId],
+        ),
+        returnValue: _i5.Future<_i25.UserModel?>.value(),
+        returnValueForMissingStub: _i5.Future<_i25.UserModel?>.value(),
+      ) as _i5.Future<_i25.UserModel?>);
+  @override
+  _i5.Future<bool> deleteAddress({
+    required String? userId,
+    required String? addressId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deleteAddress,
+          [],
+          {
+            #userId: userId,
+            #addressId: addressId,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> updateAddress({
+    required String? userId,
+    required String? addressId,
+    required _i19.AddressModel? address,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateAddress,
+          [],
+          {
+            #userId: userId,
+            #addressId: addressId,
+            #address: address,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<List<_i19.AddressModel>> getAllUserAddresses(String? uid) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllUserAddresses,
+          [uid],
+        ),
+        returnValue:
+            _i5.Future<List<_i19.AddressModel>>.value(<_i19.AddressModel>[]),
+        returnValueForMissingStub:
+            _i5.Future<List<_i19.AddressModel>>.value(<_i19.AddressModel>[]),
+      ) as _i5.Future<List<_i19.AddressModel>>);
+  @override
+  _i5.Future<int> getUserPostCount(String? userId) => (super.noSuchMethod(
+        Invocation.method(
+          #getUserPostCount,
+          [userId],
+        ),
+        returnValue: _i5.Future<int>.value(0),
+        returnValueForMissingStub: _i5.Future<int>.value(0),
+      ) as _i5.Future<int>);
+  @override
+  _i5.Future<List<_i10.PostModel>> getAllUserPosts(
+    String? userId, {
+    String? lastPostId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllUserPosts,
+          [userId],
+          {#lastPostId: lastPostId},
+        ),
+        returnValue: _i5.Future<List<_i10.PostModel>>.value(<_i10.PostModel>[]),
+        returnValueForMissingStub:
+            _i5.Future<List<_i10.PostModel>>.value(<_i10.PostModel>[]),
+      ) as _i5.Future<List<_i10.PostModel>>);
+  @override
+  _i5.Future<bool> createUser({
+    required String? userId,
+    required _i25.UserModel? user,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createUser,
+          [],
+          {
+            #userId: userId,
+            #user: user,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> updateDeliveryInfo({
+    required String? userId,
+    required Map<String, dynamic>? newDelivery,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateDeliveryInfo,
+          [],
+          {
+            #userId: userId,
+            #newDelivery: newDelivery,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> updateUserDetails({
+    required String? userId,
+    required _i25.UserModel? newUser,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateUserDetails,
+          [],
+          {
+            #userId: userId,
+            #newUser: newUser,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> addAddress({
+    required String? userId,
+    required _i19.AddressModel? newAddress,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addAddress,
+          [],
+          {
+            #userId: userId,
+            #newAddress: newAddress,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<bool> updateArea({
+    required String? userId,
+    required Map<String, dynamic>? newAreaMap,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateArea,
+          [],
+          {
+            #userId: userId,
+            #newAreaMap: newAreaMap,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
 }
