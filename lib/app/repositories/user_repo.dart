@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cartisan/app/api_classes/user_api.dart';
 import 'package:cartisan/app/controllers/auth_service.dart';
 import 'package:cartisan/app/models/user_model.dart';
@@ -10,6 +12,7 @@ class UserRepo {
   String get _currentUid => Get.find<AuthService>().currentUser!.uid;
 
   Stream<UserModel?> currentUserStream() {
+    log('getting current user stream');
     return userDb.usersCollection
         .doc(_currentUid)
         .snapshots()

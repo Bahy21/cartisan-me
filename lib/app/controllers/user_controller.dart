@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 class UserController extends GetxController {
   final dio = Dio();
   final db = Database();
-  AuthService ac = Get.find<AuthService>();
+  final ac = Get.find<AuthService>();
   UserModel? get currentUser => _userModel.value;
   int get userPostCount => _userPostCount.value;
   // ignore: prefer_final_fields
@@ -29,15 +29,21 @@ class UserController extends GetxController {
 
   @override
   void onReady() {
-    log('controller ready');
-    log(currentUser.toString());
-    if (currentUser != null) {
-      NotificationService().init();
-      getUserPostCount();
-    } else {
-      log('user is null');
-      worker = registerUserNotifications();
-    }
+    ever<UserModel?>(_userModel, (callback) {
+      if (callback == null) return;
+      log('user model is not null');
+      // getUserPostCount();
+    });
+
+    // log('controller ready');
+    // log(currentUser.toString());
+    // if (currentUser != null) {
+    //   NotificationService().init();
+    //   getUserPostCount();
+    // } else {
+    //   log('user is null');
+    //   worker = registerUserNotifications();
+    // }
     super.onReady();
   }
 

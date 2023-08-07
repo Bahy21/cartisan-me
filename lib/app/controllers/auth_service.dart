@@ -9,7 +9,7 @@ class AuthService extends GetxService {
   Rx<User?> firebaseUser = Rx<User?>(null);
 
   RxString userToken = ''.obs;
-  Timer? timer;
+  // Timer? timer;
   User? get currentUser => firebaseUser.value;
   bool get isLoading => _isLoading.value;
   set isLoading(bool value) => _isLoading.value = value;
@@ -19,28 +19,26 @@ class AuthService extends GetxService {
   @override
   void onInit() {
     firebaseUser.bindStream(_auth.authStateChanges());
-    initAuthToken();
+
     handleEmailVerification();
     ever(firebaseUser, (callback) async {
-      userToken.value =
-          await FirebaseAuth.instance.currentUser!.getIdToken(true);
-      log('Set the token to $userToken');
+      if (callback == null) return;
+      await initAuthToken();
     });
-    timer = Timer.periodic(45.minutes, (callback) async {
-      userToken.value =
-          await FirebaseAuth.instance.currentUser!.getIdToken(true);
-      log('Set the token to $userToken');
-    });
+    // timer = Timer.periodic(45.minutes, (callback) {
+    //   initAuthToken();
+    // });
     super.onInit();
   }
 
   @override
   void onClose() {
-    timer?.cancel();
+    // timer?.cancel();
     super.onClose();
   }
 
   Future<void> initAuthToken() async {
+    log("updating user token");
     userToken.value = await FirebaseAuth.instance.currentUser!.getIdToken(true);
   }
 
