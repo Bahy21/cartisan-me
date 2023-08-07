@@ -32,7 +32,8 @@ class UserController extends GetxController {
     ever<UserModel?>(_userModel, (callback) {
       if (callback == null) return;
       log('user model is not null');
-      // getUserPostCount();
+      NotificationService().init();
+      getUserPostCount();
     });
 
     // log('controller ready');
