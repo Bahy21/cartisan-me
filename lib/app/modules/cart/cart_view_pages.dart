@@ -140,7 +140,7 @@ class CartViewPages extends GetView<CartPageController> {
                         status: true,
                       );
                     },
-                    physics: const NeverScrollableScrollPhysics(),
+                     physics: const NeverScrollableScrollPhysics(),
                   ),
                 ),
               ],

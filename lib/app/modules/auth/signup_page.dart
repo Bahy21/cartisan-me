@@ -1,10 +1,9 @@
 import 'package:cartisan/app/data/constants/constants.dart';
 import 'package:cartisan/app/data/global_functions/error_dialog.dart';
-import 'package:cartisan/app/data/global_functions/success_dialog.dart';
 import 'package:cartisan/app/modules/auth/components/cartisan_logo.dart';
 import 'package:cartisan/app/modules/auth/components/custom_login_field.dart';
-import 'package:cartisan/app/modules/profile/components/custom_textformfield.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
+import 'package:cartisan/app/modules/widgets/custom_state_drop_down.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:cartisan/app/services/translation_service.dart';
 import 'package:cartisan/app/services/user_auth_service.dart';
@@ -29,10 +28,10 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordFocus = FocusNode();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
   final TextEditingController _taxController = TextEditingController();
   final _confirmPasswordFocus = FocusNode();
   bool _isSeller = false;
+  String? selectedState;
 
   Future<void> _handleRegistration() async {
     try {
@@ -45,7 +44,7 @@ class _SignUpPageState extends State<SignUpPage> {
         taxPercentage: double.tryParse(_taxController.text) ?? 0.0,
         city: '',
         country: 'America',
-        state: _stateController.text,
+        state: selectedState ?? '',
       );
       if (status) {
         hideLoadingDialog();
@@ -189,15 +188,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 if (_isSeller) ...[
                   SizedBox(height: AppSpacing.tenVertical),
-                  CustomLoginField(
-                    controller: _stateController,
-                    hintText: 'State',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return TranslationsService
-                            .sigUpPageTranslation.fieldRequired;
-                      }
-                      return null;
+                  CustomStateDropDown(
+                    onStateChanged: (value) {
+                      setState(() {
+                        selectedState = value;
+                        debugPrint(selectedState);
+                      });
                     },
                   ),
                   SizedBox(height: AppSpacing.tenVertical),

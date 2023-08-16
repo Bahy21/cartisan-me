@@ -127,7 +127,7 @@ class NnewAddressStateView extends State<NewAddressView> {
               SizedBox(height: AppSpacing.seventeenVertical),
               CustomAddressTextField(
                 heading: 'Contact Number',
-                hintText: '0118 - xxxxxxxxxxx',
+                hintText: '+1 (650) xxxxxxxx',
                 controller: _numberController,
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.next,

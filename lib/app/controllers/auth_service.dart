@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:cartisan/app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class AuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Rx<User?> firebaseUser = Rx<User?>(null);
+  Database db = Database();
 
   RxString userToken = ''.obs;
   // Timer? timer;
@@ -19,7 +21,6 @@ class AuthService extends GetxService {
   @override
   void onInit() {
     firebaseUser.bindStream(_auth.authStateChanges());
-
     handleEmailVerification();
     ever(firebaseUser, (callback) async {
       if (callback == null) return;
@@ -30,6 +31,8 @@ class AuthService extends GetxService {
     // });
     super.onInit();
   }
+
+ 
 
   @override
   void onClose() {

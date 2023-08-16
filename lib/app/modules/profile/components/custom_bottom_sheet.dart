@@ -7,6 +7,7 @@ import 'package:cartisan/app/models/user_model.dart';
 import 'package:cartisan/app/modules/profile/components/custom_switch.dart';
 import 'package:cartisan/app/modules/profile/components/custom_textformfield.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
+import 'package:cartisan/app/modules/widgets/custom_state_drop_down.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,6 +34,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
   late TextEditingController _descriptionController;
   late TextEditingController _stateController;
   late TextEditingController _taxController;
+  final TextEditingController _shippingCostController = TextEditingController();
+  final TextEditingController _localDeliveryCostController =
+      TextEditingController();
 
   late bool _pickUpAvailable;
   late bool _shippingAvailable;
@@ -180,14 +184,13 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                                   'State',
                                   style: AppTypography.kBold14,
                                 ),
-                                CustomTextFormField(
-                                  controller: _stateController,
-                                  validator: (value) {
-                                    return null;
+                                CustomStateDropDown(
+                                  isSellerPage: true,
+                                  selectedState: _stateController.text,
+                                  onStateChanged: (value) {
+                                    setState(() {});
+                                    _stateController.text = value!;
                                   },
-                                  hintText: currentUser.state.isEmpty
-                                      ? 'Enter your state here'
-                                      : currentUser.state,
                                 ),
                                 SizedBox(height: AppSpacing.eighteenVertical),
                                 Text(
@@ -203,6 +206,32 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                                       ? 'Enter tax here'
                                       : currentUser.taxPercentage.toString(),
                                 ),
+                                SizedBox(height: AppSpacing.eighteenVertical),
+                                if (_shippingAvailable) ...[
+                                  Text(
+                                    'Shipping Cost',
+                                    style: AppTypography.kBold14,
+                                  ),
+                                  CustomTextFormField(
+                                    controller: _shippingCostController,
+                                    validator: (value) {
+                                      return null;
+                                    },
+                                    hintText: 'Enter Shipping Cost',
+                                  ),
+                                  SizedBox(height: AppSpacing.eighteenVertical),
+                                  Text(
+                                    'Local Delivery Cost',
+                                    style: AppTypography.kBold14,
+                                  ),
+                                  CustomTextFormField(
+                                    controller: _localDeliveryCostController,
+                                    validator: (value) {
+                                      return null;
+                                    },
+                                    hintText: 'Enter Local Delivery Cost',
+                                  ),
+                                ],
                                 SizedBox(height: 25.h),
                                 Text(
                                   'More Options',

@@ -20,6 +20,8 @@ class Database {
   CollectionReference get errorReportReference =>
       firestore.collection('errorReports');
 
+ 
+
   CollectionReference get chatRoomsCollection =>
       firestore.collection('chatRooms');
   CollectionReference<Map<String, dynamic>> chatRoomMessages(

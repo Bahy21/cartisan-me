@@ -8,6 +8,7 @@ import 'package:cartisan/app/modules/profile/components/custom_textformfield.dar
 import 'package:cartisan/app/modules/profile/components/stripe_button.dart';
 import 'package:cartisan/app/modules/profile/edit_store_view.dart';
 import 'package:cartisan/app/modules/widgets/buttons/primary_button.dart';
+import 'package:cartisan/app/modules/widgets/custom_state_drop_down.dart';
 import 'package:cartisan/app/modules/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -89,15 +90,18 @@ class _BecomeASellerState extends State<BecomeASeller> {
       },
       child: SafeArea(
         child: Scaffold(
+          appBar: AppBar(
+            leading: const BackButton(),
+          ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(
+                horizontal: 22.w,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 45.h,
-                  ),
+                  SizedBox(height: 35.h),
                   Center(
                     child: Text(
                       'Begin your journey with Cartisan',
@@ -105,21 +109,19 @@ class _BecomeASellerState extends State<BecomeASeller> {
                       style: AppTypography.kExtraBold32,
                     ),
                   ),
-                  SizedBox(
-                    height: 45.h,
-                  ),
+                  SizedBox(height: 45.h),
                   Text(
                     'State',
                     style: AppTypography.kBold14,
                   ),
-                  CustomTextFormField(
-                    controller: _stateController,
-                    validator: (value) {
-                      return null;
+                  CustomStateDropDown(
+                    selectedState: _stateController.text,
+                    isSellerPage: true,
+                    onStateChanged: (value) {
+                      setState(() {
+                        _stateController.text = value ?? '';
+                      });
                     },
-                    hintText: currentUser.state.isEmpty
-                        ? 'Enter your state here'
-                        : currentUser.state,
                   ),
                   SizedBox(height: AppSpacing.eighteenVertical),
                   Text(
