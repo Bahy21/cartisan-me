@@ -25,7 +25,6 @@ class UserAPI {
       final result = await apiService.get<Map>(
         link,
       );
-
       if (result.statusCode != 200) {
         throw Exception('Error fetching user');
       }

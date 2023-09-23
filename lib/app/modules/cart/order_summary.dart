@@ -1,8 +1,12 @@
+// ignore_for_file: omit_local_variable_types
+
 import 'package:cartisan/app/controllers/address_controller.dart';
 import 'package:cartisan/app/controllers/cart_controller.dart';
 import 'package:cartisan/app/controllers/cart_page_controller.dart';
 import 'package:cartisan/app/controllers/checkout_controller.dart';
+import 'package:cartisan/app/controllers/user_controller.dart';
 import 'package:cartisan/app/data/constants/constants.dart';
+import 'package:cartisan/app/models/order_item_model.dart';
 import 'package:cartisan/app/modules/cart/components/address_card.dart';
 import 'package:cartisan/app/modules/cart/components/cart_item_card.dart';
 import 'package:cartisan/app/modules/cart/components/order_summary_card.dart';
@@ -22,6 +26,7 @@ class _OrderSummaryState extends State<OrderSummary> {
   final ac = Get.find<AddressController>();
   final cartController = Get.find<CartController>();
   final checkoutController = Get.find<CheckoutController>();
+  final userController = Get.find<UserController>();
   @override
   Widget build(BuildContext context) {
     return GetX<CheckoutController>(
@@ -29,15 +34,18 @@ class _OrderSummaryState extends State<OrderSummary> {
       builder: (controller) {
         controller.generateOrder();
         if (controller.order == null) {
+
           return const Scaffold(
             body: Center(child: CircularProgressIndicator.adaptive()),
           );
         }
+        final List<OrderItemModel> orderItems = controller.order!.orderItems;
         double totalDelivery = 0;
         double totalTax = 0;
-        controller.order!.orderItems
-            .map<void>((e) => totalDelivery += e.deliveryCost);
-        controller.order!.orderItems.map<void>((e) => totalTax += e.tax);
+        for (final e in orderItems){
+          totalDelivery += e.deliveryCost ;
+          totalTax += e.tax ;
+        }
         return Scaffold(
           body: ListView(
             padding:

@@ -41,8 +41,8 @@ class AuthService extends GetxService {
   }
 
   Future<void> initAuthToken() async {
-    log("updating user token");
-    userToken.value = await FirebaseAuth.instance.currentUser!.getIdToken(true);
+    log('updating user token');
+    userToken.value = (await FirebaseAuth.instance.currentUser!.getIdToken(true))!;
   }
 
   Future<void> handleEmailVerification() async {

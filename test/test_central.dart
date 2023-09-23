@@ -359,14 +359,14 @@ void main() async {
     test('update order status', () async {
       when(mockOrderApi.updateOrderStatus(
         orderId: '',
-        newStatus: OrderItemStatus.awaitingPayment,
+        newSatus: OrderItemStatus.awaitingPayment,
       )).thenAnswer(
         (_) async => true,
       );
       expect(
         await mockOrderApi.updateOrderStatus(
           orderId: '',
-          newStatus: OrderItemStatus.awaitingPayment,
+          newSatus: OrderItemStatus.awaitingPayment,
         ),
         true,
       );

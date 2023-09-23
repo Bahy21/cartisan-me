@@ -45,7 +45,6 @@ class CheckoutController extends GetxController {
       //     .ordersCollection
       //     .doc(order.orderId)
       //     .set(order.toMap(), SetOptions(merge: true));
-
       Get.back<void>();
       Get.find<CartPageController>().animateInitialPageToNext();
     } else {
@@ -75,6 +74,7 @@ class CheckoutController extends GetxController {
     String ephemeralKey,
   ) async {
     try {
+
       final billingDetails = stripe.BillingDetails(
         name: user.profileName,
         email: user.email,
@@ -85,7 +85,7 @@ class CheckoutController extends GetxController {
           line1: '',
           line2: '',
           postalCode: '',
-          state: '',
+          state: user.state,
         ),
       );
       final stripeInstance = stripe.Stripe.instance;

@@ -18,6 +18,7 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 
 class EditPostView extends StatefulWidget {
   final PostModel post;
@@ -31,9 +32,13 @@ class EditPostView extends StatefulWidget {
 
 class _EditPostViewState extends State<EditPostView> {
   final _formKey = GlobalKey<FormState>();
-
   UserModel get currentUser => Get.find<UserController>().currentUser!;
   final _iconSize = 24;
+
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return GetX<EditProductController>(
@@ -45,6 +50,12 @@ class _EditPostViewState extends State<EditPostView> {
               child: CircularProgressIndicator.adaptive(),
             ),
           );
+        }else {
+          controller.productNameTextEditingController.text = controller.post!.productName;
+          controller.descriptionTextEditingController.text = controller.post!.description;
+          controller.brandTextEditingController.text = controller.post!.brand;
+          controller.priceController.text = controller.post!.price.toString();
+          controller.locationTextEditingController.text = controller.post!.location;
         }
         final imageCount = controller.post!.images.length;
         return WillPopScope(
@@ -144,6 +155,9 @@ class _EditPostViewState extends State<EditPostView> {
                         ),
                       ],
                     ),
+                  ),
+                  SizedBox(
+                    height: 20.h,
                   ),
                   if (imageCount != 0)
                     Row(

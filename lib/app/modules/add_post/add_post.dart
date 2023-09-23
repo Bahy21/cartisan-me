@@ -364,7 +364,8 @@ class _AddPostState extends State<AddPost> {
   }
 
   Future<void> createPost() async {
-    Get.dialog<Widget>(const LoadingDialog(), barrierDismissible: false);
+    final userController = Get.find<UserController>();
+    await Get.dialog<Widget>(const LoadingDialog(), barrierDismissible: false);
     final uploadedImagesLinks = await handleImageUpload();
     final userId = Get.find<AuthService>().currentUser!.uid;
     final post = PostModel(
@@ -375,7 +376,7 @@ class _AddPostState extends State<AddPost> {
       brand: _productBrandText.text,
       variants: _variants,
       price: (int.tryParse(_productPriceText.text) ?? 0).toDouble(),
-      location: Get.find<UserController>().currentUser!.city,
+      location:userController.currentUser!.city,
       rating: 0,
       images: uploadedImagesLinks,
       selectedVariant: _variants.first,
@@ -394,9 +395,8 @@ class _AddPostState extends State<AddPost> {
         ..back<void>()
         ..back<void>()
         ..back<void>();
-      await Get.dialog<Widget>(
-        const SuccessDialog(message: 'Post successfully added'),
-      );
+      await Get.dialog<Widget>(const SuccessDialog(message: 'Post successfully added'),);
+      await userController.getUserPostCount();
     } else {
       await showErrorDialog('Error uploading post');
     }
